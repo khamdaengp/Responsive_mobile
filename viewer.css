@@ -85,3 +85,32 @@ body.mv-popout-body .mv-device-frame {
   box-shadow: none !important;
   margin: 0 !important;
 }
+
+/* Enable drag-to-highlight text selection & copy across pop-out developer tools */
+::selection {
+  background: rgba(99, 102, 241, 0.6) !important;
+  color: #ffffff !important;
+}
+
+body.mv-popout-body .mv-net-details-drawer,
+body.mv-popout-body .mv-net-details-drawer *,
+body.mv-popout-body .mv-net-kv-table,
+body.mv-popout-body .mv-net-kv-table *,
+body.mv-popout-body .mv-net-code-box,
+body.mv-popout-body .mv-net-tab-pane,
+body.mv-popout-body .mv-net-tab-pane *,
+body.mv-popout-body .mv-net-stream,
+body.mv-popout-body .mv-net-stream *,
+body.mv-popout-body .mv-console-stream,
+body.mv-popout-body .mv-console-stream *,
+body.mv-popout-body .mv-sec-console,
+body.mv-popout-body .mv-sec-console *,
+body.mv-popout-body .mv-storage-table,
+body.mv-popout-body .mv-storage-table *,
+body.mv-popout-body .mv-http-body-textarea,
+body.mv-popout-body .mv-http-url-input,
+body.mv-popout-body .mv-encoder-output {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+
