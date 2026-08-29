@@ -32,10 +32,24 @@
   "background": {
     "service_worker": "background.js"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "all_frames": true,
+      "match_about_blank": true,
+      "css": [
+        "frame-scrollbar.css"
+      ],
+      "run_at": "document_start"
+    }
+  ],
   "web_accessible_resources": [
     {
       "resources": [
         "styles.css",
+        "frame-scrollbar.css",
         "viewer.html",
         "viewer.css",
         "viewer.js",
