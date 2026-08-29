@@ -204,26 +204,27 @@
     clockEl.textContent = `${hours}:${formattedMinutes}`;
   }
 
-  // Auto-resize the actual Chrome window to fit device + dock snugly with complete visibility
+  // Auto-resize the actual Chrome window to fit device + dock snugly with 0-5px margin
   async function fitWindowToDevice() {
     try {
       const device = DEVICE_PRESETS[currentDeviceId] || DEVICE_PRESETS['iphone-16-pro'];
       const devW = isLandscape ? device.height : device.width;
       const devH = isLandscape ? device.width : device.height;
-      const frameTotalWidth = devW + 24;
-      const frameTotalHeight = devH + 24;
-      const extraDockWidth = isDockMinimized ? 0 : 340;
+      const frameTotalWidth = devW + 20; // 10px border on each side
+      const frameTotalHeight = devH + 20;
+      const extraDockWidth = isDockMinimized ? 0 : 330;
 
       // Detect OS window border overhead
       const osChromeWidth = Math.max(0, window.outerWidth - window.innerWidth) || 16;
       const osChromeHeight = Math.max(0, window.outerHeight - window.innerHeight) || 39;
 
       // Give a maximum cap based on user's actual screen resolution
-      const maxAllowedWidth = screen.availWidth - 40;
-      const maxAllowedHeight = screen.availHeight - 40;
+      const maxAllowedWidth = screen.availWidth - 10;
+      const maxAllowedHeight = screen.availHeight - 10;
 
-      const targetWidth = Math.min(maxAllowedWidth, frameTotalWidth + extraDockWidth + 36 + osChromeWidth);
-      const targetHeight = Math.min(maxAllowedHeight, frameTotalHeight + 40 + osChromeHeight);
+      // Set target to fit with 4px total margin (2px each side, within 0-5px)
+      const targetWidth = Math.min(maxAllowedWidth, frameTotalWidth + extraDockWidth + 4 + osChromeWidth);
+      const targetHeight = Math.min(maxAllowedHeight, frameTotalHeight + 4 + osChromeHeight);
 
       const currentWin = await chrome.windows.getCurrent();
       if (currentWin && currentWin.id) {
@@ -268,15 +269,15 @@
   }
 
   function calculateScale(deviceWidth, deviceHeight) {
-    const frameTotalWidth = deviceWidth + 24;
-    const frameTotalHeight = deviceHeight + 24;
+    const frameTotalWidth = deviceWidth + 20;
+    const frameTotalHeight = deviceHeight + 20;
 
-    const occupiedDockWidth = isDockMinimized ? 0 : 340;
-    const paddingX = isDockMinimized ? 24 : 40;
-    const paddingY = 24; // 12px top, 12px bottom margin
+    const occupiedDockWidth = isDockMinimized ? 0 : 330;
+    const paddingX = isDockMinimized ? 4 : 12;
+    const paddingY = 4; // 2px top, 2px bottom margin (0-5px)
 
-    const availWidth = Math.max(100, window.innerWidth - occupiedDockWidth - paddingX);
-    const availHeight = Math.max(100, window.innerHeight - paddingY);
+    const availWidth = Math.max(10, window.innerWidth - occupiedDockWidth - paddingX);
+    const availHeight = Math.max(10, window.innerHeight - paddingY);
 
     let scale = 1;
     if (currentZoomMode === 'auto') {
@@ -289,7 +290,7 @@
     }
 
     const scaledHeight = frameTotalHeight * scale;
-    const topOffset = Math.max(8, (window.innerHeight - scaledHeight) / 2);
+    const topOffset = Math.max(0, (window.innerHeight - scaledHeight) / 2);
 
     stageEl.style.transformOrigin = 'top center';
     stageEl.style.transform = `translateY(${topOffset.toFixed(1)}px) scale(${scale.toFixed(4)})`;

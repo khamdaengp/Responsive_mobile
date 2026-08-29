@@ -437,8 +437,8 @@
   align-items: center;
   justify-content: center;
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 12px;
+  right: 12px;
   left: auto !important;
   top: auto !important;
   z-index: 999999;

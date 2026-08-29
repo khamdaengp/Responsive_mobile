@@ -23,7 +23,7 @@ body.mv-popout-body .mv-workspace {
   visibility: visible !important;
   padding: 0 !important;
   margin: 0 !important;
-  gap: 20px !important;
+  gap: 10px !important;
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
@@ -41,13 +41,14 @@ body.mv-popout-body .mv-stage-container {
   justify-content: center;
   transform-origin: top center;
   flex-shrink: 0;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.15s ease-out;
 }
 
 body.mv-popout-body .mv-controls-dock:not(.mv-minimized) {
   margin-top: auto;
   margin-bottom: auto;
   align-self: center;
+  margin-right: 8px;
 }
 
 body.mv-popout-body .mv-side-buttons {
@@ -55,5 +56,5 @@ body.mv-popout-body .mv-side-buttons {
 }
 
 body.mv-popout-body .mv-device-frame {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
 }
