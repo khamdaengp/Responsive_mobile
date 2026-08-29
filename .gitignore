@@ -1,3 +1,6 @@
+# Chrome internal unpacked build artifacts
+_metadata/
+
 # OS & System files
 .DS_Store
 Thumbs.db
