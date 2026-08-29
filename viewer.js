@@ -199,24 +199,80 @@
   };
 
   let activeNetProfile = 'online';
+  let activeNetFilter = 'all';
+
+  // Filter Buttons
+  const filterAllBtn = document.getElementById('mv-filter-all');
+  const filterFetchBtn = document.getElementById('mv-filter-fetch');
+  const filterXhrBtn = document.getElementById('mv-filter-xhr');
+  const filterClearBtn = document.getElementById('mv-filter-clear');
+
+  function applyNetFilter() {
+    if (!netStreamEl) return;
+    const entries = netStreamEl.querySelectorAll('.mv-log-entry');
+    entries.forEach((entry) => {
+      const type = entry.getAttribute('data-type') || 'DOC';
+      if (activeNetFilter === 'all') {
+        entry.style.display = 'flex';
+      } else if (activeNetFilter === 'fetch' && type === 'FETCH') {
+        entry.style.display = 'flex';
+      } else if (activeNetFilter === 'xhr' && type === 'XHR') {
+        entry.style.display = 'flex';
+      } else {
+        entry.style.display = 'none';
+      }
+    });
+  }
+
+  function setFilter(filterName, activeBtn) {
+    activeNetFilter = filterName;
+    [filterAllBtn, filterFetchBtn, filterXhrBtn].forEach(b => b?.classList.remove('mv-chip-active'));
+    activeBtn?.classList.add('mv-chip-active');
+    applyNetFilter();
+  }
+
+  filterAllBtn?.addEventListener('click', () => setFilter('all', filterAllBtn));
+  filterFetchBtn?.addEventListener('click', () => setFilter('fetch', filterFetchBtn));
+  filterXhrBtn?.addEventListener('click', () => setFilter('xhr', filterXhrBtn));
+  filterClearBtn?.addEventListener('click', () => {
+    if (netStreamEl) netStreamEl.innerHTML = '';
+  });
 
   // Live Network Stream Logger
-  function logNetworkEvent(method, message, type = 'info') {
+  function logNetworkEvent(tag, message, type = 'info', reqType = 'DOC') {
     if (!netStreamEl) return;
     const now = new Date();
     const timeStr = now.toTimeString().split(' ')[0];
-    const tagClass = type === 'pass' ? 'mv-log-tag-pass' : type === 'warn' ? 'mv-log-tag-warn' : 'mv-log-tag-info';
+    let tagClass = 'mv-log-tag-info';
+    if (type === 'pass') tagClass = 'mv-log-tag-pass';
+    else if (type === 'warn') tagClass = 'mv-log-tag-warn';
+    else if (reqType === 'XHR') tagClass = 'mv-log-tag-xhr';
+    else if (reqType === 'FETCH') tagClass = 'mv-log-tag-fetch';
     
     const entry = document.createElement('div');
     entry.className = 'mv-log-entry';
+    entry.setAttribute('data-type', reqType);
     entry.innerHTML = `
       <span class="mv-log-time">${timeStr}</span>
-      <span class="${tagClass}">[${method}]</span>
-      <span>${message}</span>
+      <span class="${tagClass}">[${tag}]</span>
+      <span style="word-break: break-all;">${message}</span>
     `;
     netStreamEl.appendChild(entry);
     netStreamEl.scrollTop = netStreamEl.scrollHeight;
+    applyNetFilter();
   }
+
+  // Intercept incoming Fetch / XHR traffic from iframe
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'MOBILEVIEW_NETWORK_REQ' && e.data.data) {
+      const { reqType, method, url, status, duration } = e.data.data;
+      const statusType = status >= 200 && status < 300 ? 'pass' : (status >= 400 ? 'warn' : 'info');
+      const label = `${reqType} ${method}`;
+      const detail = `${url} (${status} · ${duration}ms)`;
+      logNetworkEvent(label, detail, statusType, reqType);
+      logSecurityEvent(reqType, `${method} ${url.substring(0, 30)} (${status})`, statusType);
+    }
+  });
 
   // Network Profile Change Handler
   if (networkSelectEl) {

@@ -39,6 +39,9 @@
       ],
       "all_frames": true,
       "match_about_blank": true,
+      "js": [
+        "frame-network-interceptor.js"
+      ],
       "css": [
         "frame-scrollbar.css"
       ],
@@ -50,6 +53,7 @@
       "resources": [
         "styles.css",
         "frame-scrollbar.css",
+        "frame-network-interceptor.js",
         "viewer.html",
         "viewer.css",
         "viewer.js",

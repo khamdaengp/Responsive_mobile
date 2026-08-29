@@ -1277,10 +1277,31 @@
   font-family: monospace;
   font-size: 10px;
   color: #94a3b8;
-  height: 75px;
+  height: 95px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.mv-net-filters {
+  display: flex;
+  gap: 4px;
+}
+
+.mv-chip.mv-chip-active {
+  background: #6366f1 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.mv-log-tag-xhr {
+  color: #c084fc;
+  font-weight: bold;
+}
+
+.mv-log-tag-fetch {
+  color: #38bdf8;
+  font-weight: bold;
 }
 

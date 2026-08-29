@@ -311,19 +311,22 @@
               </div>
             </div>
 
-            <!-- Live Network Activity Stream -->
+            <!-- Live Network Activity Stream (Fetch / XHR) -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Live Network Activity Stream</label>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px;">
+                <label class="mv-control-label">Fetch & XHR Requests</label>
+                <div class="mv-net-filters">
+                  <button class="mv-chip mv-chip-active" id="mv-filter-all" style="padding: 2px 6px; font-size: 9px;">All</button>
+                  <button class="mv-chip" id="mv-filter-fetch" style="padding: 2px 6px; font-size: 9px;">Fetch</button>
+                  <button class="mv-chip" id="mv-filter-xhr" style="padding: 2px 6px; font-size: 9px;">XHR</button>
+                  <button class="mv-chip" id="mv-filter-clear" style="padding: 2px 6px; font-size: 9px;" title="Clear Network Requests">Clear</button>
+                </div>
+              </div>
               <div class="mv-net-stream" id="mv-net-stream">
-                <div class="mv-log-entry">
+                <div class="mv-log-entry" data-type="DOC">
                   <span class="mv-log-time">00:00</span>
                   <span class="mv-log-tag-pass">[GET]</span>
-                  <span>HTTP/2 200 OK — Main Document</span>
-                </div>
-                <div class="mv-log-entry">
-                  <span class="mv-log-time">00:00</span>
-                  <span class="mv-log-tag-info">[FETCH]</span>
-                  <span>Scripts & Stylesheets cached</span>
+                  <span>HTTP/2 200 OK — Document</span>
                 </div>
               </div>
             </div>
