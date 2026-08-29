@@ -39,9 +39,18 @@
       ],
       "all_frames": true,
       "match_about_blank": true,
+      "world": "MAIN",
       "js": [
         "frame-network-interceptor.js"
       ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "all_frames": true,
+      "match_about_blank": true,
       "css": [
         "frame-scrollbar.css"
       ],
