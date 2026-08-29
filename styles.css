@@ -922,37 +922,49 @@
 
 /* Landscape Specific Adjustments */
 .mv-device-frame.mv-landscape {
-  flex-direction: row;
+  flex-direction: column !important;
 }
 
 .mv-device-frame.mv-landscape .mv-dynamic-island {
+  position: absolute;
   top: 50%;
-  left: 11px;
-  transform: translateY(-50%) rotate(-90deg);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 18px;
+  border-radius: 12px;
+  padding: 0 6px;
 }
 
 .mv-device-frame.mv-landscape .mv-notch {
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%) rotate(-90deg);
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 16px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 
 .mv-device-frame.mv-landscape .mv-punch-hole {
+  position: absolute;
   top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
 }
 
 .mv-device-frame.mv-landscape .mv-status-bar {
-  padding: 0 16px;
-  height: 28px;
+  padding: 0 20px;
+  height: 26px;
 }
 
 .mv-device-frame.mv-landscape .mv-home-indicator {
-  bottom: 5px;
-  width: 180px;
+  bottom: 4px;
+  width: 160px;
+  height: 3.5px;
 }
 
 .mv-device-frame.mv-landscape .mv-btn-action,
