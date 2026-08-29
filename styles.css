@@ -966,43 +966,67 @@
    Advanced QA Tester & Pentester Developer Suite Styles
    ========================================================================== */
 
-/* Dock Tabs */
+/* Dock Navigation Menu (Sleek Developer Segmented Grid) */
 .mv-dock-tabs {
-  display: flex;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 10px;
-  padding: 3px;
-  gap: 3px;
+  padding: 4px;
+  gap: 4px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .mv-tab-btn {
-  flex: 1;
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
   color: #94a3b8;
-  padding: 6px 4px;
+  padding: 7px 6px;
   font-size: 11px;
   font-weight: 600;
   border-radius: 7px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: inherit;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.mv-tab-btn svg {
+  width: 12.5px;
+  height: 12.5px;
+  fill: currentColor;
+  flex-shrink: 0;
+  opacity: 0.8;
+  transition: transform 0.18s ease;
 }
 
 .mv-tab-btn:hover {
   color: #f8fafc;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.mv-tab-btn:hover svg {
+  transform: scale(1.1);
+  opacity: 1;
 }
 
 .mv-tab-btn.mv-tab-active {
-  background: #6366f1;
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 3px 10px rgba(99, 102, 241, 0.45);
+  font-weight: 700;
+}
+
+.mv-tab-btn.mv-tab-active svg {
+  fill: #ffffff;
+  opacity: 1;
 }
 
 /* Tab Panels */
