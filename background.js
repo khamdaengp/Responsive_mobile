@@ -66,7 +66,7 @@ chrome.runtime.onStartup.addListener(() => {
 // Update rules immediately on worker wake-up
 updateDeviceRule('iOS');
 
-// Handle messages from content scripts (e.g. changing device OS)
+// Handle messages from content scripts and pop-out window
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message && message.type === 'SET_DEVICE_OS') {
     (async () => {
@@ -74,6 +74,31 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         await updateDeviceRule(message.os);
         sendResponse({ success: true, os: message.os });
       } catch (err) {
+        sendResponse({ success: false, error: err.message });
+      }
+    })();
+    return true;
+  }
+
+  // Handle Pop-out to standalone window request
+  if (message && message.type === 'OPEN_POPOUT_WINDOW') {
+    (async () => {
+      try {
+        const url = message.url || 'https://www.google.com';
+        const device = message.device || 'iphone-16-pro';
+        const landscape = !!message.isLandscape;
+        const viewerUrl = chrome.runtime.getURL(`viewer.html?url=${encodeURIComponent(url)}&device=${encodeURIComponent(device)}&landscape=${landscape}`);
+        
+        await chrome.windows.create({
+          url: viewerUrl,
+          type: 'popup',
+          width: landscape ? 1150 : 850,
+          height: landscape ? 700 : 960,
+          focused: true
+        });
+        sendResponse({ success: true });
+      } catch (err) {
+        console.error('Failed to open pop-out window:', err);
         sendResponse({ success: false, error: err.message });
       }
     })();
@@ -104,7 +129,15 @@ chrome.action.onClicked.addListener(async (tab) => {
     tab.url.includes('chromewebstore.google.com') ||
     tab.url.includes('chrome.google.com/webstore')
   ) {
-    console.warn('Responsive Preview cannot run on internal or restricted browser pages.');
+    // If clicked on an internal page, open standalone pop-out viewer directly
+    const viewerUrl = chrome.runtime.getURL('viewer.html?url=https%3A%2F%2Fwww.google.com');
+    await chrome.windows.create({
+      url: viewerUrl,
+      type: 'popup',
+      width: 850,
+      height: 960,
+      focused: true
+    });
     return;
   }
 

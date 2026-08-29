@@ -161,7 +161,8 @@
     wifi: `<svg viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4z"/></svg>`,
     battery: `<svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>`,
     enter: `<svg viewBox="0 0 24 24"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7h-2z"/></svg>`,
-    clear: `<svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
+    clear: `<svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
+    popout: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`
   };
 
   // Build Overlay DOM Structure
@@ -302,6 +303,9 @@
 
         <!-- Quick Action Toolbar -->
         <div class="mv-action-toolbar">
+          <button class="mv-icon-btn" id="mv-popout-btn" title="Pop-out to Standalone Window (P)">
+            ${SVG_ICONS.popout}
+          </button>
           <button class="mv-icon-btn" id="mv-reload-btn" title="Reload iframe (R)">
             ${SVG_ICONS.refresh}
           </button>
@@ -317,13 +321,16 @@
         <div class="mv-keyboard-hint">
           <span>Press</span>
           <span class="mv-kbd">Esc</span>
-          <span>to close</span>
+          <span>close</span>
+          <span>•</span>
+          <span class="mv-kbd">P</span>
+          <span>pop-out</span>
           <span>•</span>
           <span class="mv-kbd">O</span>
-          <span>to rotate</span>
+          <span>rotate</span>
           <span>•</span>
           <span class="mv-kbd">↵</span>
-          <span>to load</span>
+          <span>load</span>
         </div>
       </div>
     </div>
@@ -343,6 +350,7 @@
   const orientationBtnEl = shadowRoot.getElementById('mv-orientation-btn');
   const orientationTextEl = shadowRoot.getElementById('mv-orientation-text');
   const closeBtnEl = shadowRoot.getElementById('mv-close-btn');
+  const popoutBtnEl = shadowRoot.getElementById('mv-popout-btn');
   const reloadBtnEl = shadowRoot.getElementById('mv-reload-btn');
   const scrollTopBtnEl = shadowRoot.getElementById('mv-scroll-top-btn');
   const openNewTabBtnEl = shadowRoot.getElementById('mv-open-new-tab-btn');
@@ -594,6 +602,19 @@
   // Close button
   closeBtnEl.addEventListener('click', closeOverlay);
 
+  // Pop-out to standalone window
+  function triggerPopout() {
+    const currentUrl = activeLoadedUrl || iframeEl.src || window.location.href;
+    chrome.runtime.sendMessage({
+      type: 'OPEN_POPOUT_WINDOW',
+      url: currentUrl,
+      device: currentDeviceId,
+      isLandscape: isLandscape
+    });
+    closeOverlay();
+  }
+  popoutBtnEl.addEventListener('click', triggerPopout);
+
   // Reload iframe cleanly without touching cross-origin window
   reloadBtnEl.addEventListener('click', reloadIframe);
 
@@ -638,6 +659,9 @@
     if (e.key === 'Escape') {
       e.preventDefault();
       closeOverlay();
+    } else if (e.key === 'p' || e.key === 'P') {
+      e.preventDefault();
+      triggerPopout();
     } else if (e.key === 'o' || e.key === 'O') {
       isLandscape = !isLandscape;
       applyDeviceLayout();

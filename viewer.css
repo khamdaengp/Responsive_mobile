@@ -1,0 +1,24 @@
+/* ==========================================================================
+   MobileView — Standalone Pop-out Window Stylesheet
+   ========================================================================== */
+
+body.mv-popout-body {
+  margin: 0;
+  padding: 0;
+  background-color: #060913;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #f8fafc;
+}
+
+body.mv-popout-body .mv-workspace {
+  transform: scale(1) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  padding: 16px;
+  gap: 28px;
+}

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Responsive Mobile Viewport & Mockup Tester",
-  "version": "1.2.0",
-  "description": "Test and verify mobile responsiveness and UI layouts directly on the current web page or any custom URL inside realistic device mockups.",
+  "version": "1.3.0",
+  "description": "Test and verify mobile responsiveness and UI layouts directly on the current web page or in a standalone pop-out window inside realistic device mockups.",
   "permissions": [
     "activeTab",
     "scripting",
@@ -36,6 +36,9 @@
     {
       "resources": [
         "styles.css",
+        "viewer.html",
+        "viewer.css",
+        "viewer.js",
         "icons/*",
         "rules.json"
       ],
