@@ -925,39 +925,53 @@
   flex-direction: column !important;
 }
 
-.mv-device-frame.mv-landscape .mv-dynamic-island {
+.mv-device-frame.mv-landscape #mv-camera-container {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80px;
-  height: 18px;
-  border-radius: 12px;
+  left: 14px;
+  transform: translateY(-50%);
+  z-index: 65;
+  pointer-events: none;
+}
+
+.mv-device-frame.mv-landscape .mv-dynamic-island {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  width: 95px;
+  height: 22px;
+  border-radius: 20px;
   padding: 0 6px;
+  background: #000000;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
 }
 
 .mv-device-frame.mv-landscape .mv-notch {
   position: absolute;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90px;
-  height: 16px;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  left: -48px;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  width: 120px;
+  height: 20px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  background: #000000;
 }
 
 .mv-device-frame.mv-landscape .mv-punch-hole {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 0;
+  left: 0;
   transform: translate(-50%, -50%);
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #000000;
 }
 
 .mv-device-frame.mv-landscape .mv-status-bar {
-  padding: 0 20px;
+  padding: 0 20px 0 36px;
   height: 26px;
 }
 
