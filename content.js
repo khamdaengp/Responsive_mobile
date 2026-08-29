@@ -478,8 +478,8 @@
     if (currentZoomMode === 'auto') {
       const scaleX = availWidth / (deviceWidth + 24);
       const scaleY = availHeight / (deviceHeight + 24);
-      scale = Math.min(1, scaleX, scaleY);
-      scale = Math.max(0.4, scale);
+      scale = Math.min(1.0, scaleX, scaleY);
+      scale = Math.max(0.25, scale);
     } else {
       scale = parseInt(currentZoomMode, 10) / 100;
     }

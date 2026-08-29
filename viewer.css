@@ -21,15 +21,16 @@ body.mv-popout-body .mv-workspace {
   transform: scale(1) !important;
   opacity: 1 !important;
   visibility: visible !important;
-  padding: 0 !important;
+  padding: 12px !important;
   margin: 0 !important;
-  gap: 0 !important;
+  gap: 20px !important;
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   background-color: #ffffff;
 }
 
@@ -38,7 +39,9 @@ body.mv-popout-body .mv-stage-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.15s ease-out;
+  transform-origin: center center;
+  flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 body.mv-popout-body .mv-side-buttons {
