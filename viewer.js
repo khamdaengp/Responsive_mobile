@@ -501,6 +501,27 @@
       renderStorageTable(document.getElementById('mv-sessionstorage-table'), sess, 'session');
       renderStorageTable(document.getElementById('mv-cookies-table'), cook, 'cookie');
     }
+
+    // 6. Custom HTTP Dispatch Result
+    if (e.data.type === 'MOBILEVIEW_HTTP_DISPATCH_RESULT' && e.data.data) {
+      const { status, statusText, duration, responseHeaders, responseBody } = e.data.data;
+      const statusEl = document.getElementById('mv-http-resp-status');
+      const timeEl = document.getElementById('mv-http-resp-time');
+      const bodyEl = document.getElementById('mv-http-resp-body');
+
+      if (statusEl) {
+        statusEl.textContent = `Status: ${status} ${statusText}`;
+        if (status >= 200 && status < 300) {
+          statusEl.className = 'mv-badge-pill mv-badge-green';
+        } else if (status >= 400) {
+          statusEl.className = 'mv-badge-pill mv-badge-red';
+        } else {
+          statusEl.className = 'mv-badge-pill mv-badge-cyan';
+        }
+      }
+      if (timeEl) timeEl.textContent = `${duration} ms`;
+      if (bodyEl) bodyEl.textContent = formatJsonSafe(responseBody);
+    }
   });
 
   // =========================================================================
@@ -661,6 +682,168 @@
       iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_MUTATE_STORAGE', action: 'clear', store: 'local' }, '*');
       iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_MUTATE_STORAGE', action: 'clear', store: 'session' }, '*');
     }
+  });
+
+  // =========================================================================
+  // HTTP / API Client Dispatcher Handlers (GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS)
+  // =========================================================================
+  const httpMethodSelect = document.getElementById('mv-http-method');
+  const httpUrlInput = document.getElementById('mv-http-url');
+  const httpSendBtn = document.getElementById('mv-http-send-btn');
+  const httpSubtabs = document.querySelectorAll('.mv-http-subtab');
+  const httpTabPanes = document.querySelectorAll('.mv-http-tab-pane');
+  const httpBodyInput = document.getElementById('mv-http-body');
+  const httpHeadersInput = document.getElementById('mv-http-headers');
+  const httpRespStatusEl = document.getElementById('mv-http-resp-status');
+  const httpRespTimeEl = document.getElementById('mv-http-resp-time');
+  const httpRespBodyEl = document.getElementById('mv-http-resp-body');
+  const httpSampleJsonBtn = document.getElementById('mv-http-sample-json');
+  const httpPresetAuthBtn = document.getElementById('mv-http-preset-auth');
+  const httpCopyRespBtn = document.getElementById('mv-http-copy-resp-btn');
+
+  // Subtab switching
+  httpSubtabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      httpSubtabs.forEach(t => t.classList.remove('mv-subtab-active'));
+      httpTabPanes.forEach(p => p.classList.remove('mv-pane-active'));
+      tab.classList.add('mv-subtab-active');
+      const paneId = tab.getAttribute('data-pane');
+      const pane = document.getElementById(paneId);
+      if (pane) pane.classList.add('mv-pane-active');
+    });
+  });
+
+  // Color-coded method selector
+  const METHOD_COLORS = {
+    GET: '#4ade80',
+    POST: '#f59e0b',
+    PUT: '#38bdf8',
+    DELETE: '#f87171',
+    PATCH: '#c084fc',
+    HEAD: '#2dd4bf',
+    OPTIONS: '#94a3b8'
+  };
+
+  httpMethodSelect?.addEventListener('change', (e) => {
+    const val = e.target.value;
+    httpMethodSelect.style.color = METHOD_COLORS[val] || '#4ade80';
+  });
+
+  httpSampleJsonBtn?.addEventListener('click', () => {
+    if (httpBodyInput) {
+      httpBodyInput.value = JSON.stringify({
+        email: "tester@example.com",
+        role: "admin",
+        timestamp: new Date().toISOString()
+      }, null, 2);
+    }
+  });
+
+  httpPresetAuthBtn?.addEventListener('click', () => {
+    if (httpHeadersInput) {
+      const current = httpHeadersInput.value.trim();
+      const authHeader = 'Authorization: Bearer YOUR_ACCESS_TOKEN';
+      httpHeadersInput.value = current ? `${current}\n${authHeader}` : authHeader;
+    }
+  });
+
+  httpCopyRespBtn?.addEventListener('click', () => {
+    if (!httpRespBodyEl) return;
+    navigator.clipboard.writeText(httpRespBodyEl.textContent || '');
+    const originalText = httpCopyRespBtn.textContent;
+    httpCopyRespBtn.textContent = 'Copied!';
+    setTimeout(() => { httpCopyRespBtn.textContent = originalText; }, 1500);
+  });
+
+  // Send HTTP Request
+  httpSendBtn?.addEventListener('click', async () => {
+    const method = (httpMethodSelect?.value || 'GET').toUpperCase();
+    let url = (httpUrlInput?.value || '').trim();
+
+    if (!url) {
+      if (activeLoadedUrl) {
+        url = activeLoadedUrl;
+      } else {
+        url = 'https://httpbin.org/anything';
+      }
+      if (httpUrlInput) httpUrlInput.value = url;
+    }
+
+    // Resolve relative URLs to active iframe origin
+    if (url.startsWith('/')) {
+      try {
+        const origin = new URL(activeLoadedUrl || 'https://www.google.com').origin;
+        url = origin + url;
+      } catch (e) {}
+    }
+
+    // Parse custom headers
+    const customHeaders = {};
+    if (httpHeadersInput && httpHeadersInput.value.trim()) {
+      const lines = httpHeadersInput.value.trim().split('\n');
+      lines.forEach((line) => {
+        const parts = line.split(':');
+        if (parts.length >= 2) {
+          const key = parts[0].trim();
+          const val = parts.slice(1).join(':').trim();
+          if (key) customHeaders[key] = val;
+        }
+      });
+    }
+
+    const body = httpBodyInput?.value || '';
+
+    // Switch to Response tab
+    httpSubtabs.forEach(t => t.classList.remove('mv-subtab-active'));
+    httpTabPanes.forEach(p => p.classList.remove('mv-pane-active'));
+    const respTab = document.querySelector('.mv-http-subtab[data-pane="http-pane-response"]');
+    const respPane = document.getElementById('http-pane-response');
+    if (respTab) respTab.classList.add('mv-subtab-active');
+    if (respPane) respPane.classList.add('mv-pane-active');
+
+    if (httpRespStatusEl) {
+      httpRespStatusEl.textContent = 'Sending...';
+      httpRespStatusEl.className = 'mv-badge-pill mv-badge-cyan';
+    }
+    if (httpRespBodyEl) httpRespBodyEl.textContent = 'Executing request...';
+
+    // Dispatch via in-frame execution context
+    let sentToIframe = false;
+    try {
+      if (iframeEl && iframeEl.contentWindow) {
+        iframeEl.contentWindow.postMessage({
+          type: 'MOBILEVIEW_DISPATCH_HTTP',
+          data: { method, url, headers: customHeaders, body }
+        }, '*');
+        sentToIframe = true;
+      }
+    } catch (e) {}
+
+    // Fallback: direct fetch if iframe doesn't respond in 1500ms
+    setTimeout(async () => {
+      if (httpRespStatusEl && httpRespStatusEl.textContent === 'Sending...') {
+        const startTime = performance.now();
+        try {
+          const fetchOpts = { method, headers: customHeaders };
+          if (body && !['GET', 'HEAD'].includes(method)) fetchOpts.body = body;
+          const res = await fetch(url, fetchOpts);
+          const duration = Math.round(performance.now() - startTime);
+          const text = await res.text();
+          if (httpRespStatusEl) {
+            httpRespStatusEl.textContent = `Status: ${res.status} ${res.statusText}`;
+            httpRespStatusEl.className = res.ok ? 'mv-badge-pill mv-badge-green' : 'mv-badge-pill mv-badge-red';
+          }
+          if (httpRespTimeEl) httpRespTimeEl.textContent = `${duration} ms`;
+          if (httpRespBodyEl) httpRespBodyEl.textContent = formatJsonSafe(text);
+        } catch (err) {
+          if (httpRespStatusEl) {
+            httpRespStatusEl.textContent = 'Status: CORS / Network Error';
+            httpRespStatusEl.className = 'mv-badge-pill mv-badge-red';
+          }
+          if (httpRespBodyEl) httpRespBodyEl.textContent = String(err.message || err);
+        }
+      }
+    }, 1500);
   });
 
   // Network Profile Change Handler

@@ -545,6 +545,63 @@
               </div>
             </div>
 
+            <!-- Interactive HTTP / API Request Client (POST, GET, DELETE, PUT, PATCH, HEAD, OPTIONS) -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">HTTP & API Request Dispatcher</label>
+              
+              <!-- Method + URL Input Bar -->
+              <div class="mv-http-url-bar">
+                <select class="mv-http-method-select" id="mv-http-method">
+                  <option value="GET" style="color: #4ade80;">GET</option>
+                  <option value="POST" style="color: #f59e0b;">POST</option>
+                  <option value="PUT" style="color: #38bdf8;">PUT</option>
+                  <option value="DELETE" style="color: #f87171;">DELETE</option>
+                  <option value="PATCH" style="color: #c084fc;">PATCH</option>
+                  <option value="HEAD" style="color: #2dd4bf;">HEAD</option>
+                  <option value="OPTIONS" style="color: #94a3b8;">OPTIONS</option>
+                </select>
+                <input type="text" class="mv-http-url-input" id="mv-http-url" placeholder="/api/endpoint or https://..." spellcheck="false" autocomplete="off" />
+                <button class="mv-btn mv-btn-primary" id="mv-http-send-btn" style="padding: 6px 12px; font-weight: bold;">Send</button>
+              </div>
+
+              <!-- Request Subtabs: Body | Headers | Response -->
+              <div class="mv-net-subtabs" style="margin-top: 6px;">
+                <button class="mv-http-subtab mv-subtab-active" data-pane="http-pane-body">Body</button>
+                <button class="mv-http-subtab" data-pane="http-pane-headers">Headers</button>
+                <button class="mv-http-subtab" data-pane="http-pane-response">Response</button>
+              </div>
+
+              <!-- Pane 1: Request Body -->
+              <div class="mv-http-tab-pane mv-pane-active" id="http-pane-body">
+                <div class="mv-net-pane-toolbar">
+                  <span class="mv-net-pane-title">JSON / Raw Body</span>
+                  <button class="mv-chip" id="mv-http-sample-json" style="padding: 2px 6px; font-size: 9px;">Preset JSON</button>
+                </div>
+                <textarea class="mv-http-body-textarea" id="mv-http-body" placeholder='{\n  "username": "admin@gmail.com",\n  "status": "active"\n}' spellcheck="false"></textarea>
+              </div>
+
+              <!-- Pane 2: Custom Headers -->
+              <div class="mv-http-tab-pane" id="http-pane-headers">
+                <div class="mv-net-pane-toolbar">
+                  <span class="mv-net-pane-title">Request Headers (Key: Value)</span>
+                  <button class="mv-chip" id="mv-http-preset-auth" style="padding: 2px 6px; font-size: 9px;">+ Auth Header</button>
+                </div>
+                <textarea class="mv-http-body-textarea" id="mv-http-headers" placeholder="Content-Type: application/json&#10;Authorization: Bearer my_token" spellcheck="false"></textarea>
+              </div>
+
+              <!-- Pane 3: Response View -->
+              <div class="mv-http-tab-pane" id="http-pane-response">
+                <div class="mv-net-pane-toolbar">
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    <span class="mv-badge-pill mv-badge-green" id="mv-http-resp-status">Status: Ready</span>
+                    <span class="mv-badge-pill mv-badge-cyan" id="mv-http-resp-time">0 ms</span>
+                  </div>
+                  <button class="mv-net-copy-btn" id="mv-http-copy-resp-btn">Copy</button>
+                </div>
+                <div class="mv-net-code-box" id="mv-http-resp-body" style="max-height: 120px;">Dispatch a request to inspect response</div>
+              </div>
+            </div>
+
             <!-- Quick Injection Payloads for Testing -->
             <div class="mv-control-group">
               <label class="mv-control-label">Inject Pentest Payload</label>

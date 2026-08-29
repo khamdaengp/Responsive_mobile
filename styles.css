@@ -1736,5 +1736,105 @@
   margin-top: 4px;
 }
 
+/* ==========================================================================
+   HTTP / REST API Client Tool Styles
+   ========================================================================== */
+.mv-http-url-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.mv-http-method-select {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #4ade80;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 6px 8px;
+  outline: none;
+  font-family: monospace;
+  cursor: pointer;
+}
+
+.mv-http-url-input {
+  flex: 1;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 11px;
+  color: #f8fafc;
+  outline: none;
+  font-family: monospace;
+}
+
+.mv-http-url-input:focus {
+  border-color: #6366f1;
+}
+
+.mv-http-tab-pane {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.mv-http-tab-pane.mv-pane-active {
+  display: flex;
+}
+
+.mv-http-subtab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 4px 6px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  text-align: center;
+}
+
+.mv-http-subtab:hover {
+  color: #ffffff;
+}
+
+.mv-http-subtab.mv-subtab-active {
+  background: #6366f1;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.35);
+}
+
+.mv-http-body-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-family: monospace;
+  font-size: 10px;
+  color: #a5f3fc;
+  height: 75px;
+  resize: vertical;
+  outline: none;
+  scrollbar-width: none !important;
+}
+
+.mv-http-body-textarea::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
+.mv-http-body-textarea:focus {
+  border-color: #6366f1;
+}
+
+
 
 

@@ -426,5 +426,62 @@
     if (e.data.type === 'MOBILEVIEW_REQUEST_STORAGE') {
       collectStorage();
     }
+
+    // Custom HTTP Method Dispatcher (GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS)
+    if (e.data.type === 'MOBILEVIEW_DISPATCH_HTTP' && e.data.data) {
+      (async () => {
+        const { method, url, headers, body } = e.data.data;
+        const startTime = performance.now();
+        try {
+          const fetchOpts = {
+            method: (method || 'GET').toUpperCase(),
+            headers: headers || {}
+          };
+          if (body && !['GET', 'HEAD'].includes(fetchOpts.method)) {
+            fetchOpts.body = body;
+          }
+          const res = await window.fetch(url, fetchOpts);
+          const duration = Math.round(performance.now() - startTime);
+
+          const responseHeaders = {};
+          if (res.headers) {
+            res.headers.forEach((v, k) => { responseHeaders[k] = v; });
+          }
+
+          let responseBody = '';
+          try {
+            const clone = res.clone();
+            responseBody = await clone.text();
+            if (responseBody.length > 50000) responseBody = responseBody.substring(0, 50000) + '... [Truncated]';
+          } catch (e) {
+            responseBody = '[Binary or Streamed Response]';
+          }
+
+          window.parent.postMessage({
+            type: 'MOBILEVIEW_HTTP_DISPATCH_RESULT',
+            data: {
+              status: res.status,
+              statusText: res.statusText || 'OK',
+              duration: duration,
+              responseHeaders: responseHeaders,
+              responseBody: responseBody
+            }
+          }, '*');
+        } catch (err) {
+          const duration = Math.round(performance.now() - startTime);
+          window.parent.postMessage({
+            type: 'MOBILEVIEW_HTTP_DISPATCH_RESULT',
+            data: {
+              status: 0,
+              statusText: 'Network / CORS Error',
+              duration: duration,
+              responseHeaders: {},
+              responseBody: String(err.message || err)
+            }
+          }, '*');
+        }
+      })();
+    }
   });
 })();
+
