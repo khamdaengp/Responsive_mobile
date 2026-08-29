@@ -204,7 +204,7 @@
     clockEl.textContent = `${hours}:${formattedMinutes}`;
   }
 
-  // Auto-resize the actual Chrome window to fit device + dock snugly with 0-5px margin
+  // Auto-resize the actual Chrome window to fit device + dock snugly with exact 0px margin
   async function fitWindowToDevice() {
     try {
       const device = DEVICE_PRESETS[currentDeviceId] || DEVICE_PRESETS['iphone-16-pro'];
@@ -219,12 +219,12 @@
       const osChromeHeight = Math.max(0, window.outerHeight - window.innerHeight) || 39;
 
       // Give a maximum cap based on user's actual screen resolution
-      const maxAllowedWidth = screen.availWidth - 10;
-      const maxAllowedHeight = screen.availHeight - 10;
+      const maxAllowedWidth = screen.availWidth;
+      const maxAllowedHeight = screen.availHeight;
 
-      // Set target to fit with 4px total margin (2px each side, within 0-5px)
-      const targetWidth = Math.min(maxAllowedWidth, frameTotalWidth + extraDockWidth + 4 + osChromeWidth);
-      const targetHeight = Math.min(maxAllowedHeight, frameTotalHeight + 4 + osChromeHeight);
+      // Set target to fit with exact 0px margin
+      const targetWidth = Math.min(maxAllowedWidth, frameTotalWidth + extraDockWidth + osChromeWidth);
+      const targetHeight = Math.min(maxAllowedHeight, frameTotalHeight + osChromeHeight);
 
       const currentWin = await chrome.windows.getCurrent();
       if (currentWin && currentWin.id) {
@@ -273,11 +273,11 @@
     const frameTotalHeight = deviceHeight + 20;
 
     const occupiedDockWidth = isDockMinimized ? 0 : 330;
-    const paddingX = isDockMinimized ? 4 : 12;
-    const paddingY = 4; // 2px top, 2px bottom margin (0-5px)
+    const paddingX = isDockMinimized ? 0 : 10;
+    const paddingY = 0; // Exact 0px margin
 
     const availWidth = Math.max(10, window.innerWidth - occupiedDockWidth - paddingX);
-    const availHeight = Math.max(10, window.innerHeight - paddingY);
+    const availHeight = window.innerHeight;
 
     let scale = 1;
     if (currentZoomMode === 'auto') {

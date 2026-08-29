@@ -3,8 +3,8 @@
    ========================================================================== */
 
 body.mv-popout-body {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   background-color: #ffffff;
   width: 100vw;
   height: 100vh;
@@ -23,7 +23,7 @@ body.mv-popout-body .mv-workspace {
   visibility: visible !important;
   padding: 0 !important;
   margin: 0 !important;
-  gap: 10px !important;
+  gap: 0 !important;
   width: 100vw;
   height: 100vh;
   box-sizing: border-box;
@@ -35,20 +35,20 @@ body.mv-popout-body .mv-workspace {
 }
 
 body.mv-popout-body .mv-stage-container {
-  margin: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   transform-origin: top center;
   flex-shrink: 0;
-  transition: transform 0.15s ease-out;
+  transition: transform 0.12s ease-out;
 }
 
 body.mv-popout-body .mv-controls-dock:not(.mv-minimized) {
   margin-top: auto;
   margin-bottom: auto;
   align-self: center;
-  margin-right: 8px;
 }
 
 body.mv-popout-body .mv-side-buttons {
@@ -56,5 +56,5 @@ body.mv-popout-body .mv-side-buttons {
 }
 
 body.mv-popout-body .mv-device-frame {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.06) !important;
 }
