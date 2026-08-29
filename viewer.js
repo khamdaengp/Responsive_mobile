@@ -204,27 +204,31 @@
     clockEl.textContent = `${hours}:${formattedMinutes}`;
   }
 
-  // Auto-resize the actual Chrome window to fit device + dock snugly
+  // Auto-resize the actual Chrome window to fit device + dock snugly with 0 wasted margin
   async function fitWindowToDevice() {
     try {
       const device = DEVICE_PRESETS[currentDeviceId] || DEVICE_PRESETS['iphone-16-pro'];
       const devW = isLandscape ? device.height : device.width;
       const devH = isLandscape ? device.width : device.height;
-      const extraDockWidth = isDockMinimized ? 0 : 340;
+      const frameTotalWidth = devW + 20; // 10px border on each side
+      const frameTotalHeight = devH + 20;
+      const extraDockWidth = isDockMinimized ? 0 : 330;
 
-      const targetWidth = Math.min(screen.availWidth, devW + extraDockWidth + 48);
-      const targetHeight = Math.min(screen.availHeight, devH + 90);
+      // Detect OS window border overhead
+      const osChromeWidth = Math.max(0, window.outerWidth - window.innerWidth) || 16;
+      const osChromeHeight = Math.max(0, window.outerHeight - window.innerHeight) || 39;
+
+      const targetWidth = Math.min(screen.availWidth, frameTotalWidth + extraDockWidth + osChromeWidth);
+      const targetHeight = Math.min(screen.availHeight, frameTotalHeight + osChromeHeight);
 
       const currentWin = await chrome.windows.getCurrent();
       if (currentWin && currentWin.id) {
         await chrome.windows.update(currentWin.id, {
-          width: targetWidth,
-          height: targetHeight
+          width: Math.round(targetWidth),
+          height: Math.round(targetHeight)
         });
       }
-    } catch (e) {
-      // ignore
-    }
+    } catch (e) {}
   }
 
   // Calculate Layout & Scaling
@@ -260,21 +264,23 @@
   }
 
   function calculateScale(deviceWidth, deviceHeight) {
-    const occupiedDockWidth = isDockMinimized ? 0 : 340;
-    const availWidth = window.innerWidth - occupiedDockWidth - 16;
-    const availHeight = window.innerHeight - 16;
+    const frameTotalWidth = deviceWidth + 20;
+    const frameTotalHeight = deviceHeight + 20;
+
+    const occupiedDockWidth = isDockMinimized ? 0 : 330;
+    const availWidth = Math.max(10, window.innerWidth - occupiedDockWidth);
+    const availHeight = window.innerHeight;
 
     let scale = 1;
     if (currentZoomMode === 'auto') {
-      const scaleX = availWidth / (deviceWidth + 24);
-      const scaleY = availHeight / (deviceHeight + 24);
-      scale = Math.min(1.0, scaleX, scaleY);
-      scale = Math.max(0.35, scale);
+      const scaleX = availWidth / frameTotalWidth;
+      const scaleY = availHeight / frameTotalHeight;
+      scale = Math.min(scaleX, scaleY);
     } else {
       scale = parseInt(currentZoomMode, 10) / 100;
     }
 
-    stageEl.style.transform = `scale(${scale.toFixed(3)})`;
+    stageEl.style.transform = `scale(${scale.toFixed(4)})`;
   }
 
   // Load URL

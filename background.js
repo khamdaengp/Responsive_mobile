@@ -105,9 +105,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const devW = landscape ? dims.h : dims.w;
         const devH = landscape ? dims.w : dims.h;
 
-        // Snug window size fitting the device mockup with minimal bezel/OS padding
-        const targetWidth = Math.min(1600, devW + 48);
-        const targetHeight = Math.min(1050, devH + 90);
+        // Pixel-perfect outer window size (frame = dev + 20px, OS window chrome = 16px W / 39px H)
+        const targetWidth = Math.min(1600, devW + 20 + 16);
+        const targetHeight = Math.min(1050, devH + 20 + 39);
 
         const viewerUrl = chrome.runtime.getURL(`viewer.html?url=${encodeURIComponent(url)}&device=${encodeURIComponent(deviceId)}&landscape=${landscape}`);
         
