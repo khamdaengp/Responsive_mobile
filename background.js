@@ -128,31 +128,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// Listen for clicks on the extension action icon in the toolbar
+// Listen for clicks on the extension action icon in the toolbar -> Directly Open Standalone Pop-out Window
 chrome.action.onClicked.addListener(async (tab) => {
-  if (!tab || !tab.id) return;
-
   // Ensure rules are applied
   await updateDeviceRule('iOS');
 
-  // Guard against internal browser schemes where content scripts cannot execute
-  const restrictedProtocols = [
-    'chrome:',
-    'chrome-extension:',
-    'edge:',
-    'devtools:',
-    'about:',
-    'view-source:'
-  ];
+  let targetUrl = 'https://www.google.com';
+  if (tab && tab.url && !tab.url.startsWith('chrome://') && !tab.url.startsWith('edge://') && !tab.url.startsWith('about:') && !tab.url.startsWith('chrome-extension://')) {
+    targetUrl = tab.url;
+  }
 
-  if (
-    !tab.url ||
-    restrictedProtocols.some((proto) => tab.url.startsWith(proto)) ||
-    tab.url.includes('chromewebstore.google.com') ||
-    tab.url.includes('chrome.google.com/webstore')
-  ) {
-    // If clicked on an internal page, open standalone pop-out viewer directly
-    const viewerUrl = chrome.runtime.getURL('viewer.html?url=https%3A%2F%2Fwww.google.com');
+  try {
+    const viewerUrl = chrome.runtime.getURL(`viewer.html?url=${encodeURIComponent(targetUrl)}&device=iphone-16-pro&landscape=false`);
     await chrome.windows.create({
       url: viewerUrl,
       type: 'popup',
@@ -160,22 +147,7 @@ chrome.action.onClicked.addListener(async (tab) => {
       height: 960,
       focused: true
     });
-    return;
-  }
-
-  try {
-    const response = await chrome.tabs.sendMessage(tab.id, { type: 'MV_TOGGLE_OVERLAY' });
-    if (!response || !response.success) {
-      throw new Error('Content script not active');
-    }
   } catch (err) {
-    try {
-      await chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        files: ['content.js']
-      });
-    } catch (injectionError) {
-      console.error('Failed to inject Responsive Mockup content script:', injectionError);
-    }
+    console.error('[MobileView] Failed to open pop-out window on extension click:', err);
   }
 });
