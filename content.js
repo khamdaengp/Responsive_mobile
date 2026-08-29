@@ -471,20 +471,27 @@
   }
 
   function calculateScale(deviceWidth, deviceHeight) {
+    const frameTotalWidth = deviceWidth + 24;
+    const frameTotalHeight = deviceHeight + 24;
+
     const availWidth = window.innerWidth - (isDockMinimized ? 90 : 410); // Reserve room for dock and padding
-    const availHeight = window.innerHeight - 80;
+    const availHeight = window.innerHeight - 60;
 
     let scale = 1;
     if (currentZoomMode === 'auto') {
-      const scaleX = availWidth / (deviceWidth + 24);
-      const scaleY = availHeight / (deviceHeight + 24);
+      const scaleX = availWidth / frameTotalWidth;
+      const scaleY = availHeight / frameTotalHeight;
       scale = Math.min(1.0, scaleX, scaleY);
       scale = Math.max(0.25, scale);
     } else {
       scale = parseInt(currentZoomMode, 10) / 100;
     }
 
-    stageEl.style.transform = `scale(${scale.toFixed(3)})`;
+    const scaledHeight = frameTotalHeight * scale;
+    const topOffset = Math.max(10, (window.innerHeight - scaledHeight) / 2);
+
+    stageEl.style.transformOrigin = 'top center';
+    stageEl.style.transform = `translateY(${topOffset.toFixed(1)}px) scale(${scale.toFixed(4)})`;
   }
 
   // Navigate to Target URL

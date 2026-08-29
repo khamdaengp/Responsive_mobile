@@ -273,7 +273,7 @@
 
     const occupiedDockWidth = isDockMinimized ? 0 : 340;
     const paddingX = isDockMinimized ? 24 : 40;
-    const paddingY = 28; // Ensures 14px top and bottom safety margin
+    const paddingY = 24; // 12px top, 12px bottom margin
 
     const availWidth = Math.max(100, window.innerWidth - occupiedDockWidth - paddingX);
     const availHeight = Math.max(100, window.innerHeight - paddingY);
@@ -288,7 +288,11 @@
       scale = parseInt(currentZoomMode, 10) / 100;
     }
 
-    stageEl.style.transform = `scale(${scale.toFixed(4)})`;
+    const scaledHeight = frameTotalHeight * scale;
+    const topOffset = Math.max(8, (window.innerHeight - scaledHeight) / 2);
+
+    stageEl.style.transformOrigin = 'top center';
+    stageEl.style.transform = `translateY(${topOffset.toFixed(1)}px) scale(${scale.toFixed(4)})`;
   }
 
   // Load URL
