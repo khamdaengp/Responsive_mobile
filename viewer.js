@@ -280,19 +280,73 @@
     });
   }
 
-  // Toggle Minimize to Bubble
+  // Draggable Floating Bubble & Toggle Minimization
+  let isDraggingBubble = false;
+  let hasDragged = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let initialBubbleLeft = 0;
+  let initialBubbleTop = 0;
+
   function toggleDockMinimize() {
     isDockMinimized = !isDockMinimized;
     if (isDockMinimized) {
       dockEl.classList.add('mv-minimized');
     } else {
       dockEl.classList.remove('mv-minimized');
+      dockEl.style.left = '';
+      dockEl.style.top = '';
+      dockEl.style.right = '';
+      dockEl.style.bottom = '';
     }
     const device = DEVICE_PRESETS[currentDeviceId];
     const width = isLandscape ? device.height : device.width;
     const height = isLandscape ? device.width : device.height;
     calculateScale(width, height);
   }
+
+  // Pointer drag listeners for floating bubble
+  dockEl.addEventListener('pointerdown', (e) => {
+    if (!isDockMinimized) return;
+    isDraggingBubble = true;
+    hasDragged = false;
+    dragStartX = e.clientX;
+    dragStartY = e.clientY;
+    const rect = dockEl.getBoundingClientRect();
+    initialBubbleLeft = rect.left;
+    initialBubbleTop = rect.top;
+    try {
+      dockEl.setPointerCapture(e.pointerId);
+    } catch (err) {}
+  });
+
+  window.addEventListener('pointermove', (e) => {
+    if (!isDraggingBubble || !isDockMinimized) return;
+    const dx = e.clientX - dragStartX;
+    const dy = e.clientY - dragStartY;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+      hasDragged = true;
+      const bubbleWidth = dockEl.offsetWidth || 48;
+      const bubbleHeight = dockEl.offsetHeight || 48;
+      const newLeft = Math.max(8, Math.min(window.innerWidth - bubbleWidth - 8, initialBubbleLeft + dx));
+      const newTop = Math.max(8, Math.min(window.innerHeight - bubbleHeight - 8, initialBubbleTop + dy));
+      dockEl.style.left = `${newLeft}px`;
+      dockEl.style.top = `${newTop}px`;
+      dockEl.style.right = 'auto';
+      dockEl.style.bottom = 'auto';
+    }
+  });
+
+  window.addEventListener('pointerup', (e) => {
+    if (!isDraggingBubble || !isDockMinimized) return;
+    isDraggingBubble = false;
+    try {
+      dockEl.releasePointerCapture(e.pointerId);
+    } catch (err) {}
+    if (!hasDragged) {
+      toggleDockMinimize();
+    }
+  });
 
   // Event Listeners
   if (minimizeBtnEl) {
@@ -301,12 +355,6 @@
       toggleDockMinimize();
     });
   }
-
-  dockEl.addEventListener('click', () => {
-    if (isDockMinimized) {
-      toggleDockMinimize();
-    }
-  });
 
   iframeEl.addEventListener('load', () => {
     loadingEl.classList.remove('mv-active');

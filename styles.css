@@ -422,29 +422,35 @@
 
 /* Minimized Floating Bubble Mode */
 .mv-controls-dock.mv-minimized {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   padding: 0;
   border-radius: 50%;
   overflow: hidden;
-  cursor: pointer;
+  cursor: grab;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6), 0 0 15px rgba(139, 92, 246, 0.4);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6), 0 0 15px rgba(139, 92, 246, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 999;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999999;
+  touch-action: none;
+  user-select: none;
   animation: mv-bubble-float 3s ease-in-out infinite alternate;
 }
 
+.mv-controls-dock.mv-minimized:active {
+  cursor: grabbing;
+}
+
 .mv-controls-dock.mv-minimized:hover {
-  transform: scale(1.12);
-  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.75), 0 0 22px rgba(139, 92, 246, 0.6);
-  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.1);
+  box-shadow: 0 12px 35px rgba(99, 102, 241, 0.8), 0 0 22px rgba(139, 92, 246, 0.6);
+  border-color: rgba(255, 255, 255, 0.7);
 }
 
 .mv-controls-dock.mv-minimized .mv-dock-inner {
@@ -462,6 +468,7 @@
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  pointer-events: none;
 }
 
 .mv-bubble-view svg {
