@@ -1245,3 +1245,42 @@
 .mv-device-frame.mv-shaking {
   animation: mv-haptic-shake 0.25s ease-in-out;
 }
+
+/* Network Telemetry & Traffic Stream Styles */
+.mv-network-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+  display: inline-block;
+  margin-right: 4px;
+  animation: mv-pulse-dot 2s infinite ease-in-out;
+}
+
+.mv-network-status-dot.mv-offline {
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+  animation: none;
+}
+
+@keyframes mv-pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.6; }
+}
+
+.mv-net-stream {
+  background: #090d16;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-family: monospace;
+  font-size: 10px;
+  color: #94a3b8;
+  height: 75px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+

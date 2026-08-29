@@ -270,6 +270,63 @@
                 </button>
               </div>
             </div>
+
+            <!-- Network Profile & Throttling -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Network Profile & Throttling</label>
+              <div class="mv-select-wrapper">
+                <select class="mv-device-select" id="mv-network-select">
+                  <option value="online">🚀 Online (No Throttling)</option>
+                  <option value="fast4g">⚡ Fast 4G / 5G (25 Mbps · 20ms)</option>
+                  <option value="slow4g">📱 Slow 4G / LTE (10 Mbps · 50ms)</option>
+                  <option value="fast3g">🐢 Fast 3G (1.6 Mbps · 150ms)</option>
+                  <option value="slow3g">🐌 Slow 3G (400 Kbps · 400ms)</option>
+                  <option value="offline">🚫 Offline (Disconnected)</option>
+                </select>
+                <span class="mv-select-arrow">
+                  <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </span>
+              </div>
+            </div>
+
+            <!-- Live Network Telemetry -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Network Telemetry</label>
+              <div class="mv-security-card">
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">Network Status:</span>
+                  <span class="mv-badge-pill mv-badge-green" id="mv-net-status">
+                    <span class="mv-network-status-dot" id="mv-net-dot"></span>
+                    <span id="mv-net-status-text">Online (Active)</span>
+                  </span>
+                </div>
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">Downlink Bandwidth:</span>
+                  <span class="mv-badge-pill mv-badge-cyan" id="mv-net-speed">~10 Mbps</span>
+                </div>
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">Round Trip Latency (RTT):</span>
+                  <span class="mv-badge-pill mv-badge-cyan" id="mv-net-rtt">~35 ms</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Network Activity Stream -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Live Network Activity Stream</label>
+              <div class="mv-net-stream" id="mv-net-stream">
+                <div class="mv-log-entry">
+                  <span class="mv-log-time">00:00</span>
+                  <span class="mv-log-tag-pass">[GET]</span>
+                  <span>HTTP/2 200 OK — Main Document</span>
+                </div>
+                <div class="mv-log-entry">
+                  <span class="mv-log-time">00:00</span>
+                  <span class="mv-log-tag-info">[FETCH]</span>
+                  <span>Scripts & Stylesheets cached</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- TAB 3: PENTEST & SECURITY -->

@@ -180,6 +180,72 @@
   const encodeB64Btn = document.getElementById('mv-encode-b64-btn');
   const encoderOut = document.getElementById('mv-encoder-out');
 
+  // Network Elements
+  const networkSelectEl = document.getElementById('mv-network-select');
+  const netStatusTextEl = document.getElementById('mv-net-status-text');
+  const netDotEl = document.getElementById('mv-net-dot');
+  const netSpeedEl = document.getElementById('mv-net-speed');
+  const netRttEl = document.getElementById('mv-net-rtt');
+  const netStreamEl = document.getElementById('mv-net-stream');
+
+  // Network Profiles Definition
+  const NETWORK_PROFILES = {
+    online: { name: 'Online (Full Speed)', speed: '~25 Mbps', rtt: '15 ms', throttleMs: 0, offline: false },
+    fast4g: { name: 'Fast 4G / 5G', speed: '~25 Mbps', rtt: '20 ms', throttleMs: 80, offline: false },
+    slow4g: { name: 'Slow 4G / LTE', speed: '~10 Mbps', rtt: '50 ms', throttleMs: 180, offline: false },
+    fast3g: { name: 'Fast 3G', speed: '~1.6 Mbps', rtt: '150 ms', throttleMs: 400, offline: false },
+    slow3g: { name: 'Slow 3G', speed: '~400 Kbps', rtt: '400 ms', throttleMs: 900, offline: false },
+    offline: { name: 'Offline (No Connection)', speed: '0 Kbps', rtt: '∞ ms', throttleMs: 0, offline: true }
+  };
+
+  let activeNetProfile = 'online';
+
+  // Live Network Stream Logger
+  function logNetworkEvent(method, message, type = 'info') {
+    if (!netStreamEl) return;
+    const now = new Date();
+    const timeStr = now.toTimeString().split(' ')[0];
+    const tagClass = type === 'pass' ? 'mv-log-tag-pass' : type === 'warn' ? 'mv-log-tag-warn' : 'mv-log-tag-info';
+    
+    const entry = document.createElement('div');
+    entry.className = 'mv-log-entry';
+    entry.innerHTML = `
+      <span class="mv-log-time">${timeStr}</span>
+      <span class="${tagClass}">[${method}]</span>
+      <span>${message}</span>
+    `;
+    netStreamEl.appendChild(entry);
+    netStreamEl.scrollTop = netStreamEl.scrollHeight;
+  }
+
+  // Network Profile Change Handler
+  if (networkSelectEl) {
+    networkSelectEl.addEventListener('change', (e) => {
+      activeNetProfile = e.target.value;
+      const prof = NETWORK_PROFILES[activeNetProfile] || NETWORK_PROFILES.online;
+
+      if (prof.offline) {
+        netDotEl.classList.add('mv-offline');
+        netStatusTextEl.textContent = 'Offline (Disconnected)';
+        netSpeedEl.textContent = '0 Kbps';
+        netRttEl.textContent = '∞ ms';
+        iframeEl.src = 'about:blank';
+        logNetworkEvent('NET', 'Simulated Network Disconnected (Offline)', 'warn');
+        logSecurityEvent('OFFLINE', 'Network throttler severed connectivity', 'warn');
+      } else {
+        netDotEl.classList.remove('mv-offline');
+        netStatusTextEl.textContent = `${prof.name} Active`;
+        netSpeedEl.textContent = prof.speed;
+        netRttEl.textContent = prof.rtt;
+        logNetworkEvent('THROTTLE', `Profile changed to ${prof.name}`, 'pass');
+        logSecurityEvent('NET', `Throttling set to ${prof.name}`, 'info');
+        if (iframeEl.src === 'about:blank' || !iframeEl.src) {
+          reloadIframe();
+        }
+      }
+    });
+  }
+
   // Security Console Logging
   function logSecurityEvent(tag, message, type = 'info') {
     if (!secConsoleEl) return;
@@ -414,15 +480,25 @@
 
     loadingEl.classList.add('mv-active');
     logSecurityEvent('LOAD', `Navigating to ${cleanUrl.substring(0, 36)}...`, 'info');
+    logNetworkEvent('GET', `${cleanUrl.substring(0, 32)} — Fetching Document`, 'info');
+
+    const prof = NETWORK_PROFILES[activeNetProfile] || NETWORK_PROFILES.online;
+    const throttleDelay = prof.throttleMs || 0;
 
     if (loadTimeout) clearTimeout(loadTimeout);
     loadTimeout = setTimeout(() => {
       loadingEl.classList.remove('mv-active');
       if (perfStatusEl) perfStatusEl.textContent = '200 OK (Streamed)';
       if (perfTimeEl) perfTimeEl.textContent = `${Math.round(performance.now() - loadStartTime)} ms`;
-    }, 3500);
+    }, 3500 + throttleDelay);
 
-    iframeEl.src = cleanUrl;
+    if (throttleDelay > 0) {
+      setTimeout(() => {
+        iframeEl.src = cleanUrl;
+      }, throttleDelay);
+    } else {
+      iframeEl.src = cleanUrl;
+    }
   }
 
   function reloadIframe() {
@@ -433,6 +509,7 @@
     requestAnimationFrame(() => {
       iframeEl.src = currentSrc;
       logSecurityEvent('RELOAD', 'Refreshed mobile viewport', 'info');
+      logNetworkEvent('RELOAD', 'Re-fetching cache & assets', 'info');
     });
   }
 
@@ -472,6 +549,7 @@
     if (perfStatusEl) perfStatusEl.textContent = '200 OK (Complete)';
     if (perfTimeEl) perfTimeEl.textContent = `${duration} ms`;
     logSecurityEvent('HTTP', `Page rendered in ${duration}ms`, 'pass');
+    logNetworkEvent('200 OK', `DOM Assets Loaded (${duration}ms)`, 'pass');
   });
 
   urlGoBtnEl.addEventListener('click', () => {
