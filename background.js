@@ -80,20 +80,42 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
-  // Handle Pop-out to standalone window request
+  // Handle Pop-out to standalone window request with snug device fitting
   if (message && message.type === 'OPEN_POPOUT_WINDOW') {
     (async () => {
       try {
         const url = message.url || 'https://www.google.com';
-        const device = message.device || 'iphone-16-pro';
+        const deviceId = message.device || 'iphone-16-pro';
         const landscape = !!message.isLandscape;
-        const viewerUrl = chrome.runtime.getURL(`viewer.html?url=${encodeURIComponent(url)}&device=${encodeURIComponent(device)}&landscape=${landscape}`);
+
+        // Lookup device dimensions
+        const DEVICE_DIMENSIONS = {
+          'iphone-16-pro': { w: 393, h: 852 },
+          'iphone-15-max': { w: 430, h: 932 },
+          'iphone-14': { w: 390, h: 844 },
+          'iphone-se': { w: 375, h: 667 },
+          'galaxy-s24': { w: 360, h: 780 },
+          'galaxy-s24-ultra': { w: 412, h: 915 },
+          'pixel-8-pro': { w: 412, h: 915 },
+          'ipad-mini': { w: 744, h: 1133 },
+          'ipad-air': { w: 820, h: 1180 }
+        };
+
+        const dims = DEVICE_DIMENSIONS[deviceId] || { w: 393, h: 852 };
+        const devW = landscape ? dims.h : dims.w;
+        const devH = landscape ? dims.w : dims.h;
+
+        // Snug window size fitting the device mockup with minimal bezel/OS padding
+        const targetWidth = Math.min(1600, devW + 48);
+        const targetHeight = Math.min(1050, devH + 90);
+
+        const viewerUrl = chrome.runtime.getURL(`viewer.html?url=${encodeURIComponent(url)}&device=${encodeURIComponent(deviceId)}&landscape=${landscape}`);
         
         await chrome.windows.create({
           url: viewerUrl,
           type: 'popup',
-          width: landscape ? 1150 : 850,
-          height: landscape ? 700 : 960,
+          width: targetWidth,
+          height: targetHeight,
           focused: true
         });
         sendResponse({ success: true });

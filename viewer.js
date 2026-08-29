@@ -98,7 +98,7 @@
   let currentDeviceId = DEVICE_PRESETS[initialDevice] ? initialDevice : 'iphone-16-pro';
   let isLandscape = initialLandscape;
   let currentZoomMode = 'auto';
-  let isDockMinimized = false;
+  let isDockMinimized = true; // Start in clean bubble mode in standalone window
   let activeLoadedUrl = initialUrl;
   let loadTimeout = null;
 
@@ -204,6 +204,29 @@
     clockEl.textContent = `${hours}:${formattedMinutes}`;
   }
 
+  // Auto-resize the actual Chrome window to fit device + dock snugly
+  async function fitWindowToDevice() {
+    try {
+      const device = DEVICE_PRESETS[currentDeviceId] || DEVICE_PRESETS['iphone-16-pro'];
+      const devW = isLandscape ? device.height : device.width;
+      const devH = isLandscape ? device.width : device.height;
+      const extraDockWidth = isDockMinimized ? 0 : 340;
+
+      const targetWidth = Math.min(screen.availWidth, devW + extraDockWidth + 48);
+      const targetHeight = Math.min(screen.availHeight, devH + 90);
+
+      const currentWin = await chrome.windows.getCurrent();
+      if (currentWin && currentWin.id) {
+        await chrome.windows.update(currentWin.id, {
+          width: targetWidth,
+          height: targetHeight
+        });
+      }
+    } catch (e) {
+      // ignore
+    }
+  }
+
   // Calculate Layout & Scaling
   function applyDeviceLayout() {
     const device = DEVICE_PRESETS[currentDeviceId] || DEVICE_PRESETS['iphone-16-pro'];
@@ -233,17 +256,19 @@
     } catch (e) {}
 
     calculateScale(width, height);
+    fitWindowToDevice();
   }
 
   function calculateScale(deviceWidth, deviceHeight) {
-    const availWidth = window.innerWidth - (isDockMinimized ? 60 : 380);
-    const availHeight = window.innerHeight - 50;
+    const occupiedDockWidth = isDockMinimized ? 0 : 340;
+    const availWidth = window.innerWidth - occupiedDockWidth - 16;
+    const availHeight = window.innerHeight - 16;
 
     let scale = 1;
     if (currentZoomMode === 'auto') {
       const scaleX = availWidth / (deviceWidth + 24);
       const scaleY = availHeight / (deviceHeight + 24);
-      scale = Math.min(1, scaleX, scaleY);
+      scale = Math.min(1.0, scaleX, scaleY);
       scale = Math.max(0.35, scale);
     } else {
       scale = parseInt(currentZoomMode, 10) / 100;
@@ -292,6 +317,7 @@
     const width = isLandscape ? device.height : device.width;
     const height = isLandscape ? device.width : device.height;
     calculateScale(width, height);
+    fitWindowToDevice();
   }
 
   // Event Listeners
@@ -398,6 +424,7 @@
   });
 
   // Init
+  dockEl.classList.add('mv-minimized');
   updateClock();
   setInterval(updateClock, 10000);
   applyDeviceLayout();
