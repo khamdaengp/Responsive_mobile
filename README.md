@@ -41,6 +41,19 @@ A modern, high-performance **Manifest V3 Chrome Extension** that allows develope
   - **Android Flagships**: Samsung Galaxy S24 / S23, Samsung Galaxy S24 Ultra, Google Pixel 8 Pro / 7
   - **Tablets**: iPad Mini (6th Gen), iPad Air / Pro 11"
 
+- **🛡️ Pen-Tester & Security Suite**:
+  - **Security Header Inspector**: Monitor active framing bypass status (`X-Frame-Options`, `CSP frame-ancestors`, `Sec-Fetch`).
+  - **Quick Injection Payloads**: One-click inject XSS, SQLi, SSTI, and path traversal test probes into URL query parameters.
+  - **Protocol Switcher**: One-click toggle between `HTTP` and `HTTPS`.
+  - **Storage & Session Reset**: One-click cache and session clear for clean authentication testing.
+
+- **🧪 QA Tester & Developer Tools**:
+  - **Custom Resolution (W × H)**: Define any arbitrary screen dimensions (e.g. `375 × 667`, `414 × 896`).
+  - **Pixel Grid & Ruler Overlay**: 20px precision alignment grid for checking responsive UI boundaries.
+  - **Simulated Touch Cursor**: Realistic circular touch indicator with touch feedback on click/drag.
+  - **Dark / Light Color Scheme Emulation**: Test `prefers-color-scheme: dark` vs `light`.
+  - **Snapshot & Export**: Instant high-res export of the mobile viewport.
+
 - **🛡️ 100% Shadow DOM CSS Encapsulation**:
   - Completely isolated from host webpage styles to ensure zero CSS conflicts with Bootstrap, Tailwind, or global resets.
   - Hidden desktop scrollbars with smooth touch and wheel scrolling for an authentic native mobile app feel.

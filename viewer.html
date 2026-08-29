@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MobileView — Standalone Pop-out Window</title>
+  <meta name="theme-color" content="#ffffff">
+  <title>MobileView</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="viewer.css">
 </head>
@@ -45,7 +46,9 @@
             </div>
 
             <!-- Iframe Viewport Container -->
-            <div class="mv-iframe-container">
+            <div class="mv-iframe-container" id="mv-iframe-box">
+              <div class="mv-grid-overlay" id="mv-grid-overlay"></div>
+              <div class="mv-touch-cursor" id="mv-touch-cursor"></div>
               <iframe 
                 class="mv-device-iframe" 
                 id="mv-iframe" 
@@ -82,8 +85,8 @@
               <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
             </div>
             <div>
-              <div class="mv-dock-title">MobileView</div>
-              <div class="mv-dock-subtitle">Standalone Pop-out</div>
+              <div class="mv-dock-title">MobileView Pro</div>
+              <div class="mv-dock-subtitle">Developer & Security Suite</div>
             </div>
           </div>
           <div class="mv-dock-actions">
@@ -93,70 +96,188 @@
           </div>
         </div>
 
-        <!-- Editable URL Address Bar -->
-        <div class="mv-control-group">
-          <label class="mv-control-label">Target URL</label>
-          <div class="mv-url-form">
-            <div class="mv-url-input-container">
-              <span class="mv-url-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-              </span>
-              <input 
-                type="text" 
-                class="mv-url-input" 
-                id="mv-url-input" 
-                placeholder="Enter URL (e.g. google.com, facebook.com, localhost:3000)..."
-                spellcheck="false"
-                autocomplete="off"
-              />
-              <button class="mv-url-clear-btn" id="mv-url-clear-btn" title="Clear URL">
-                <svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <!-- Navigation Tabs -->
+        <div class="mv-dock-tabs">
+          <button class="mv-tab-btn mv-tab-active" data-tab="tab-viewport">📱 Viewport</button>
+          <button class="mv-tab-btn" data-tab="tab-qa">🧪 QA Tools</button>
+          <button class="mv-tab-btn" data-tab="tab-pentest">🛡️ Pentest</button>
+        </div>
+
+        <div class="mv-tab-content">
+          <!-- TAB 1: VIEWPORT & PRESETS -->
+          <div class="mv-tab-panel mv-panel-active" id="tab-viewport">
+            <!-- Editable URL Address Bar -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Target URL</label>
+              <div class="mv-url-form">
+                <div class="mv-url-input-container">
+                  <span class="mv-url-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                  </span>
+                  <input 
+                    type="text" 
+                    class="mv-url-input" 
+                    id="mv-url-input" 
+                    placeholder="Enter URL (e.g. google.com, localhost:3000)..."
+                    spellcheck="false"
+                    autocomplete="off"
+                  />
+                  <button class="mv-url-clear-btn" id="mv-url-clear-btn" title="Clear URL">
+                    <svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  </button>
+                </div>
+                <button class="mv-url-go-btn" id="mv-url-go-btn" title="Load URL (Enter)">
+                  <svg viewBox="0 0 24 24"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7h-2z"/></svg>
+                </button>
+              </div>
+              <!-- Quick Preset Chips -->
+              <div class="mv-quick-links">
+                <button class="mv-chip" data-url="https://www.google.com">Google</button>
+                <button class="mv-chip" data-url="https://m.facebook.com">Facebook</button>
+                <button class="mv-chip" data-url="https://github.com">GitHub</button>
+                <button class="mv-chip" data-url="http://localhost:3000">Localhost:3000</button>
+              </div>
+            </div>
+
+            <!-- Device Selector -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Device Preset</label>
+              <div class="mv-select-wrapper">
+                <select class="mv-device-select" id="mv-device-select"></select>
+                <span class="mv-select-arrow">
+                  <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </span>
+              </div>
+              <div class="mv-dimension-badge" id="mv-dimension-badge">393 × 852 px</div>
+            </div>
+
+            <!-- Custom Size Resizer -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Custom Resolution (W × H)</label>
+              <div class="mv-custom-resizer">
+                <input type="number" class="mv-dimension-input" id="mv-custom-w" placeholder="Width" min="280" max="1600" value="393">
+                <span class="mv-dimension-sep">×</span>
+                <input type="number" class="mv-dimension-input" id="mv-custom-h" placeholder="Height" min="400" max="2400" value="852">
+                <button class="mv-btn" id="mv-custom-apply-btn" style="padding: 6px 12px;">Apply</button>
+              </div>
+            </div>
+
+            <!-- Orientation & Zoom Controls -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Orientation & Scale</label>
+              <div class="mv-btn-grid">
+                <button class="mv-btn" id="mv-orientation-btn" title="Toggle Portrait / Landscape (O)">
+                  <svg viewBox="0 0 24 24"><path d="M7.11 8.53L5.7 7.11C4.8 8.27 4.24 9.61 4.07 11h2.02c.14-.87.5-1.72 1.02-2.47zM6.09 13H4.07c.17 1.39.72 2.73 1.62 3.89l1.41-1.42c-.52-.75-.88-1.6-1.01-2.47zm1.01 5.32c1.16.9 2.51 1.44 3.9 1.61V17.9c-.87-.15-1.71-.49-2.46-1.03L7.1 18.32zM13 4.07V1L8.45 5.55 13 10V6.09c3.37 0 6.09 2.72 6.09 6.09s-2.72 6.09-6.09 6.09v2.02c4.49 0 8.11-3.62 8.11-8.11S17.49 4.07 13 4.07z"/></svg>
+                  <span id="mv-orientation-text">Portrait</span>
+                </button>
+                <div class="mv-select-wrapper">
+                  <select class="mv-device-select" id="mv-zoom-select" style="padding-top: 8px; padding-bottom: 8px;">
+                    <option value="auto">Auto-Fit</option>
+                    <option value="100">100%</option>
+                    <option value="85">85%</option>
+                    <option value="75">75%</option>
+                    <option value="60">60%</option>
+                  </select>
+                  <span class="mv-select-arrow">
+                    <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: QA & DEVELOPER TOOLS -->
+          <div class="mv-tab-panel" id="tab-qa">
+            <div class="mv-control-group">
+              <label class="mv-control-label">Layout & Visual Testing</label>
+              <div class="mv-btn-grid">
+                <button class="mv-btn" id="mv-grid-btn" title="Toggle 20px Grid Ruler Overlay">
+                  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>
+                  <span>Grid Ruler</span>
+                </button>
+                <button class="mv-btn" id="mv-touch-btn" title="Toggle Mobile Touch Cursor">
+                  <svg viewBox="0 0 24 24"><path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.44-.72c-.1-.02-.21-.02-.31 0-.41.07-.76.32-.93.69l-.78 1.63 5.48 5.48c.45.45 1.07.7 1.71.7h6.7c1.09 0 2-.85 2.08-1.94l.43-5.64c.05-.71-.24-1.39-.77-1.87z"/></svg>
+                  <span>Touch Dot</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="mv-control-group">
+              <label class="mv-control-label">Emulate Color Scheme</label>
+              <button class="mv-btn" id="mv-theme-btn" style="width: 100%;">
+                <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+                <span id="mv-theme-text">Toggle Dark / Light Mode</span>
               </button>
             </div>
-            <button class="mv-url-go-btn" id="mv-url-go-btn" title="Load URL (Enter)">
-              <svg viewBox="0 0 24 24"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7h-2z"/></svg>
-            </button>
-          </div>
-          <!-- Quick Preset Chips -->
-          <div class="mv-quick-links">
-            <button class="mv-chip" data-url="https://www.google.com">Google</button>
-            <button class="mv-chip" data-url="https://m.facebook.com">Facebook</button>
-            <button class="mv-chip" data-url="https://github.com">GitHub</button>
-            <button class="mv-chip" data-url="http://localhost:3000">Localhost:3000</button>
-          </div>
-        </div>
 
-        <!-- Device Selector -->
-        <div class="mv-control-group">
-          <label class="mv-control-label">Device Preset</label>
-          <div class="mv-select-wrapper">
-            <select class="mv-device-select" id="mv-device-select"></select>
-            <span class="mv-select-arrow">
-              <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-            </span>
+            <div class="mv-control-group">
+              <label class="mv-control-label">Quick Actions</label>
+              <div class="mv-btn-grid">
+                <button class="mv-btn" id="mv-screenshot-btn" title="Export Screenshot">
+                  <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                  <span>Snapshot</span>
+                </button>
+                <button class="mv-btn" id="mv-protocol-btn" title="Switch HTTP / HTTPS">
+                  <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                  <span id="mv-protocol-text">HTTP/S</span>
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="mv-dimension-badge" id="mv-dimension-badge">393 × 852 px</div>
-        </div>
 
-        <!-- Orientation & Zoom Controls -->
-        <div class="mv-control-group">
-          <label class="mv-control-label">Orientation & Scale</label>
-          <div class="mv-btn-grid">
-            <button class="mv-btn" id="mv-orientation-btn" title="Toggle Portrait / Landscape (O)">
-              <svg viewBox="0 0 24 24"><path d="M7.11 8.53L5.7 7.11C4.8 8.27 4.24 9.61 4.07 11h2.02c.14-.87.5-1.72 1.02-2.47zM6.09 13H4.07c.17 1.39.72 2.73 1.62 3.89l1.41-1.42c-.52-.75-.88-1.6-1.01-2.47zm1.01 5.32c1.16.9 2.51 1.44 3.9 1.61V17.9c-.87-.15-1.71-.49-2.46-1.03L7.1 18.32zM13 4.07V1L8.45 5.55 13 10V6.09c3.37 0 6.09 2.72 6.09 6.09s-2.72 6.09-6.09 6.09v2.02c4.49 0 8.11-3.62 8.11-8.11S17.49 4.07 13 4.07z"/></svg>
-              <span id="mv-orientation-text">Portrait</span>
-            </button>
-            <div class="mv-select-wrapper">
-              <select class="mv-device-select" id="mv-zoom-select" style="padding-top: 8px; padding-bottom: 8px;">
-                <option value="auto">Auto-Fit</option>
-                <option value="100">100%</option>
-                <option value="85">85%</option>
-                <option value="75">75%</option>
-                <option value="60">60%</option>
-              </select>
-              <span class="mv-select-arrow">
-                <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-              </span>
+          <!-- TAB 3: PENTEST & SECURITY -->
+          <div class="mv-tab-panel" id="tab-pentest">
+            <!-- Active Framing Bypass Status -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Active Security Headers</label>
+              <div class="mv-security-card">
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">X-Frame-Options:</span>
+                  <span class="mv-badge-pill mv-badge-green">Bypassed (DNR)</span>
+                </div>
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">CSP frame-ancestors:</span>
+                  <span class="mv-badge-pill mv-badge-green">Stripped (DNR)</span>
+                </div>
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">Sec-Fetch-Dest:</span>
+                  <span class="mv-badge-pill mv-badge-cyan">Document (Spoofed)</span>
+                </div>
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">User-Agent Engine:</span>
+                  <span class="mv-badge-pill mv-badge-cyan" id="mv-badge-os">iOS Mobile</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Injection Payloads for Testing -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Inject Pentest Payload</label>
+              <div class="mv-payload-form">
+                <div class="mv-select-wrapper" style="flex: 1;">
+                  <select class="mv-device-select" id="mv-payload-select">
+                    <option value="?q=<script>alert(1)</script>">XSS: &lt;script&gt;alert(1)&lt;/script&gt;</option>
+                    <option value="?test=<img src=x onerror=alert(1)>">XSS: &lt;img onerror=alert(1)&gt;</option>
+                    <option value="?id=' OR '1'='1">SQLi: ' OR '1'='1</option>
+                    <option value="?name={{7*7}}">SSTI: {{7*7}} (Expression)</option>
+                    <option value="?file=../../../../etc/passwd">LFI: ../../../../etc/passwd</option>
+                    <option value="?redirect=//evil.com">Open Redirect: //evil.com</option>
+                  </select>
+                  <span class="mv-select-arrow">
+                    <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                  </span>
+                </div>
+                <button class="mv-btn" id="mv-inject-btn" style="padding: 6px 10px;">Inject</button>
+              </div>
+            </div>
+
+            <!-- Storage & Cookie Session Clear -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Storage & Session Reset</label>
+              <button class="mv-btn" id="mv-clear-session-btn" style="width: 100%; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.15); color: #fca5a5;">
+                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                <span>Clear Cache & Reset Session</span>
+              </button>
             </div>
           </div>
         </div>
@@ -185,9 +306,6 @@
           <span>•</span>
           <span class="mv-kbd">R</span>
           <span>reload</span>
-          <span>•</span>
-          <span class="mv-kbd">↵</span>
-          <span>load</span>
         </div>
       </div>
     </div>

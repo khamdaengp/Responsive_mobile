@@ -1,5 +1,6 @@
 /**
  * MobileView — Standalone Pop-out Window Controller
+ * Advanced QA Tester & Pentester Developer Suite
  */
 
 (() => {
@@ -98,15 +99,21 @@
   let currentDeviceId = DEVICE_PRESETS[initialDevice] ? initialDevice : 'iphone-16-pro';
   let isLandscape = initialLandscape;
   let currentZoomMode = 'auto';
-  let isDockMinimized = true; // Start in clean bubble mode in standalone window
+  let isDockMinimized = false; // Expanded by default to show rich QA/pentest suite
   let activeLoadedUrl = initialUrl;
   let loadTimeout = null;
+  let customWidth = 393;
+  let customHeight = 852;
+  let isDarkMode = false;
+  let isGridActive = false;
+  let isTouchCursorActive = false;
 
   // DOM Elements
   const frameEl = document.getElementById('mv-frame');
   const stageEl = document.getElementById('mv-stage');
   const cameraContainerEl = document.getElementById('mv-camera-container');
   const iframeEl = document.getElementById('mv-iframe');
+  const iframeBoxEl = document.getElementById('mv-iframe-box');
   const loadingEl = document.getElementById('mv-loading');
   const deviceSelectEl = document.getElementById('mv-device-select');
   const zoomSelectEl = document.getElementById('mv-zoom-select');
@@ -123,6 +130,38 @@
   const clockEl = document.getElementById('mv-clock');
   const dockEl = document.getElementById('mv-dock');
   const minimizeBtnEl = document.getElementById('mv-minimize-btn');
+  const tabBtns = document.querySelectorAll('.mv-tab-btn');
+  const tabPanels = document.querySelectorAll('.mv-tab-panel');
+
+  // Custom dimensions & QA Tools elements
+  const customWInput = document.getElementById('mv-custom-w');
+  const customHInput = document.getElementById('mv-custom-h');
+  const customApplyBtn = document.getElementById('mv-custom-apply-btn');
+  const gridOverlayEl = document.getElementById('mv-grid-overlay');
+  const gridBtnEl = document.getElementById('mv-grid-btn');
+  const touchCursorEl = document.getElementById('mv-touch-cursor');
+  const touchBtnEl = document.getElementById('mv-touch-btn');
+  const themeBtnEl = document.getElementById('mv-theme-btn');
+  const themeTextEl = document.getElementById('mv-theme-text');
+  const screenshotBtnEl = document.getElementById('mv-screenshot-btn');
+  const protocolBtnEl = document.getElementById('mv-protocol-btn');
+  const protocolTextEl = document.getElementById('mv-protocol-text');
+  const payloadSelectEl = document.getElementById('mv-payload-select');
+  const injectBtnEl = document.getElementById('mv-inject-btn');
+  const clearSessionBtnEl = document.getElementById('mv-clear-session-btn');
+  const badgeOsEl = document.getElementById('mv-badge-os');
+
+  // Tab switching
+  tabBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      tabBtns.forEach((b) => b.classList.remove('mv-tab-active'));
+      tabPanels.forEach((p) => p.classList.remove('mv-panel-active'));
+      btn.classList.add('mv-tab-active');
+      const targetPanelId = btn.getAttribute('data-tab');
+      const panel = document.getElementById(targetPanelId);
+      if (panel) panel.classList.add('mv-panel-active');
+    });
+  });
 
   // Normalize URL
   function normalizeUrl(input) {
@@ -204,25 +243,23 @@
     clockEl.textContent = `${hours}:${formattedMinutes}`;
   }
 
-  // Auto-resize the actual Chrome window to fit device + dock snugly with exact 0px margin
+  // Auto-resize the actual Chrome window to fit device + dock snugly
   async function fitWindowToDevice() {
     try {
-      const device = DEVICE_PRESETS[currentDeviceId] || DEVICE_PRESETS['iphone-16-pro'];
+      const device = DEVICE_PRESETS[currentDeviceId] || { width: customWidth, height: customHeight, os: 'Custom' };
       const devW = isLandscape ? device.height : device.width;
       const devH = isLandscape ? device.width : device.height;
       const frameTotalWidth = devW + 20; // 10px border on each side
       const frameTotalHeight = devH + 20;
-      const extraDockWidth = isDockMinimized ? 0 : 330;
+      const extraDockWidth = isDockMinimized ? 0 : 360;
 
       // Detect OS window border overhead
       const osChromeWidth = Math.max(0, window.outerWidth - window.innerWidth) || 16;
       const osChromeHeight = Math.max(0, window.outerHeight - window.innerHeight) || 39;
 
-      // Give a maximum cap based on user's actual screen resolution
       const maxAllowedWidth = screen.availWidth;
       const maxAllowedHeight = screen.availHeight;
 
-      // Set target to fit with exact 0px margin
       const targetWidth = Math.min(maxAllowedWidth, frameTotalWidth + extraDockWidth + osChromeWidth);
       const targetHeight = Math.min(maxAllowedHeight, frameTotalHeight + osChromeHeight);
 
@@ -238,13 +275,24 @@
 
   // Calculate Layout & Scaling
   function applyDeviceLayout() {
-    const device = DEVICE_PRESETS[currentDeviceId] || DEVICE_PRESETS['iphone-16-pro'];
+    const device = DEVICE_PRESETS[currentDeviceId] || {
+      name: 'Custom Viewport',
+      width: customWidth,
+      height: customHeight,
+      radius: 36,
+      camera: 'punch-hole',
+      os: 'Custom'
+    };
+
     const width = isLandscape ? device.height : device.width;
     const height = isLandscape ? device.width : device.height;
 
     frameEl.style.width = `${width}px`;
     frameEl.style.height = `${height}px`;
-    frameEl.style.borderRadius = `${device.radius}px`;
+    frameEl.style.borderRadius = `${device.radius || 36}px`;
+
+    if (customWInput) customWInput.value = width;
+    if (customHInput) customHInput.value = height;
 
     if (isLandscape) {
       frameEl.classList.add('mv-landscape');
@@ -257,6 +305,7 @@
     }
 
     dimensionBadgeEl.textContent = `${width} × ${height} px (${device.os})`;
+    if (badgeOsEl) badgeOsEl.textContent = `${device.os} Engine`;
     renderCameraElement(device.camera);
 
     // Sync device OS User-Agent
@@ -272,14 +321,13 @@
     const frameTotalWidth = deviceWidth + 20;
     const frameTotalHeight = deviceHeight + 20;
 
-    const occupiedDockWidth = isDockMinimized ? 0 : 330;
+    const occupiedDockWidth = isDockMinimized ? 0 : 360;
     const availWidth = Math.max(10, window.innerWidth - occupiedDockWidth);
     const availHeight = window.innerHeight;
 
     let scale = 1;
     if (currentZoomMode === 'auto') {
       if (isDockMinimized) {
-        // Match exact width of pop-out window with zero white space on left/right
         scale = availWidth / frameTotalWidth;
       } else {
         const scaleX = availWidth / frameTotalWidth;
@@ -306,6 +354,10 @@
     activeLoadedUrl = cleanUrl;
     urlInputEl.value = cleanUrl;
     urlClearBtnEl.style.display = 'flex';
+
+    if (protocolTextEl) {
+      protocolTextEl.textContent = cleanUrl.startsWith('https') ? 'HTTPS' : 'HTTP';
+    }
 
     loadingEl.classList.add('mv-active');
 
@@ -334,7 +386,7 @@
     } else {
       dockEl.classList.remove('mv-minimized');
     }
-    const device = DEVICE_PRESETS[currentDeviceId];
+    const device = DEVICE_PRESETS[currentDeviceId] || { width: customWidth, height: customHeight };
     const width = isLandscape ? device.height : device.width;
     const height = isLandscape ? device.width : device.height;
     calculateScale(width, height);
@@ -400,7 +452,7 @@
 
   zoomSelectEl.addEventListener('change', (e) => {
     currentZoomMode = e.target.value;
-    const device = DEVICE_PRESETS[currentDeviceId];
+    const device = DEVICE_PRESETS[currentDeviceId] || { width: customWidth, height: customHeight };
     const width = isLandscape ? device.height : device.width;
     const height = isLandscape ? device.width : device.height;
     calculateScale(width, height);
@@ -422,6 +474,118 @@
     window.open(activeLoadedUrl || iframeEl.src, '_blank');
   });
 
+  // Custom Dimensions Apply
+  if (customApplyBtn) {
+    customApplyBtn.addEventListener('click', () => {
+      const w = parseInt(customWInput.value, 10);
+      const h = parseInt(customHInput.value, 10);
+      if (w >= 200 && h >= 200) {
+        customWidth = w;
+        customHeight = h;
+        currentDeviceId = 'custom';
+        applyDeviceLayout();
+      }
+    });
+  }
+
+  // Grid Overlay Toggle
+  if (gridBtnEl) {
+    gridBtnEl.addEventListener('click', () => {
+      isGridActive = !isGridActive;
+      gridOverlayEl.classList.toggle('mv-grid-active', isGridActive);
+      gridBtnEl.classList.toggle('mv-btn-active', isGridActive);
+    });
+  }
+
+  // Simulated Touch Cursor Toggle
+  if (touchBtnEl) {
+    touchBtnEl.addEventListener('click', () => {
+      isTouchCursorActive = !isTouchCursorActive;
+      touchBtnEl.classList.toggle('mv-btn-active', isTouchCursorActive);
+      if (!isTouchCursorActive) {
+        touchCursorEl.style.display = 'none';
+      }
+    });
+  }
+
+  // Track touch cursor
+  if (iframeBoxEl) {
+    iframeBoxEl.addEventListener('mousemove', (e) => {
+      if (!isTouchCursorActive) return;
+      const rect = iframeBoxEl.getBoundingClientRect();
+      touchCursorEl.style.display = 'block';
+      touchCursorEl.style.left = `${e.clientX - rect.left}px`;
+      touchCursorEl.style.top = `${e.clientY - rect.top}px`;
+    });
+
+    iframeBoxEl.addEventListener('mousedown', () => {
+      if (isTouchCursorActive) touchCursorEl.classList.add('mv-touching');
+    });
+
+    iframeBoxEl.addEventListener('mouseup', () => {
+      if (isTouchCursorActive) touchCursorEl.classList.remove('mv-touching');
+    });
+
+    iframeBoxEl.addEventListener('mouseleave', () => {
+      if (isTouchCursorActive) touchCursorEl.style.display = 'none';
+    });
+  }
+
+  // Dark / Light Theme Toggle
+  if (themeBtnEl) {
+    themeBtnEl.addEventListener('click', () => {
+      isDarkMode = !isDarkMode;
+      themeTextEl.textContent = isDarkMode ? 'Mode: Dark Theme' : 'Mode: Light Theme';
+      themeBtnEl.classList.toggle('mv-btn-active', isDarkMode);
+      try {
+        iframeEl.contentWindow.postMessage({ type: 'SET_COLOR_SCHEME', scheme: isDarkMode ? 'dark' : 'light' }, '*');
+      } catch (e) {}
+    });
+  }
+
+  // Protocol Switcher (HTTPS ↔ HTTP)
+  if (protocolBtnEl) {
+    protocolBtnEl.addEventListener('click', () => {
+      if (!activeLoadedUrl) return;
+      if (activeLoadedUrl.startsWith('https://')) {
+        loadUrl(activeLoadedUrl.replace('https://', 'http://'));
+      } else if (activeLoadedUrl.startsWith('http://')) {
+        loadUrl(activeLoadedUrl.replace('http://', 'https://'));
+      }
+    });
+  }
+
+  // Pentest Payload Injector
+  if (injectBtnEl) {
+    injectBtnEl.addEventListener('click', () => {
+      const payload = payloadSelectEl.value;
+      const baseUrl = activeLoadedUrl || 'https://www.google.com';
+      const separator = baseUrl.includes('?') ? '&' : '?';
+      const cleanPayload = payload.startsWith('?') ? payload.substring(1) : payload;
+      loadUrl(baseUrl + separator + cleanPayload);
+    });
+  }
+
+  // Clear Session & Cache
+  if (clearSessionBtnEl) {
+    clearSessionBtnEl.addEventListener('click', () => {
+      try {
+        iframeEl.src = 'about:blank';
+        setTimeout(() => {
+          reloadIframe();
+        }, 150);
+      } catch (e) {}
+    });
+  }
+
+  // Screenshot / Snapshot
+  if (screenshotBtnEl) {
+    screenshotBtnEl.addEventListener('click', () => {
+      window.print();
+    });
+  }
+
+  // Keybindings
   window.addEventListener('keydown', (e) => {
     const activeEl = document.activeElement;
     if (activeEl?.tagName === 'INPUT' || activeEl?.tagName === 'TEXTAREA') return;
@@ -438,14 +602,13 @@
   });
 
   window.addEventListener('resize', () => {
-    const device = DEVICE_PRESETS[currentDeviceId];
+    const device = DEVICE_PRESETS[currentDeviceId] || { width: customWidth, height: customHeight };
     const width = isLandscape ? device.height : device.width;
     const height = isLandscape ? device.width : device.height;
     calculateScale(width, height);
   });
 
   // Init
-  dockEl.classList.add('mv-minimized');
   updateClock();
   setInterval(updateClock, 10000);
   applyDeviceLayout();
