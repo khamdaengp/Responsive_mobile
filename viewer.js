@@ -560,37 +560,51 @@
     });
   }
 
-  // Simulated Touch Cursor Toggle
+  // Simulated Tap / Touch Feedback Indicator
+  let touchFadeTimeout = null;
+
   if (touchBtnEl) {
     touchBtnEl.addEventListener('click', () => {
       isTouchCursorActive = !isTouchCursorActive;
       touchBtnEl.classList.toggle('mv-btn-active', isTouchCursorActive);
       if (!isTouchCursorActive) {
         touchCursorEl.style.display = 'none';
+        touchCursorEl.classList.remove('mv-touching');
       }
     });
   }
 
-  // Track touch cursor
+  // Tap feedback on click / tap (Does NOT follow cursor continuously)
   if (iframeBoxEl) {
-    iframeBoxEl.addEventListener('mousemove', (e) => {
+    iframeBoxEl.addEventListener('mousedown', (e) => {
       if (!isTouchCursorActive) return;
       const rect = iframeBoxEl.getBoundingClientRect();
-      touchCursorEl.style.display = 'block';
-      touchCursorEl.style.left = `${e.clientX - rect.left}px`;
-      touchCursorEl.style.top = `${e.clientY - rect.top}px`;
-    });
+      const clickX = e.clientX - rect.left;
+      const clickY = e.clientY - rect.top;
 
-    iframeBoxEl.addEventListener('mousedown', () => {
-      if (isTouchCursorActive) touchCursorEl.classList.add('mv-touching');
+      touchCursorEl.style.left = `${clickX}px`;
+      touchCursorEl.style.top = `${clickY}px`;
+      touchCursorEl.style.display = 'block';
+      touchCursorEl.classList.add('mv-touching');
+
+      if (touchFadeTimeout) clearTimeout(touchFadeTimeout);
     });
 
     iframeBoxEl.addEventListener('mouseup', () => {
-      if (isTouchCursorActive) touchCursorEl.classList.remove('mv-touching');
+      if (!isTouchCursorActive) return;
+      touchFadeTimeout = setTimeout(() => {
+        touchCursorEl.classList.remove('mv-touching');
+        setTimeout(() => {
+          if (!touchCursorEl.classList.contains('mv-touching')) {
+            touchCursorEl.style.display = 'none';
+          }
+        }, 200);
+      }, 250);
     });
 
     iframeBoxEl.addEventListener('mouseleave', () => {
-      if (isTouchCursorActive) touchCursorEl.style.display = 'none';
+      touchCursorEl.classList.remove('mv-touching');
+      touchCursorEl.style.display = 'none';
     });
   }
 

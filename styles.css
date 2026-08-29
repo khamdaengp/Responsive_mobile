@@ -1119,25 +1119,27 @@
   display: block;
 }
 
-/* Simulated Touch Indicator Cursor */
+/* Simulated Tap / Touch Indicator Feedback */
 .mv-touch-cursor {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: rgba(99, 102, 241, 0.4);
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.7) 0%, rgba(139, 92, 246, 0.25) 70%, transparent 100%);
+  border: 2px solid rgba(255, 255, 255, 0.9);
   position: absolute;
   pointer-events: none;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.6);
   z-index: 999;
   display: none;
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
-  transition: width 0.1s, height 0.1s, background 0.1s;
+  opacity: 0;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.8), inset 0 0 8px rgba(255, 255, 255, 0.5);
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease-out;
 }
 
 .mv-touch-cursor.mv-touching {
-  background: rgba(239, 68, 68, 0.6);
-  transform: translate(-50%, -50%) scale(0.85);
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.15);
 }
 
 /* Live Viewport Specs & Metrics Grid */
