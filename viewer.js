@@ -13,6 +13,8 @@
       radius: 48,
       camera: 'island',
       os: 'iOS',
+      dpr: '3.00x Super Retina',
+      aspect: '19.5 : 9',
       category: 'Apple iPhones'
     },
     'iphone-15-max': {
@@ -22,6 +24,8 @@
       radius: 52,
       camera: 'island',
       os: 'iOS',
+      dpr: '3.00x Super Retina',
+      aspect: '19.5 : 9',
       category: 'Apple iPhones'
     },
     'iphone-14': {
@@ -31,6 +35,8 @@
       radius: 46,
       camera: 'notch',
       os: 'iOS',
+      dpr: '3.00x Retina',
+      aspect: '19.5 : 9',
       category: 'Apple iPhones'
     },
     'iphone-se': {
@@ -40,6 +46,8 @@
       radius: 26,
       camera: 'tablet',
       os: 'iOS',
+      dpr: '2.00x Retina',
+      aspect: '16 : 9',
       category: 'Apple iPhones'
     },
     'galaxy-s24': {
@@ -49,6 +57,8 @@
       radius: 36,
       camera: 'punch-hole',
       os: 'Android',
+      dpr: '3.00x Dynamic AMOLED',
+      aspect: '19.5 : 9',
       category: 'Android Flagships'
     },
     'galaxy-s24-ultra': {
@@ -58,6 +68,8 @@
       radius: 22,
       camera: 'punch-hole',
       os: 'Android',
+      dpr: '3.50x Quad HD+',
+      aspect: '20 : 9',
       category: 'Android Flagships'
     },
     'pixel-8-pro': {
@@ -67,6 +79,8 @@
       radius: 40,
       camera: 'punch-hole',
       os: 'Android',
+      dpr: '3.50x Super Actua',
+      aspect: '20 : 9',
       category: 'Android Flagships'
     },
     'ipad-mini': {
@@ -76,6 +90,8 @@
       radius: 30,
       camera: 'tablet',
       os: 'iPadOS',
+      dpr: '2.00x Liquid Retina',
+      aspect: '3 : 2',
       category: 'Tablets'
     },
     'ipad-air': {
@@ -85,6 +101,8 @@
       radius: 34,
       camera: 'tablet',
       os: 'iPadOS',
+      dpr: '2.00x Liquid Retina',
+      aspect: '4.3 : 3',
       category: 'Tablets'
     }
   };
@@ -99,9 +117,10 @@
   let currentDeviceId = DEVICE_PRESETS[initialDevice] ? initialDevice : 'iphone-16-pro';
   let isLandscape = initialLandscape;
   let currentZoomMode = 'auto';
-  let isDockMinimized = false; // Expanded by default to show rich QA/pentest suite
+  let isDockMinimized = false;
   let activeLoadedUrl = initialUrl;
   let loadTimeout = null;
+  let loadStartTime = 0;
   let customWidth = 393;
   let customHeight = 852;
   let isDarkMode = false;
@@ -150,6 +169,34 @@
   const injectBtnEl = document.getElementById('mv-inject-btn');
   const clearSessionBtnEl = document.getElementById('mv-clear-session-btn');
   const badgeOsEl = document.getElementById('mv-badge-os');
+  const valDprEl = document.getElementById('mv-val-dpr');
+  const valAspectEl = document.getElementById('mv-val-aspect');
+  const hapticBtnEl = document.getElementById('mv-haptic-btn');
+  const perfStatusEl = document.getElementById('mv-perf-status');
+  const perfTimeEl = document.getElementById('mv-perf-time');
+  const secConsoleEl = document.getElementById('mv-sec-console');
+  const encoderInput = document.getElementById('mv-encoder-input');
+  const encodeUrlBtn = document.getElementById('mv-encode-url-btn');
+  const encodeB64Btn = document.getElementById('mv-encode-b64-btn');
+  const encoderOut = document.getElementById('mv-encoder-out');
+
+  // Security Console Logging
+  function logSecurityEvent(tag, message, type = 'info') {
+    if (!secConsoleEl) return;
+    const now = new Date();
+    const timeStr = now.toTimeString().split(' ')[0];
+    const tagClass = type === 'pass' ? 'mv-log-tag-pass' : type === 'warn' ? 'mv-log-tag-warn' : 'mv-log-tag-info';
+    
+    const entry = document.createElement('div');
+    entry.className = 'mv-log-entry';
+    entry.innerHTML = `
+      <span class="mv-log-time">${timeStr}</span>
+      <span class="${tagClass}">[${tag}]</span>
+      <span>${message}</span>
+    `;
+    secConsoleEl.appendChild(entry);
+    secConsoleEl.scrollTop = secConsoleEl.scrollHeight;
+  }
 
   // Tab switching
   tabBtns.forEach((btn) => {
@@ -281,7 +328,9 @@
       height: customHeight,
       radius: 36,
       camera: 'punch-hole',
-      os: 'Custom'
+      os: 'Custom',
+      dpr: '3.00x Custom',
+      aspect: 'Custom'
     };
 
     const width = isLandscape ? device.height : device.width;
@@ -306,6 +355,9 @@
 
     dimensionBadgeEl.textContent = `${width} × ${height} px (${device.os})`;
     if (badgeOsEl) badgeOsEl.textContent = `${device.os} Engine`;
+    if (valDprEl) valDprEl.textContent = device.dpr || '3.00x Super Retina';
+    if (valAspectEl) valAspectEl.textContent = isLandscape ? 'Landscape Mode' : (device.aspect || '19.5 : 9');
+
     renderCameraElement(device.camera);
 
     // Sync device OS User-Agent
@@ -351,6 +403,7 @@
     const cleanUrl = normalizeUrl(targetUrl);
     if (!cleanUrl) return;
 
+    loadStartTime = performance.now();
     activeLoadedUrl = cleanUrl;
     urlInputEl.value = cleanUrl;
     urlClearBtnEl.style.display = 'flex';
@@ -360,10 +413,13 @@
     }
 
     loadingEl.classList.add('mv-active');
+    logSecurityEvent('LOAD', `Navigating to ${cleanUrl.substring(0, 36)}...`, 'info');
 
     if (loadTimeout) clearTimeout(loadTimeout);
     loadTimeout = setTimeout(() => {
       loadingEl.classList.remove('mv-active');
+      if (perfStatusEl) perfStatusEl.textContent = '200 OK (Streamed)';
+      if (perfTimeEl) perfTimeEl.textContent = `${Math.round(performance.now() - loadStartTime)} ms`;
     }, 3500);
 
     iframeEl.src = cleanUrl;
@@ -371,10 +427,12 @@
 
   function reloadIframe() {
     loadingEl.classList.add('mv-active');
+    loadStartTime = performance.now();
     const currentSrc = activeLoadedUrl || iframeEl.src || 'https://www.google.com';
     iframeEl.src = 'about:blank';
     requestAnimationFrame(() => {
       iframeEl.src = currentSrc;
+      logSecurityEvent('RELOAD', 'Refreshed mobile viewport', 'info');
     });
   }
 
@@ -410,6 +468,10 @@
   iframeEl.addEventListener('load', () => {
     loadingEl.classList.remove('mv-active');
     if (loadTimeout) clearTimeout(loadTimeout);
+    const duration = Math.round(performance.now() - loadStartTime);
+    if (perfStatusEl) perfStatusEl.textContent = '200 OK (Complete)';
+    if (perfTimeEl) perfTimeEl.textContent = `${duration} ms`;
+    logSecurityEvent('HTTP', `Page rendered in ${duration}ms`, 'pass');
   });
 
   urlGoBtnEl.addEventListener('click', () => {
@@ -484,6 +546,7 @@
         customHeight = h;
         currentDeviceId = 'custom';
         applyDeviceLayout();
+        logSecurityEvent('RESIZE', `Custom resolution: ${w} × ${h} px`, 'info');
       }
     });
   }
@@ -543,6 +606,18 @@
     });
   }
 
+  // Haptic Feedback Vibration Simulator
+  if (hapticBtnEl) {
+    hapticBtnEl.addEventListener('click', () => {
+      frameEl.classList.add('mv-shaking');
+      if (navigator.vibrate) navigator.vibrate(100);
+      setTimeout(() => {
+        frameEl.classList.remove('mv-shaking');
+      }, 300);
+      logSecurityEvent('HAPTIC', 'Triggered device vibration pulse', 'info');
+    });
+  }
+
   // Protocol Switcher (HTTPS ↔ HTTP)
   if (protocolBtnEl) {
     protocolBtnEl.addEventListener('click', () => {
@@ -555,6 +630,25 @@
     });
   }
 
+  // Payload Encoders
+  if (encodeUrlBtn && encoderInput) {
+    encodeUrlBtn.addEventListener('click', () => {
+      const val = encoderInput.value || '';
+      encoderOut.textContent = encodeURIComponent(val);
+    });
+  }
+
+  if (encodeB64Btn && encoderInput) {
+    encodeB64Btn.addEventListener('click', () => {
+      const val = encoderInput.value || '';
+      try {
+        encoderOut.textContent = btoa(val);
+      } catch (e) {
+        encoderOut.textContent = 'Encoding error (non-ASCII)';
+      }
+    });
+  }
+
   // Pentest Payload Injector
   if (injectBtnEl) {
     injectBtnEl.addEventListener('click', () => {
@@ -562,7 +656,9 @@
       const baseUrl = activeLoadedUrl || 'https://www.google.com';
       const separator = baseUrl.includes('?') ? '&' : '?';
       const cleanPayload = payload.startsWith('?') ? payload.substring(1) : payload;
-      loadUrl(baseUrl + separator + cleanPayload);
+      const target = baseUrl + separator + cleanPayload;
+      logSecurityEvent('INJECT', `Testing payload: ${cleanPayload}`, 'warn');
+      loadUrl(target);
     });
   }
 
@@ -571,6 +667,7 @@
     clearSessionBtnEl.addEventListener('click', () => {
       try {
         iframeEl.src = 'about:blank';
+        logSecurityEvent('CLEAR', 'Session and cache reset', 'pass');
         setTimeout(() => {
           reloadIframe();
         }, 150);

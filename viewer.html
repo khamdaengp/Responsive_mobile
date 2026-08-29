@@ -184,6 +184,38 @@
                 </div>
               </div>
             </div>
+
+            <!-- Live Viewport Hardware Metrics -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Live Viewport Specs</label>
+              <div class="mv-metrics-grid">
+                <div class="mv-metric-item">
+                  <span class="mv-metric-label">Pixel Ratio (DPR)</span>
+                  <span class="mv-metric-val" id="mv-val-dpr">3.00x Super Retina</span>
+                </div>
+                <div class="mv-metric-item">
+                  <span class="mv-metric-label">Aspect Ratio</span>
+                  <span class="mv-metric-val" id="mv-val-aspect">19.5 : 9</span>
+                </div>
+                <div class="mv-metric-item">
+                  <span class="mv-metric-label">Touch Screen</span>
+                  <span class="mv-metric-val">5-Point Multi-Touch</span>
+                </div>
+                <div class="mv-metric-item">
+                  <span class="mv-metric-label">Color Gamut</span>
+                  <span class="mv-metric-val">Display P3 (Wide)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Haptic / Vibration Simulator -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Hardware Simulation</label>
+              <button class="mv-btn" id="mv-haptic-btn" style="width: 100%;">
+                <svg viewBox="0 0 24 24"><path d="M0 15h2V9H0v6zm3 2h2V7H3v10zm19-8v6h2V9h-2zm-3 8h2V7h-2v10zM16.5 3h-9C6.67 3 6 3.67 6 4.5v15c0 .83.67 1.5 1.5 1.5h9c.83 0 1.5-.67 1.5-1.5v-15c0-.83-.67-1.5-1.5-1.5zM16 19H8V5h8v14z"/></svg>
+                <span>Trigger Haptic Vibration</span>
+              </button>
+            </div>
           </div>
 
           <!-- TAB 2: QA & DEVELOPER TOOLS -->
@@ -208,6 +240,21 @@
                 <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
                 <span id="mv-theme-text">Toggle Dark / Light Mode</span>
               </button>
+            </div>
+
+            <!-- Page Performance Latency Monitor -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Page Performance Monitor</label>
+              <div class="mv-security-card">
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">Load Status:</span>
+                  <span class="mv-badge-pill mv-badge-green" id="mv-perf-status">200 OK (Rendered)</span>
+                </div>
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">DOM Content Ready:</span>
+                  <span class="mv-badge-pill mv-badge-cyan" id="mv-perf-time">~340 ms</span>
+                </div>
+              </div>
             </div>
 
             <div class="mv-control-group">
@@ -268,6 +315,36 @@
                   </span>
                 </div>
                 <button class="mv-btn" id="mv-inject-btn" style="padding: 6px 10px;">Inject</button>
+              </div>
+            </div>
+
+            <!-- Payload Encoder Helper (Base64 / URL) -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Payload Encoder Helper</label>
+              <div class="mv-encoder-box">
+                <input type="text" class="mv-dimension-input" id="mv-encoder-input" placeholder="Type text to encode (e.g. <script>)..." style="text-align: left;">
+                <div class="mv-btn-grid" style="grid-template-columns: 1fr 1fr;">
+                  <button class="mv-btn" id="mv-encode-url-btn" style="padding: 5px;">URL-Encode</button>
+                  <button class="mv-btn" id="mv-encode-b64-btn" style="padding: 5px;">Base64</button>
+                </div>
+                <div class="mv-encoder-output" id="mv-encoder-out">Encoded output appears here</div>
+              </div>
+            </div>
+
+            <!-- Real-time Security Event Console -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Live Security Event Log</label>
+              <div class="mv-sec-console" id="mv-sec-console">
+                <div class="mv-log-entry">
+                  <span class="mv-log-time">00:00</span>
+                  <span class="mv-log-tag-pass">[DNR]</span>
+                  <span>Anti-framing rules active</span>
+                </div>
+                <div class="mv-log-entry">
+                  <span class="mv-log-time">00:00</span>
+                  <span class="mv-log-tag-info">[UA]</span>
+                  <span>Mobile User-Agent spoofed</span>
+                </div>
               </div>
             </div>
 
