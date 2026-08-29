@@ -273,17 +273,19 @@
     const frameTotalHeight = deviceHeight + 20;
 
     const occupiedDockWidth = isDockMinimized ? 0 : 330;
-    const paddingX = isDockMinimized ? 0 : 10;
-    const paddingY = 0; // Exact 0px margin
-
-    const availWidth = Math.max(10, window.innerWidth - occupiedDockWidth - paddingX);
+    const availWidth = Math.max(10, window.innerWidth - occupiedDockWidth);
     const availHeight = window.innerHeight;
 
     let scale = 1;
     if (currentZoomMode === 'auto') {
-      const scaleX = availWidth / frameTotalWidth;
-      const scaleY = availHeight / frameTotalHeight;
-      scale = Math.min(1.0, scaleX, scaleY);
+      if (isDockMinimized) {
+        // Match exact width of pop-out window with zero white space on left/right
+        scale = availWidth / frameTotalWidth;
+      } else {
+        const scaleX = availWidth / frameTotalWidth;
+        const scaleY = availHeight / frameTotalHeight;
+        scale = Math.min(scaleX, scaleY);
+      }
       scale = Math.max(0.25, scale);
     } else {
       scale = parseInt(currentZoomMode, 10) / 100;

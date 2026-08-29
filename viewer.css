@@ -42,7 +42,7 @@ body.mv-popout-body .mv-stage-container {
   justify-content: center;
   transform-origin: top center;
   flex-shrink: 0;
-  transition: transform 0.12s ease-out;
+  transition: transform 0.1s ease-out;
 }
 
 body.mv-popout-body .mv-controls-dock:not(.mv-minimized) {
@@ -56,5 +56,6 @@ body.mv-popout-body .mv-side-buttons {
 }
 
 body.mv-popout-body .mv-device-frame {
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: none !important;
+  margin: 0 !important;
 }
