@@ -60,17 +60,21 @@ body.mv-popout-body .mv-dock-inner {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  padding-right: 2px;
+  padding-right: 0 !important;
   gap: 12px;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
-body.mv-popout-body .mv-dock-inner::-webkit-scrollbar {
-  width: 4px;
-}
-
-body.mv-popout-body .mv-dock-inner::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+body.mv-popout-body *::-webkit-scrollbar,
+body.mv-popout-body .mv-dock-inner::-webkit-scrollbar,
+body.mv-popout-body .mv-net-stream::-webkit-scrollbar,
+body.mv-popout-body .mv-net-code-box::-webkit-scrollbar,
+body.mv-popout-body .mv-sec-console::-webkit-scrollbar,
+body.mv-popout-body .mv-net-tab-pane::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 body.mv-popout-body .mv-side-buttons {

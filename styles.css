@@ -1494,5 +1494,32 @@
   word-break: break-all;
   user-select: text;
   line-height: 1.4;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
+
+/* Eliminate all desktop scrollbars across MobileView dock panels and tools */
+.mv-controls-dock,
+.mv-dock-inner,
+.mv-net-stream,
+.mv-net-code-box,
+.mv-net-tab-pane,
+.mv-sec-console,
+.mv-tab-panel {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.mv-controls-dock::-webkit-scrollbar,
+.mv-dock-inner::-webkit-scrollbar,
+.mv-net-stream::-webkit-scrollbar,
+.mv-net-code-box::-webkit-scrollbar,
+.mv-net-tab-pane::-webkit-scrollbar,
+.mv-sec-console::-webkit-scrollbar,
+.mv-tab-panel::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
 
