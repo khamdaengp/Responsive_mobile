@@ -420,14 +420,14 @@
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Minimized Floating Bubble Mode */
+/* Minimized Floating Bubble Mode (Fixed in corner, never follows mouse) */
 .mv-controls-dock.mv-minimized {
   width: 48px;
   height: 48px;
   padding: 0;
   border-radius: 50%;
   overflow: hidden;
-  cursor: grab;
+  cursor: pointer;
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   border: 2px solid rgba(255, 255, 255, 0.35);
   box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6), 0 0 15px rgba(139, 92, 246, 0.4);
@@ -435,20 +435,17 @@
   align-items: center;
   justify-content: center;
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 24px;
+  right: 24px;
+  left: auto !important;
+  top: auto !important;
   z-index: 999999;
-  touch-action: none;
   user-select: none;
   animation: mv-bubble-float 3s ease-in-out infinite alternate;
 }
 
-.mv-controls-dock.mv-minimized:active {
-  cursor: grabbing;
-}
-
 .mv-controls-dock.mv-minimized:hover {
-  transform: scale(1.1);
+  transform: scale(1.12);
   box-shadow: 0 12px 35px rgba(99, 102, 241, 0.8), 0 0 22px rgba(139, 92, 246, 0.6);
   border-color: rgba(255, 255, 255, 0.7);
 }
