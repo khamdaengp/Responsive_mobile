@@ -200,12 +200,175 @@
 
   let activeNetProfile = 'online';
   let activeNetFilter = 'all';
+  const capturedRequestsMap = new Map();
+  let selectedReqId = null;
 
   // Filter Buttons
   const filterAllBtn = document.getElementById('mv-filter-all');
   const filterFetchBtn = document.getElementById('mv-filter-fetch');
   const filterXhrBtn = document.getElementById('mv-filter-xhr');
   const filterClearBtn = document.getElementById('mv-filter-clear');
+
+  // Network Details Drawer Elements
+  const netDrawerEl = document.getElementById('mv-net-drawer');
+  const drawerTitleEl = document.getElementById('mv-drawer-title');
+  const drawerCloseBtn = document.getElementById('mv-drawer-close');
+  const detUrlEl = document.getElementById('mv-det-url');
+  const detMethodEl = document.getElementById('mv-det-method');
+  const detStatusEl = document.getElementById('mv-det-status');
+  const detDurationEl = document.getElementById('mv-det-duration');
+  const headersContentEl = document.getElementById('mv-headers-content');
+  const payloadContentEl = document.getElementById('mv-payload-content');
+  const responseContentEl = document.getElementById('mv-response-content');
+  const copyHeadersBtn = document.getElementById('mv-copy-headers-btn');
+  const copyPayloadBtn = document.getElementById('mv-copy-payload-btn');
+  const copyResponseBtn = document.getElementById('mv-copy-response-btn');
+  const netSubtabs = document.querySelectorAll('.mv-net-subtab');
+  const netTabPanes = document.querySelectorAll('.mv-net-tab-pane');
+
+  // Network Details Subtab Switching
+  netSubtabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      netSubtabs.forEach(t => t.classList.remove('mv-subtab-active'));
+      netTabPanes.forEach(p => p.classList.remove('mv-pane-active'));
+      tab.classList.add('mv-subtab-active');
+      const paneId = tab.getAttribute('data-pane');
+      const pane = document.getElementById(paneId);
+      if (pane) pane.classList.add('mv-pane-active');
+    });
+  });
+
+  if (drawerCloseBtn) {
+    drawerCloseBtn.addEventListener('click', () => {
+      if (netDrawerEl) netDrawerEl.classList.remove('mv-open');
+      const entries = netStreamEl.querySelectorAll('.mv-log-entry');
+      entries.forEach(e => e.classList.remove('mv-selected'));
+      selectedReqId = null;
+    });
+  }
+
+  // Helper to format JSON safely
+  function formatJsonSafe(str) {
+    if (!str) return '';
+    try {
+      if (typeof str === 'object') return JSON.stringify(str, null, 2);
+      const parsed = JSON.parse(str);
+      return JSON.stringify(parsed, null, 2);
+    } catch (e) {
+      return String(str);
+    }
+  }
+
+  // Display request details in drawer
+  function showRequestDetails(reqId) {
+    const data = capturedRequestsMap.get(reqId);
+    if (!data) return;
+
+    selectedReqId = reqId;
+    if (netDrawerEl) netDrawerEl.classList.add('mv-open');
+
+    // Highlight row
+    const entries = netStreamEl.querySelectorAll('.mv-log-entry');
+    entries.forEach(e => {
+      if (e.getAttribute('data-id') === reqId) {
+        e.classList.add('mv-selected');
+      } else {
+        e.classList.remove('mv-selected');
+      }
+    });
+
+    if (drawerTitleEl) {
+      drawerTitleEl.textContent = `${data.method} ${data.url}`;
+    }
+
+    if (detUrlEl) detUrlEl.textContent = data.fullUrl || data.url;
+    if (detMethodEl) detMethodEl.textContent = `${data.method} (${data.reqType})`;
+    if (detStatusEl) detStatusEl.textContent = `${data.status} ${data.statusText || ''}`;
+    if (detDurationEl) detDurationEl.textContent = `${data.duration} ms`;
+
+    // Render Headers
+    if (headersContentEl) {
+      let headersHtml = `
+        <div class="mv-net-kv-row"><span class="mv-net-key">Request URL:</span><span class="mv-net-val">${data.fullUrl || data.url}</span></div>
+        <div class="mv-net-kv-row"><span class="mv-net-key">Request Method:</span><span class="mv-net-val">${data.method}</span></div>
+        <div class="mv-net-kv-row"><span class="mv-net-key">Status Code:</span><span class="mv-net-val">${data.status} ${data.statusText || ''}</span></div>
+        <div class="mv-net-kv-row"><span class="mv-net-key">Duration:</span><span class="mv-net-val">${data.duration} ms</span></div>
+      `;
+
+      if (data.requestHeaders && Object.keys(data.requestHeaders).length > 0) {
+        headersHtml += `<div style="margin-top: 6px; font-weight: bold; color: #94a3b8; font-size: 9px; text-transform: uppercase;">Request Headers:</div>`;
+        Object.entries(data.requestHeaders).forEach(([k, v]) => {
+          headersHtml += `<div class="mv-net-kv-row"><span class="mv-net-key">${k}:</span><span class="mv-net-val">${v}</span></div>`;
+        });
+      }
+
+      if (data.responseHeaders && Object.keys(data.responseHeaders).length > 0) {
+        headersHtml += `<div style="margin-top: 6px; font-weight: bold; color: #94a3b8; font-size: 9px; text-transform: uppercase;">Response Headers:</div>`;
+        Object.entries(data.responseHeaders).forEach(([k, v]) => {
+          headersHtml += `<div class="mv-net-kv-row"><span class="mv-net-key">${k}:</span><span class="mv-net-val">${v}</span></div>`;
+        });
+      }
+
+      headersContentEl.innerHTML = headersHtml;
+    }
+
+    // Render Payload
+    if (payloadContentEl) {
+      if (data.requestPayload) {
+        payloadContentEl.textContent = formatJsonSafe(data.requestPayload);
+      } else {
+        payloadContentEl.textContent = '(No payload / body sent with this request)';
+      }
+    }
+
+    // Render Response
+    if (responseContentEl) {
+      if (data.responseBody) {
+        responseContentEl.textContent = formatJsonSafe(data.responseBody);
+      } else {
+        responseContentEl.textContent = '(Empty response body)';
+      }
+    }
+  }
+
+  // Copy helper
+  function setupCopyBtn(btn, getContentFn) {
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const content = getContentFn();
+      if (!content) return;
+      navigator.clipboard.writeText(content);
+      const originalText = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = originalText; }, 1500);
+    });
+  }
+
+  setupCopyBtn(copyHeadersBtn, () => {
+    if (!selectedReqId) return '';
+    const data = capturedRequestsMap.get(selectedReqId);
+    if (!data) return '';
+    return JSON.stringify({
+      url: data.fullUrl || data.url,
+      method: data.method,
+      status: data.status,
+      duration: data.duration,
+      requestHeaders: data.requestHeaders,
+      responseHeaders: data.responseHeaders
+    }, null, 2);
+  });
+
+  setupCopyBtn(copyPayloadBtn, () => {
+    if (!selectedReqId) return '';
+    const data = capturedRequestsMap.get(selectedReqId);
+    return data?.requestPayload ? formatJsonSafe(data.requestPayload) : '';
+  });
+
+  setupCopyBtn(copyResponseBtn, () => {
+    if (!selectedReqId) return '';
+    const data = capturedRequestsMap.get(selectedReqId);
+    return data?.responseBody ? formatJsonSafe(data.responseBody) : '';
+  });
 
   function applyNetFilter() {
     if (!netStreamEl) return;
@@ -236,10 +399,13 @@
   filterXhrBtn?.addEventListener('click', () => setFilter('xhr', filterXhrBtn));
   filterClearBtn?.addEventListener('click', () => {
     if (netStreamEl) netStreamEl.innerHTML = '';
+    capturedRequestsMap.clear();
+    if (netDrawerEl) netDrawerEl.classList.remove('mv-open');
+    selectedReqId = null;
   });
 
   // Live Network Stream Logger
-  function logNetworkEvent(tag, message, type = 'info', reqType = 'DOC') {
+  function logNetworkEvent(tag, message, type = 'info', reqType = 'DOC', reqId = null) {
     if (!netStreamEl) return;
     const now = new Date();
     const timeStr = now.toTimeString().split(' ')[0];
@@ -250,13 +416,23 @@
     else if (reqType === 'FETCH') tagClass = 'mv-log-tag-fetch';
     
     const entry = document.createElement('div');
-    entry.className = 'mv-log-entry';
+    entry.className = `mv-log-entry ${reqId ? 'mv-clickable' : ''}`;
     entry.setAttribute('data-type', reqType);
+    if (reqId) entry.setAttribute('data-id', reqId);
+
     entry.innerHTML = `
       <span class="mv-log-time">${timeStr}</span>
       <span class="${tagClass}">[${tag}]</span>
-      <span style="word-break: break-all;">${message}</span>
+      <span style="word-break: break-all; flex: 1;">${message}</span>
+      ${reqId ? '<span style="font-size: 8px; color: #64748b;">🔍</span>' : ''}
     `;
+
+    if (reqId) {
+      entry.addEventListener('click', () => {
+        showRequestDetails(reqId);
+      });
+    }
+
     netStreamEl.appendChild(entry);
     netStreamEl.scrollTop = netStreamEl.scrollHeight;
     applyNetFilter();
@@ -265,11 +441,15 @@
   // Intercept incoming Fetch / XHR traffic from iframe
   window.addEventListener('message', (e) => {
     if (e.data && e.data.type === 'MOBILEVIEW_NETWORK_REQ' && e.data.data) {
-      const { reqType, method, url, status, duration } = e.data.data;
+      const data = e.data.data;
+      const { id, reqType, method, url, status, duration } = data;
+      const reqId = id || ('req_' + Date.now() + '_' + Math.random());
+      capturedRequestsMap.set(reqId, { ...data, id: reqId });
+
       const statusType = status >= 200 && status < 300 ? 'pass' : (status >= 400 ? 'warn' : 'info');
       const label = `${reqType} ${method}`;
       const detail = `${url} (${status} · ${duration}ms)`;
-      logNetworkEvent(label, detail, statusType, reqType);
+      logNetworkEvent(label, detail, statusType, reqType, reqId);
       logSecurityEvent(reqType, `${method} ${url.substring(0, 30)} (${status})`, statusType);
     }
   });
@@ -420,7 +600,7 @@
       const devH = isLandscape ? device.width : device.height;
       const frameTotalWidth = devW + 20; // 10px border on each side
       const frameTotalHeight = devH + 20;
-      const extraDockWidth = isDockMinimized ? 0 : 360;
+      const extraDockWidth = isDockMinimized ? 0 : 400;
 
       // Detect OS window border overhead
       const osChromeWidth = Math.max(0, window.outerWidth - window.innerWidth) || 16;
@@ -495,7 +675,7 @@
     const frameTotalWidth = deviceWidth + 20;
     const frameTotalHeight = deviceHeight + 20;
 
-    const occupiedDockWidth = isDockMinimized ? 0 : 360;
+    const occupiedDockWidth = isDockMinimized ? 0 : 400;
     const availWidth = Math.max(10, window.innerWidth - occupiedDockWidth);
     const availHeight = window.innerHeight;
 

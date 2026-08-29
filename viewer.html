@@ -329,6 +329,52 @@
                   <span>HTTP/2 200 OK — Document</span>
                 </div>
               </div>
+
+              <!-- Network Request Details Drawer (Headers / Payload / Response) -->
+              <div class="mv-net-details-drawer" id="mv-net-drawer">
+                <div class="mv-net-details-header">
+                  <div class="mv-net-details-title" id="mv-drawer-title">Request Details</div>
+                  <button class="mv-net-close-btn" id="mv-drawer-close" title="Close Details">✕</button>
+                </div>
+
+                <div class="mv-net-subtabs">
+                  <button class="mv-net-subtab mv-subtab-active" data-pane="pane-headers">Headers</button>
+                  <button class="mv-net-subtab" data-pane="pane-payload">Payload</button>
+                  <button class="mv-net-subtab" data-pane="pane-response">Response</button>
+                </div>
+
+                <!-- Pane 1: Headers -->
+                <div class="mv-net-tab-pane mv-pane-active" id="pane-headers">
+                  <div class="mv-net-pane-toolbar">
+                    <span class="mv-net-pane-title">General & Headers</span>
+                    <button class="mv-net-copy-btn" id="mv-copy-headers-btn">Copy</button>
+                  </div>
+                  <div class="mv-net-kv-table" id="mv-headers-content">
+                    <div class="mv-net-kv-row"><span class="mv-net-key">Request URL:</span><span class="mv-net-val" id="mv-det-url">-</span></div>
+                    <div class="mv-net-kv-row"><span class="mv-net-key">Request Method:</span><span class="mv-net-val" id="mv-det-method">-</span></div>
+                    <div class="mv-net-kv-row"><span class="mv-net-key">Status Code:</span><span class="mv-net-val" id="mv-det-status">-</span></div>
+                    <div class="mv-net-kv-row"><span class="mv-net-key">Duration:</span><span class="mv-net-val" id="mv-det-duration">-</span></div>
+                  </div>
+                </div>
+
+                <!-- Pane 2: Payload -->
+                <div class="mv-net-tab-pane" id="pane-payload">
+                  <div class="mv-net-pane-toolbar">
+                    <span class="mv-net-pane-title">Request Payload / Body</span>
+                    <button class="mv-net-copy-btn" id="mv-copy-payload-btn">Copy</button>
+                  </div>
+                  <div class="mv-net-code-box" id="mv-payload-content">No payload data for this request</div>
+                </div>
+
+                <!-- Pane 3: Response -->
+                <div class="mv-net-tab-pane" id="pane-response">
+                  <div class="mv-net-pane-toolbar">
+                    <span class="mv-net-pane-title">Response Body</span>
+                    <button class="mv-net-copy-btn" id="mv-copy-response-btn">Copy</button>
+                  </div>
+                  <div class="mv-net-code-box" id="mv-response-content">Loading response...</div>
+                </div>
+              </div>
             </div>
           </div>
 
