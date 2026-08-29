@@ -99,6 +99,9 @@
         <!-- Navigation Tabs -->
         <div class="mv-dock-tabs">
           <button class="mv-tab-btn mv-tab-active" data-tab="tab-viewport">📱 Viewport</button>
+          <button class="mv-tab-btn" data-tab="tab-console">📜 Console</button>
+          <button class="mv-tab-btn" data-tab="tab-perf">⚡ Perf</button>
+          <button class="mv-tab-btn" data-tab="tab-app">💾 App</button>
           <button class="mv-tab-btn" data-tab="tab-qa">🧪 QA Tools</button>
           <button class="mv-tab-btn" data-tab="tab-pentest">🛡️ Pentest</button>
         </div>
@@ -218,7 +221,135 @@
             </div>
           </div>
 
-          <!-- TAB 2: QA & DEVELOPER TOOLS -->
+          <!-- TAB 2: INTERACTIVE CONSOLE -->
+          <div class="mv-tab-panel" id="tab-console">
+            <div class="mv-control-group">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                <label class="mv-control-label">Mobile JS Console</label>
+                <div class="mv-net-filters">
+                  <button class="mv-chip mv-chip-active" id="mv-con-filter-all" style="padding: 2px 6px; font-size: 9px;">All</button>
+                  <button class="mv-chip" id="mv-con-filter-error" style="padding: 2px 6px; font-size: 9px;">Errors</button>
+                  <button class="mv-chip" id="mv-con-filter-warn" style="padding: 2px 6px; font-size: 9px;">Warnings</button>
+                  <button class="mv-chip" id="mv-con-filter-log" style="padding: 2px 6px; font-size: 9px;">Logs</button>
+                  <button class="mv-chip" id="mv-con-filter-clear" style="padding: 2px 6px; font-size: 9px;">Clear</button>
+                </div>
+              </div>
+              <div class="mv-console-stream" id="mv-console-stream">
+                <div class="mv-con-entry mv-con-info" data-level="info">
+                  <span class="mv-log-time">00:00</span>
+                  <span>Console session initialized. Ready for mobile debugging.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Interactive JS REPL -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Evaluate JavaScript in Mobile Page</label>
+              <form class="mv-con-repl-form" id="mv-repl-form">
+                <span class="mv-con-repl-in">&gt;</span>
+                <input type="text" class="mv-con-repl-input" id="mv-repl-input" placeholder="e.g. document.title, window.innerWidth, alert('hi')" spellcheck="false" autocomplete="off" />
+                <button type="submit" class="mv-btn mv-btn-primary" style="padding: 6px 12px; font-size: 11px;">Run</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- TAB 3: PERFORMANCE & CORE WEB VITALS -->
+          <div class="mv-tab-panel" id="tab-perf">
+            <div class="mv-control-group">
+              <label class="mv-control-label">Core Web Vitals & Loading</label>
+              <div class="mv-vitals-grid">
+                <div class="mv-vital-card">
+                  <span class="mv-vital-title">LCP (Largest Paint)</span>
+                  <span class="mv-vital-val" id="mv-perf-lcp">~1.1 s</span>
+                  <span class="mv-vital-sub">Good (&lt; 2.5s)</span>
+                </div>
+                <div class="mv-vital-card">
+                  <span class="mv-vital-title">FID / INP (Latency)</span>
+                  <span class="mv-vital-val" id="mv-perf-inp">~18 ms</span>
+                  <span class="mv-vital-sub">Good (&lt; 200ms)</span>
+                </div>
+                <div class="mv-vital-card">
+                  <span class="mv-vital-title">CLS (Layout Shift)</span>
+                  <span class="mv-vital-val" id="mv-perf-cls">0.01</span>
+                  <span class="mv-vital-sub">Good (&lt; 0.1)</span>
+                </div>
+                <div class="mv-vital-card">
+                  <span class="mv-vital-title">TTFB (Server Time)</span>
+                  <span class="mv-vital-val" id="mv-perf-ttfb">~45 ms</span>
+                  <span class="mv-vital-sub">Time to First Byte</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mv-control-group">
+              <label class="mv-control-label">Page Weight & Memory Footprint</label>
+              <div class="mv-security-card">
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">Total Transferred:</span>
+                  <span class="mv-badge-pill mv-badge-cyan" id="mv-perf-weight">~420 KB</span>
+                </div>
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">DOM Content Ready:</span>
+                  <span class="mv-badge-pill mv-badge-cyan" id="mv-perf-dom">~280 ms</span>
+                </div>
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">Window Load Complete:</span>
+                  <span class="mv-badge-pill mv-badge-green" id="mv-perf-load">~420 ms</span>
+                </div>
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">JS Heap Memory:</span>
+                  <span class="mv-badge-pill mv-badge-cyan" id="mv-perf-mem">~18 MB / 32 MB</span>
+                </div>
+                <div class="mv-security-item">
+                  <span class="mv-sec-name">Scripts / CSS / Images:</span>
+                  <span class="mv-badge-pill mv-badge-cyan" id="mv-perf-counts">12 JS · 4 CSS · 8 IMG</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: APPLICATION & STORAGE -->
+          <div class="mv-tab-panel" id="tab-app">
+            <!-- LocalStorage -->
+            <div class="mv-control-group">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                <label class="mv-control-label">LocalStorage</label>
+                <button class="mv-chip" id="mv-refresh-storage-btn" style="padding: 2px 6px; font-size: 9px;">Refresh</button>
+              </div>
+              <div class="mv-storage-table" id="mv-localstorage-table">
+                <div class="mv-storage-row" style="color: #64748b; font-style: italic;">No LocalStorage items found</div>
+              </div>
+              <!-- Add LocalStorage Key -->
+              <div class="mv-storage-add-form">
+                <input type="text" class="mv-input" id="mv-add-local-key" placeholder="Key" style="flex: 1; font-size: 10px; padding: 5px 8px;" />
+                <input type="text" class="mv-input" id="mv-add-local-val" placeholder="Value" style="flex: 1.2; font-size: 10px; padding: 5px 8px;" />
+                <button class="mv-btn mv-btn-primary" id="mv-add-local-btn" style="padding: 4px 8px; font-size: 10px;">Set</button>
+              </div>
+            </div>
+
+            <!-- SessionStorage -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">SessionStorage</label>
+              <div class="mv-storage-table" id="mv-sessionstorage-table">
+                <div class="mv-storage-row" style="color: #64748b; font-style: italic;">No SessionStorage items found</div>
+              </div>
+            </div>
+
+            <!-- Cookies -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Document Cookies</label>
+              <div class="mv-storage-table" id="mv-cookies-table">
+                <div class="mv-storage-row" style="color: #64748b; font-style: italic;">No Cookies found</div>
+              </div>
+            </div>
+
+            <button class="mv-btn" id="mv-app-clear-all-btn" style="width: 100%; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.15); color: #fca5a5; margin-top: 4px;">
+              <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+              <span>Clear LocalStorage & Cookies</span>
+            </button>
+          </div>
+
+          <!-- TAB 5: QA & DEVELOPER TOOLS -->
           <div class="mv-tab-panel" id="tab-qa">
             <div class="mv-control-group">
               <label class="mv-control-label">Layout & Visual Testing</label>
