@@ -98,6 +98,7 @@
   let currentDeviceId = DEVICE_PRESETS[initialDevice] ? initialDevice : 'iphone-16-pro';
   let isLandscape = initialLandscape;
   let currentZoomMode = 'auto';
+  let isDockMinimized = false;
   let activeLoadedUrl = initialUrl;
   let loadTimeout = null;
 
@@ -120,6 +121,8 @@
   const urlGoBtnEl = document.getElementById('mv-url-go-btn');
   const quickChips = document.querySelectorAll('.mv-chip');
   const clockEl = document.getElementById('mv-clock');
+  const dockEl = document.getElementById('mv-dock');
+  const minimizeBtnEl = document.getElementById('mv-minimize-btn');
 
   // Normalize URL
   function normalizeUrl(input) {
@@ -233,7 +236,7 @@
   }
 
   function calculateScale(deviceWidth, deviceHeight) {
-    const availWidth = window.innerWidth - 380;
+    const availWidth = window.innerWidth - (isDockMinimized ? 60 : 380);
     const availHeight = window.innerHeight - 50;
 
     let scale = 1;
@@ -277,7 +280,34 @@
     });
   }
 
+  // Toggle Minimize to Bubble
+  function toggleDockMinimize() {
+    isDockMinimized = !isDockMinimized;
+    if (isDockMinimized) {
+      dockEl.classList.add('mv-minimized');
+    } else {
+      dockEl.classList.remove('mv-minimized');
+    }
+    const device = DEVICE_PRESETS[currentDeviceId];
+    const width = isLandscape ? device.height : device.width;
+    const height = isLandscape ? device.width : device.height;
+    calculateScale(width, height);
+  }
+
   // Event Listeners
+  if (minimizeBtnEl) {
+    minimizeBtnEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleDockMinimize();
+    });
+  }
+
+  dockEl.addEventListener('click', () => {
+    if (isDockMinimized) {
+      toggleDockMinimize();
+    }
+  });
+
   iframeEl.addEventListener('load', () => {
     loadingEl.classList.remove('mv-active');
     if (loadTimeout) clearTimeout(loadTimeout);
@@ -349,7 +379,10 @@
     const activeEl = document.activeElement;
     if (activeEl?.tagName === 'INPUT' || activeEl?.tagName === 'TEXTAREA') return;
 
-    if (e.key === 'o' || e.key === 'O') {
+    if (e.key === 'm' || e.key === 'M') {
+      e.preventDefault();
+      toggleDockMinimize();
+    } else if (e.key === 'o' || e.key === 'O') {
       isLandscape = !isLandscape;
       applyDeviceLayout();
     } else if (e.key === 'r' || e.key === 'R') {

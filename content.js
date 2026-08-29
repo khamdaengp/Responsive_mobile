@@ -104,6 +104,7 @@
   let isLandscape = false;
   let currentZoomMode = 'auto'; // 'auto', '100', '85', '75', '60'
   let isOpen = false;
+  let isDockMinimized = false;
   let clockInterval = null;
   let activeLoadedUrl = window.location.href;
   let loadTimeout = null;
@@ -162,7 +163,8 @@
     battery: `<svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>`,
     enter: `<svg viewBox="0 0 24 24"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7h-2z"/></svg>`,
     clear: `<svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
-    popout: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`
+    popout: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`,
+    minimize: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>`
   };
 
   // Build Overlay DOM Structure
@@ -222,115 +224,131 @@
         </div>
       </div>
 
-      <!-- Floating Controls Dock -->
+      <!-- Floating Controls Dock (Collapsible into Bubble) -->
       <div class="mv-controls-dock" id="mv-dock">
-        <!-- Dock Header -->
-        <div class="mv-dock-header">
-          <div class="mv-dock-title-group">
-            <div class="mv-dock-badge-icon">${SVG_ICONS.phone}</div>
-            <div>
-              <div class="mv-dock-title">MobileView</div>
-              <div class="mv-dock-subtitle">Responsive UI Tester</div>
-            </div>
-          </div>
-          <button class="mv-close-btn" id="mv-close-btn" title="Close Preview (Esc)">
-            ${SVG_ICONS.close}
-          </button>
+        <!-- Floating Bubble View (Shown when Minimized) -->
+        <div class="mv-bubble-view" id="mv-bubble-view" title="Expand MobileView Controls (M)">
+          ${SVG_ICONS.phone}
         </div>
 
-        <!-- Editable URL Address Bar -->
-        <div class="mv-control-group">
-          <label class="mv-control-label">Target URL</label>
-          <div class="mv-url-form">
-            <div class="mv-url-input-container">
-              <span class="mv-url-icon">${SVG_ICONS.globe}</span>
-              <input 
-                type="text" 
-                class="mv-url-input" 
-                id="mv-url-input" 
-                placeholder="Enter URL (e.g. google.com, facebook.com, localhost:3000)..."
-                spellcheck="false"
-                autocomplete="off"
-              />
-              <button class="mv-url-clear-btn" id="mv-url-clear-btn" title="Clear URL">
-                ${SVG_ICONS.clear}
+        <!-- Full Dock Contents -->
+        <div class="mv-dock-inner">
+          <!-- Dock Header -->
+          <div class="mv-dock-header">
+            <div class="mv-dock-title-group">
+              <div class="mv-dock-badge-icon">${SVG_ICONS.phone}</div>
+              <div>
+                <div class="mv-dock-title">MobileView</div>
+                <div class="mv-dock-subtitle">Responsive UI Tester</div>
+              </div>
+            </div>
+            <div class="mv-dock-actions">
+              <button class="mv-minimize-btn" id="mv-minimize-btn" title="Minimize to Floating Bubble (M)">
+                ${SVG_ICONS.minimize}
+              </button>
+              <button class="mv-close-btn" id="mv-close-btn" title="Close Preview (Esc)">
+                ${SVG_ICONS.close}
               </button>
             </div>
-            <button class="mv-url-go-btn" id="mv-url-go-btn" title="Load URL (Enter)">
-              ${SVG_ICONS.enter}
-            </button>
           </div>
-          <!-- Quick Preset Chips -->
-          <div class="mv-quick-links">
-            <button class="mv-chip" data-url="current">Current Tab</button>
-            <button class="mv-chip" data-url="https://www.google.com">Google</button>
-            <button class="mv-chip" data-url="https://m.facebook.com">Facebook</button>
-            <button class="mv-chip" data-url="https://github.com">GitHub</button>
-            <button class="mv-chip" data-url="http://localhost:3000">Localhost:3000</button>
-          </div>
-        </div>
 
-        <!-- Device Selector -->
-        <div class="mv-control-group">
-          <label class="mv-control-label">Device Preset</label>
-          <div class="mv-select-wrapper">
-            <select class="mv-device-select" id="mv-device-select"></select>
-            <span class="mv-select-arrow">${SVG_ICONS.arrowDown}</span>
-          </div>
-          <div class="mv-dimension-badge" id="mv-dimension-badge">393 × 852 px</div>
-        </div>
-
-        <!-- Orientation & Zoom Controls -->
-        <div class="mv-control-group">
-          <label class="mv-control-label">Orientation & Scale</label>
-          <div class="mv-btn-grid">
-            <button class="mv-btn" id="mv-orientation-btn" title="Toggle Portrait / Landscape (O)">
-              ${SVG_ICONS.rotate}
-              <span id="mv-orientation-text">Portrait</span>
-            </button>
-            <div class="mv-select-wrapper">
-              <select class="mv-device-select" id="mv-zoom-select" style="padding-top: 8px; padding-bottom: 8px;">
-                <option value="auto">Auto-Fit</option>
-                <option value="100">100%</option>
-                <option value="85">85%</option>
-                <option value="75">75%</option>
-                <option value="60">60%</option>
-              </select>
-              <span class="mv-select-arrow">${SVG_ICONS.arrowDown}</span>
+          <!-- Editable URL Address Bar -->
+          <div class="mv-control-group">
+            <label class="mv-control-label">Target URL</label>
+            <div class="mv-url-form">
+              <div class="mv-url-input-container">
+                <span class="mv-url-icon">${SVG_ICONS.globe}</span>
+                <input 
+                  type="text" 
+                  class="mv-url-input" 
+                  id="mv-url-input" 
+                  placeholder="Enter URL (e.g. google.com, facebook.com, localhost:3000)..."
+                  spellcheck="false"
+                  autocomplete="off"
+                />
+                <button class="mv-url-clear-btn" id="mv-url-clear-btn" title="Clear URL">
+                  ${SVG_ICONS.clear}
+                </button>
+              </div>
+              <button class="mv-url-go-btn" id="mv-url-go-btn" title="Load URL (Enter)">
+                ${SVG_ICONS.enter}
+              </button>
+            </div>
+            <!-- Quick Preset Chips -->
+            <div class="mv-quick-links">
+              <button class="mv-chip" data-url="current">Current Tab</button>
+              <button class="mv-chip" data-url="https://www.google.com">Google</button>
+              <button class="mv-chip" data-url="https://m.facebook.com">Facebook</button>
+              <button class="mv-chip" data-url="https://github.com">GitHub</button>
+              <button class="mv-chip" data-url="http://localhost:3000">Localhost:3000</button>
             </div>
           </div>
-        </div>
 
-        <!-- Quick Action Toolbar -->
-        <div class="mv-action-toolbar">
-          <button class="mv-icon-btn" id="mv-popout-btn" title="Pop-out to Standalone Window (P)">
-            ${SVG_ICONS.popout}
-          </button>
-          <button class="mv-icon-btn" id="mv-reload-btn" title="Reload iframe (R)">
-            ${SVG_ICONS.refresh}
-          </button>
-          <button class="mv-icon-btn" id="mv-scroll-top-btn" title="Scroll to top">
-            ${SVG_ICONS.scrollTop}
-          </button>
-          <button class="mv-icon-btn" id="mv-open-new-tab-btn" title="Open loaded URL in new tab">
-            ${SVG_ICONS.external}
-          </button>
-        </div>
+          <!-- Device Selector -->
+          <div class="mv-control-group">
+            <label class="mv-control-label">Device Preset</label>
+            <div class="mv-select-wrapper">
+              <select class="mv-device-select" id="mv-device-select"></select>
+              <span class="mv-select-arrow">${SVG_ICONS.arrowDown}</span>
+            </div>
+            <div class="mv-dimension-badge" id="mv-dimension-badge">393 × 852 px</div>
+          </div>
 
-        <!-- Keyboard Hint -->
-        <div class="mv-keyboard-hint">
-          <span>Press</span>
-          <span class="mv-kbd">Esc</span>
-          <span>close</span>
-          <span>•</span>
-          <span class="mv-kbd">P</span>
-          <span>pop-out</span>
-          <span>•</span>
-          <span class="mv-kbd">O</span>
-          <span>rotate</span>
-          <span>•</span>
-          <span class="mv-kbd">↵</span>
-          <span>load</span>
+          <!-- Orientation & Zoom Controls -->
+          <div class="mv-control-group">
+            <label class="mv-control-label">Orientation & Scale</label>
+            <div class="mv-btn-grid">
+              <button class="mv-btn" id="mv-orientation-btn" title="Toggle Portrait / Landscape (O)">
+                ${SVG_ICONS.rotate}
+                <span id="mv-orientation-text">Portrait</span>
+              </button>
+              <div class="mv-select-wrapper">
+                <select class="mv-device-select" id="mv-zoom-select" style="padding-top: 8px; padding-bottom: 8px;">
+                  <option value="auto">Auto-Fit</option>
+                  <option value="100">100%</option>
+                  <option value="85">85%</option>
+                  <option value="75">75%</option>
+                  <option value="60">60%</option>
+                </select>
+                <span class="mv-select-arrow">${SVG_ICONS.arrowDown}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Toolbar -->
+          <div class="mv-action-toolbar">
+            <button class="mv-icon-btn" id="mv-popout-btn" title="Pop-out to Standalone Window (P)">
+              ${SVG_ICONS.popout}
+            </button>
+            <button class="mv-icon-btn" id="mv-reload-btn" title="Reload iframe (R)">
+              ${SVG_ICONS.refresh}
+            </button>
+            <button class="mv-icon-btn" id="mv-scroll-top-btn" title="Scroll to top">
+              ${SVG_ICONS.scrollTop}
+            </button>
+            <button class="mv-icon-btn" id="mv-open-new-tab-btn" title="Open loaded URL in new tab">
+              ${SVG_ICONS.external}
+            </button>
+          </div>
+
+          <!-- Keyboard Hint -->
+          <div class="mv-keyboard-hint">
+            <span>Press</span>
+            <span class="mv-kbd">Esc</span>
+            <span>close</span>
+            <span>•</span>
+            <span class="mv-kbd">M</span>
+            <span>bubble</span>
+            <span>•</span>
+            <span class="mv-kbd">P</span>
+            <span>pop-out</span>
+            <span>•</span>
+            <span class="mv-kbd">O</span>
+            <span>rotate</span>
+            <span>•</span>
+            <span class="mv-kbd">↵</span>
+            <span>load</span>
+          </div>
         </div>
       </div>
     </div>
@@ -350,6 +368,7 @@
   const orientationBtnEl = shadowRoot.getElementById('mv-orientation-btn');
   const orientationTextEl = shadowRoot.getElementById('mv-orientation-text');
   const closeBtnEl = shadowRoot.getElementById('mv-close-btn');
+  const minimizeBtnEl = shadowRoot.getElementById('mv-minimize-btn');
   const popoutBtnEl = shadowRoot.getElementById('mv-popout-btn');
   const reloadBtnEl = shadowRoot.getElementById('mv-reload-btn');
   const scrollTopBtnEl = shadowRoot.getElementById('mv-scroll-top-btn');
@@ -452,7 +471,7 @@
   }
 
   function calculateScale(deviceWidth, deviceHeight) {
-    const availWidth = window.innerWidth - 410; // Reserve room for dock and padding
+    const availWidth = window.innerWidth - (isDockMinimized ? 90 : 410); // Reserve room for dock and padding
     const availHeight = window.innerHeight - 80;
 
     let scale = 1;
@@ -599,6 +618,33 @@
     calculateScale(width, height);
   });
 
+  // Toggle Dock Minimize to Bubble
+  function toggleDockMinimize() {
+    isDockMinimized = !isDockMinimized;
+    if (isDockMinimized) {
+      dockEl.classList.add('mv-minimized');
+    } else {
+      dockEl.classList.remove('mv-minimized');
+    }
+    const device = DEVICE_PRESETS[currentDeviceId];
+    const width = isLandscape ? device.height : device.width;
+    const height = isLandscape ? device.width : device.height;
+    calculateScale(width, height);
+  }
+
+  // Minimize button click
+  minimizeBtnEl.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDockMinimize();
+  });
+
+  // Clicking the dock when minimized expands it
+  dockEl.addEventListener('click', () => {
+    if (isDockMinimized) {
+      toggleDockMinimize();
+    }
+  });
+
   // Close button
   closeBtnEl.addEventListener('click', closeOverlay);
 
@@ -643,8 +689,7 @@
     }
   });
 
-  // Prevent clicks inside dock or phone frame from bubbling
-  dockEl.addEventListener('click', (e) => e.stopPropagation());
+  // Prevent clicks inside phone frame from bubbling
   frameEl.addEventListener('click', (e) => e.stopPropagation());
 
   // Global Keyboard Shortcuts
@@ -659,6 +704,9 @@
     if (e.key === 'Escape') {
       e.preventDefault();
       closeOverlay();
+    } else if (e.key === 'm' || e.key === 'M') {
+      e.preventDefault();
+      toggleDockMinimize();
     } else if (e.key === 'p' || e.key === 'P') {
       e.preventDefault();
       triggerPopout();

@@ -66,113 +66,129 @@
       </div>
     </div>
 
-    <!-- Floating Controls Dock -->
+    <!-- Floating Controls Dock (Collapsible into Bubble) -->
     <div class="mv-controls-dock" id="mv-dock">
-      <!-- Dock Header -->
-      <div class="mv-dock-header">
-        <div class="mv-dock-title-group">
-          <div class="mv-dock-badge-icon">
-            <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
-          </div>
-          <div>
-            <div class="mv-dock-title">MobileView</div>
-            <div class="mv-dock-subtitle">Standalone Pop-out</div>
-          </div>
-        </div>
+      <!-- Floating Bubble View (Shown when Minimized) -->
+      <div class="mv-bubble-view" id="mv-bubble-view" title="Expand MobileView Controls (M)">
+        <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
       </div>
 
-      <!-- Editable URL Address Bar -->
-      <div class="mv-control-group">
-        <label class="mv-control-label">Target URL</label>
-        <div class="mv-url-form">
-          <div class="mv-url-input-container">
-            <span class="mv-url-icon">
-              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-            </span>
-            <input 
-              type="text" 
-              class="mv-url-input" 
-              id="mv-url-input" 
-              placeholder="Enter URL (e.g. google.com, facebook.com, localhost:3000)..."
-              spellcheck="false"
-              autocomplete="off"
-            />
-            <button class="mv-url-clear-btn" id="mv-url-clear-btn" title="Clear URL">
-              <svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      <!-- Full Dock Contents -->
+      <div class="mv-dock-inner">
+        <!-- Dock Header -->
+        <div class="mv-dock-header">
+          <div class="mv-dock-title-group">
+            <div class="mv-dock-badge-icon">
+              <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+            </div>
+            <div>
+              <div class="mv-dock-title">MobileView</div>
+              <div class="mv-dock-subtitle">Standalone Pop-out</div>
+            </div>
+          </div>
+          <div class="mv-dock-actions">
+            <button class="mv-minimize-btn" id="mv-minimize-btn" title="Minimize to Floating Bubble (M)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
-          <button class="mv-url-go-btn" id="mv-url-go-btn" title="Load URL (Enter)">
-            <svg viewBox="0 0 24 24"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7h-2z"/></svg>
-          </button>
         </div>
-        <!-- Quick Preset Chips -->
-        <div class="mv-quick-links">
-          <button class="mv-chip" data-url="https://www.google.com">Google</button>
-          <button class="mv-chip" data-url="https://m.facebook.com">Facebook</button>
-          <button class="mv-chip" data-url="https://github.com">GitHub</button>
-          <button class="mv-chip" data-url="http://localhost:3000">Localhost:3000</button>
-        </div>
-      </div>
 
-      <!-- Device Selector -->
-      <div class="mv-control-group">
-        <label class="mv-control-label">Device Preset</label>
-        <div class="mv-select-wrapper">
-          <select class="mv-device-select" id="mv-device-select"></select>
-          <span class="mv-select-arrow">
-            <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-          </span>
+        <!-- Editable URL Address Bar -->
+        <div class="mv-control-group">
+          <label class="mv-control-label">Target URL</label>
+          <div class="mv-url-form">
+            <div class="mv-url-input-container">
+              <span class="mv-url-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+              </span>
+              <input 
+                type="text" 
+                class="mv-url-input" 
+                id="mv-url-input" 
+                placeholder="Enter URL (e.g. google.com, facebook.com, localhost:3000)..."
+                spellcheck="false"
+                autocomplete="off"
+              />
+              <button class="mv-url-clear-btn" id="mv-url-clear-btn" title="Clear URL">
+                <svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            <button class="mv-url-go-btn" id="mv-url-go-btn" title="Load URL (Enter)">
+              <svg viewBox="0 0 24 24"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7h-2z"/></svg>
+            </button>
+          </div>
+          <!-- Quick Preset Chips -->
+          <div class="mv-quick-links">
+            <button class="mv-chip" data-url="https://www.google.com">Google</button>
+            <button class="mv-chip" data-url="https://m.facebook.com">Facebook</button>
+            <button class="mv-chip" data-url="https://github.com">GitHub</button>
+            <button class="mv-chip" data-url="http://localhost:3000">Localhost:3000</button>
+          </div>
         </div>
-        <div class="mv-dimension-badge" id="mv-dimension-badge">393 × 852 px</div>
-      </div>
 
-      <!-- Orientation & Zoom Controls -->
-      <div class="mv-control-group">
-        <label class="mv-control-label">Orientation & Scale</label>
-        <div class="mv-btn-grid">
-          <button class="mv-btn" id="mv-orientation-btn" title="Toggle Portrait / Landscape (O)">
-            <svg viewBox="0 0 24 24"><path d="M7.11 8.53L5.7 7.11C4.8 8.27 4.24 9.61 4.07 11h2.02c.14-.87.5-1.72 1.02-2.47zM6.09 13H4.07c.17 1.39.72 2.73 1.62 3.89l1.41-1.42c-.52-.75-.88-1.6-1.01-2.47zm1.01 5.32c1.16.9 2.51 1.44 3.9 1.61V17.9c-.87-.15-1.71-.49-2.46-1.03L7.1 18.32zM13 4.07V1L8.45 5.55 13 10V6.09c3.37 0 6.09 2.72 6.09 6.09s-2.72 6.09-6.09 6.09v2.02c4.49 0 8.11-3.62 8.11-8.11S17.49 4.07 13 4.07z"/></svg>
-            <span id="mv-orientation-text">Portrait</span>
-          </button>
+        <!-- Device Selector -->
+        <div class="mv-control-group">
+          <label class="mv-control-label">Device Preset</label>
           <div class="mv-select-wrapper">
-            <select class="mv-device-select" id="mv-zoom-select" style="padding-top: 8px; padding-bottom: 8px;">
-              <option value="auto">Auto-Fit</option>
-              <option value="100">100%</option>
-              <option value="85">85%</option>
-              <option value="75">75%</option>
-              <option value="60">60%</option>
-            </select>
+            <select class="mv-device-select" id="mv-device-select"></select>
             <span class="mv-select-arrow">
               <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
             </span>
           </div>
+          <div class="mv-dimension-badge" id="mv-dimension-badge">393 × 852 px</div>
         </div>
-      </div>
 
-      <!-- Quick Action Toolbar -->
-      <div class="mv-action-toolbar">
-        <button class="mv-icon-btn" id="mv-reload-btn" title="Reload iframe (R)">
-          <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-        </button>
-        <button class="mv-icon-btn" id="mv-scroll-top-btn" title="Scroll to top">
-          <svg viewBox="0 0 24 24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg>
-        </button>
-        <button class="mv-icon-btn" id="mv-open-new-tab-btn" title="Open loaded URL in new tab">
-          <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
-        </button>
-      </div>
+        <!-- Orientation & Zoom Controls -->
+        <div class="mv-control-group">
+          <label class="mv-control-label">Orientation & Scale</label>
+          <div class="mv-btn-grid">
+            <button class="mv-btn" id="mv-orientation-btn" title="Toggle Portrait / Landscape (O)">
+              <svg viewBox="0 0 24 24"><path d="M7.11 8.53L5.7 7.11C4.8 8.27 4.24 9.61 4.07 11h2.02c.14-.87.5-1.72 1.02-2.47zM6.09 13H4.07c.17 1.39.72 2.73 1.62 3.89l1.41-1.42c-.52-.75-.88-1.6-1.01-2.47zm1.01 5.32c1.16.9 2.51 1.44 3.9 1.61V17.9c-.87-.15-1.71-.49-2.46-1.03L7.1 18.32zM13 4.07V1L8.45 5.55 13 10V6.09c3.37 0 6.09 2.72 6.09 6.09s-2.72 6.09-6.09 6.09v2.02c4.49 0 8.11-3.62 8.11-8.11S17.49 4.07 13 4.07z"/></svg>
+              <span id="mv-orientation-text">Portrait</span>
+            </button>
+            <div class="mv-select-wrapper">
+              <select class="mv-device-select" id="mv-zoom-select" style="padding-top: 8px; padding-bottom: 8px;">
+                <option value="auto">Auto-Fit</option>
+                <option value="100">100%</option>
+                <option value="85">85%</option>
+                <option value="75">75%</option>
+                <option value="60">60%</option>
+              </select>
+              <span class="mv-select-arrow">
+                <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+              </span>
+            </div>
+          </div>
+        </div>
 
-      <!-- Keyboard Hint -->
-      <div class="mv-keyboard-hint">
-        <span>Shortcut:</span>
-        <span class="mv-kbd">O</span>
-        <span>rotate</span>
-        <span>•</span>
-        <span class="mv-kbd">R</span>
-        <span>reload</span>
-        <span>•</span>
-        <span class="mv-kbd">↵</span>
-        <span>load</span>
+        <!-- Quick Action Toolbar -->
+        <div class="mv-action-toolbar">
+          <button class="mv-icon-btn" id="mv-reload-btn" title="Reload iframe (R)">
+            <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+          </button>
+          <button class="mv-icon-btn" id="mv-scroll-top-btn" title="Scroll to top">
+            <svg viewBox="0 0 24 24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg>
+          </button>
+          <button class="mv-icon-btn" id="mv-open-new-tab-btn" title="Open loaded URL in new tab">
+            <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+          </button>
+        </div>
+
+        <!-- Keyboard Hint -->
+        <div class="mv-keyboard-hint">
+          <span>Shortcut:</span>
+          <span class="mv-kbd">M</span>
+          <span>bubble</span>
+          <span>•</span>
+          <span class="mv-kbd">O</span>
+          <span>rotate</span>
+          <span>•</span>
+          <span class="mv-kbd">R</span>
+          <span>reload</span>
+          <span>•</span>
+          <span class="mv-kbd">↵</span>
+          <span>load</span>
+        </div>
       </div>
     </div>
   </div>

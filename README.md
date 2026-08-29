@@ -12,6 +12,11 @@ A modern, high-performance **Manifest V3 Chrome Extension** that allows develope
   - Integrated status bar with live auto-updating clock, cellular 5G signal, Wi-Fi, and battery indicators.
   - Native gesture home indicator bar at the bottom.
 
+- **🫧 Minimize to Floating Bubble**:
+  - Collapse the controls dock into a sleek floating action bubble at the bottom corner.
+  - Automatically gives the device mockup maximum screen space to scale up.
+  - Simply click the bubble or press <kbd>M</kbd> to expand the full dock back out.
+
 - **🗗 Pop-out to Standalone Window**:
   - Detach the responsive tester from the active tab into a dedicated, standalone floating window.
   - Dock it side-by-side with your code editor (VS Code, WebStorm) or place it on a secondary monitor.
@@ -47,6 +52,7 @@ A modern, high-performance **Manifest V3 Chrome Extension** that allows develope
 | Shortcut | Action |
 |---|---|
 | <kbd>Esc</kbd> | Close mobile overlay |
+| <kbd>M</kbd> | Minimize / Expand Controls Dock (Floating Bubble) |
 | <kbd>P</kbd> | Pop-out to Standalone Window |
 | <kbd>O</kbd> | Toggle Portrait / Landscape orientation |
 | <kbd>R</kbd> | Reload current mobile viewport |
