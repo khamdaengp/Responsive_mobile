@@ -1150,6 +1150,17 @@
 .mv-payload-form {
   display: flex;
   gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mv-payload-form .mv-select-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+#mv-inject-btn {
+  flex-shrink: 0;
 }
 
 /* Grid Ruler Overlay */
@@ -1801,9 +1812,12 @@
   display: flex;
   gap: 6px;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mv-http-method-select {
+  flex-shrink: 0;
   background: rgba(30, 41, 59, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
@@ -1818,6 +1832,7 @@
 
 .mv-http-url-input {
   flex: 1;
+  min-width: 0;
   background: rgba(15, 23, 42, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
@@ -1830,6 +1845,10 @@
 
 .mv-http-url-input:focus {
   border-color: #6366f1;
+}
+
+#mv-http-send-btn {
+  flex-shrink: 0;
 }
 
 .mv-http-tab-pane {
