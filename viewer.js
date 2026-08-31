@@ -961,31 +961,48 @@
     }, 1500);
   });
 
-  // Network Profile Change Handler
+  // Unified Network Profile Setting & Live Telemetry
+  function setNetworkProfile(profileKey) {
+    activeNetProfile = profileKey || 'online';
+    const prof = NETWORK_PROFILES[activeNetProfile] || NETWORK_PROFILES.online;
+
+    if (networkSelectEl) networkSelectEl.value = activeNetProfile;
+
+    const quickButtons = document.querySelectorAll('.mv-quick-net-btn');
+    quickButtons.forEach(b => {
+      b.classList.toggle('mv-btn-active', b.getAttribute('data-profile') === activeNetProfile);
+    });
+
+    if (prof.offline) {
+      if (netDotEl) netDotEl.classList.add('mv-offline');
+      if (netStatusTextEl) netStatusTextEl.textContent = 'Offline (Disconnected)';
+      if (netSpeedEl) netSpeedEl.textContent = '0 Kbps';
+      if (netRttEl) netRttEl.textContent = '∞ ms';
+      logNetworkEvent('NET', 'Simulated Network Disconnected (Offline)', 'warn');
+      logSecurityEvent('OFFLINE', 'Network throttler severed connectivity', 'warn');
+    } else {
+      if (netDotEl) netDotEl.classList.remove('mv-offline');
+      if (netStatusTextEl) netStatusTextEl.textContent = `${prof.name} Active`;
+      if (netSpeedEl) netSpeedEl.textContent = prof.speed;
+      if (netRttEl) netRttEl.textContent = prof.rtt;
+      logNetworkEvent('THROTTLE', `Profile changed to ${prof.name}`, 'pass');
+      logSecurityEvent('NET', `Throttling set to ${prof.name}`, 'info');
+    }
+
+    // Broadcast to in-frame interceptor
+    if (iframeEl && iframeEl.contentWindow) {
+      try {
+        iframeEl.contentWindow.postMessage({
+          type: 'MOBILEVIEW_SET_NETWORK_THROTTLE',
+          profile: activeNetProfile
+        }, '*');
+      } catch (e) {}
+    }
+  }
+
   if (networkSelectEl) {
     networkSelectEl.addEventListener('change', (e) => {
-      activeNetProfile = e.target.value;
-      const prof = NETWORK_PROFILES[activeNetProfile] || NETWORK_PROFILES.online;
-
-      if (prof.offline) {
-        netDotEl.classList.add('mv-offline');
-        netStatusTextEl.textContent = 'Offline (Disconnected)';
-        netSpeedEl.textContent = '0 Kbps';
-        netRttEl.textContent = '∞ ms';
-        iframeEl.src = 'about:blank';
-        logNetworkEvent('NET', 'Simulated Network Disconnected (Offline)', 'warn');
-        logSecurityEvent('OFFLINE', 'Network throttler severed connectivity', 'warn');
-      } else {
-        netDotEl.classList.remove('mv-offline');
-        netStatusTextEl.textContent = `${prof.name} Active`;
-        netSpeedEl.textContent = prof.speed;
-        netRttEl.textContent = prof.rtt;
-        logNetworkEvent('THROTTLE', `Profile changed to ${prof.name}`, 'pass');
-        logSecurityEvent('NET', `Throttling set to ${prof.name}`, 'info');
-        if (iframeEl.src === 'about:blank' || !iframeEl.src) {
-          reloadIframe();
-        }
-      }
+      setNetworkProfile(e.target.value);
     });
   }
 
@@ -1433,14 +1450,22 @@
 
   if (iframeEl) {
     iframeEl.addEventListener('load', () => {
-      if (isTouchCursorActive && iframeEl.contentWindow) {
-        try {
-          iframeEl.contentWindow.postMessage({
-            type: 'MOBILEVIEW_SET_TOUCH_DOT',
-            active: true
-          }, '*');
-        } catch (e) {}
-      }
+      setTimeout(() => {
+        if (iframeEl.contentWindow) {
+          try {
+            if (isTouchCursorActive) {
+              iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_SET_TOUCH_DOT', active: true }, '*');
+            }
+            if (activeThemeScheme !== 'auto') {
+              iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_SET_COLOR_SCHEME', scheme: activeThemeScheme }, '*');
+            }
+            if (activeNetProfile !== 'online') {
+              iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_SET_NETWORK_THROTTLE', profile: activeNetProfile }, '*');
+            }
+            iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_REQUEST_STORAGE' }, '*');
+          } catch (e) {}
+        }
+      }, 200);
     });
   }
 
@@ -1471,28 +1496,59 @@
     });
   }
 
-  // Dark / Light Theme Toggles
+  // Unified Color Scheme / Theme Switcher
+  let activeThemeScheme = 'auto';
+
+  function setColorScheme(themeKey) {
+    activeThemeScheme = themeKey || 'auto';
+
+    const themeButtons = document.querySelectorAll('.mv-theme-btn');
+    themeButtons.forEach(b => {
+      b.classList.toggle('mv-btn-active', b.getAttribute('data-theme') === activeThemeScheme);
+    });
+
+    if (themeBtnEl) {
+      themeBtnEl.classList.toggle('mv-btn-active', activeThemeScheme === 'dark');
+    }
+    if (themeTextEl) {
+      themeTextEl.textContent = activeThemeScheme === 'dark' ? 'Mode: Dark Theme' : (activeThemeScheme === 'light' ? 'Mode: Light Theme' : 'Mode: System Theme');
+    }
+
+    if (iframeEl && iframeEl.contentWindow) {
+      try {
+        iframeEl.contentWindow.postMessage({
+          type: 'MOBILEVIEW_SET_COLOR_SCHEME',
+          scheme: activeThemeScheme
+        }, '*');
+      } catch (e) {}
+    }
+
+    logSecurityEvent('THEME', `Color scheme switched to ${activeThemeScheme}`, 'info');
+  }
+
+  // Dark / Light Theme Toggles in Viewport Tab
   const themeButtons = document.querySelectorAll('.mv-theme-btn');
   themeButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      themeButtons.forEach(b => b.classList.remove('mv-btn-active'));
-      btn.classList.add('mv-btn-active');
       const theme = btn.getAttribute('data-theme') || 'auto';
-      try {
-        iframeEl.contentWindow.postMessage({ type: 'SET_COLOR_SCHEME', scheme: theme }, '*');
-      } catch (e) {}
+      setColorScheme(theme);
     });
   });
 
-  // Quick Network Profile Switcher
+  // QA Tab Theme Toggle Button
+  if (themeBtnEl) {
+    themeBtnEl.addEventListener('click', () => {
+      const nextTheme = activeThemeScheme === 'dark' ? 'light' : 'dark';
+      setColorScheme(nextTheme);
+    });
+  }
+
+  // Quick Network Profile Switcher in Viewport Tab
   const quickNetButtons = document.querySelectorAll('.mv-quick-net-btn');
   quickNetButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      quickNetButtons.forEach(b => b.classList.remove('mv-btn-active'));
-      btn.classList.add('mv-btn-active');
-      activeNetProfile = btn.getAttribute('data-profile') || 'online';
-      if (netProfileSelect) netProfileSelect.value = activeNetProfile;
-      logNetworkEvent('THROTTLE', `Profile switched to ${activeNetProfile}`, 'info');
+      const profile = btn.getAttribute('data-profile') || 'online';
+      setNetworkProfile(profile);
     });
   });
 

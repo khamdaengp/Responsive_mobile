@@ -149,8 +149,18 @@
   });
 
   // =========================================================================
-  // 2. NETWORK TRAFFIC INTERCEPTION (FETCH & XHR)
+  // 2. NETWORK TRAFFIC INTERCEPTION & REALISTIC THROTTLING SIMULATION
   // =========================================================================
+  let activeThrottleProfile = 'online';
+  const THROTTLE_DELAYS = {
+    online: 0,
+    fast4g: 80,
+    slow4g: 220,
+    fast3g: 450,
+    slow3g: 1200,
+    offline: -1
+  };
+
   function broadcastNet(details) {
     try {
       window.parent.postMessage({
@@ -210,6 +220,32 @@
         cleanUrl = parsed.pathname + parsed.search;
       } catch (e) {
         if (cleanUrl.length > 80) cleanUrl = cleanUrl.substring(0, 60) + '...';
+      }
+
+      // Offline simulation
+      if (activeThrottleProfile === 'offline') {
+        const duration = 10;
+        broadcastNet({
+          id: reqId,
+          reqType: 'FETCH',
+          method: method.toUpperCase(),
+          url: cleanUrl,
+          fullUrl: fullUrl,
+          status: 0,
+          statusText: 'ERR_INTERNET_DISCONNECTED (Offline Mode)',
+          duration: duration,
+          requestHeaders: requestHeaders,
+          requestPayload: requestPayload,
+          responseHeaders: {},
+          responseBody: 'TypeError: Failed to fetch (Device Offline Mode Simulated)'
+        });
+        throw new TypeError('Failed to fetch (Device Offline Mode Simulated)');
+      }
+
+      // Latency simulation
+      const delayMs = THROTTLE_DELAYS[activeThrottleProfile] || 0;
+      if (delayMs > 0) {
+        await new Promise(r => setTimeout(r, delayMs));
       }
 
       try {
@@ -311,6 +347,40 @@
       cleanUrl = parsed.pathname + parsed.search;
     } catch (e) {
       if (cleanUrl.length > 80) cleanUrl = cleanUrl.substring(0, 60) + '...';
+    }
+
+    if (activeThrottleProfile === 'offline') {
+      setTimeout(() => {
+        try {
+          this.dispatchEvent(new ProgressEvent('error'));
+          this.dispatchEvent(new ProgressEvent('loadend'));
+        } catch (e) {}
+        broadcastNet({
+          id: reqId,
+          reqType: 'XHR',
+          method: method,
+          url: cleanUrl,
+          fullUrl: fullUrl,
+          status: 0,
+          statusText: 'ERR_INTERNET_DISCONNECTED (Offline Mode)',
+          duration: 10,
+          requestHeaders: this.__mv_requestHeaders,
+          requestPayload: requestPayload,
+          responseHeaders: {},
+          responseBody: 'XHR Network Error: Offline Mode Simulated'
+        });
+      }, 15);
+      return;
+    }
+
+    const delayMs = THROTTLE_DELAYS[activeThrottleProfile] || 0;
+    if (delayMs > 0) {
+      setTimeout(() => {
+        try {
+          origSend.apply(this, args);
+        } catch (e) {}
+      }, delayMs);
+      return;
     }
 
     this.addEventListener('loadend', () => {
@@ -623,7 +693,101 @@
         dot.style.opacity = '0';
       }
     }
+
+    // 7. Color Scheme / Theme Simulator
+    if (e.data.type === 'MOBILEVIEW_SET_COLOR_SCHEME' || e.data.type === 'SET_COLOR_SCHEME') {
+      applyColorScheme(e.data.scheme || e.data.theme || 'auto');
+    }
+
+    // 8. Network Throttling Switcher
+    if (e.data.type === 'MOBILEVIEW_SET_NETWORK_THROTTLE') {
+      activeThrottleProfile = e.data.profile || 'online';
+    }
   });
+
+  // =========================================================================
+  // Theme / Color Scheme Simulator
+  // =========================================================================
+  function applyColorScheme(scheme) {
+    try {
+      let styleEl = document.getElementById('__mv_theme_override__');
+      if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = '__mv_theme_override__';
+        (document.head || document.documentElement).appendChild(styleEl);
+      }
+
+      if (scheme === 'dark') {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.documentElement.setAttribute('data-mode', 'dark');
+        document.documentElement.style.colorScheme = 'dark';
+        if (document.body) {
+          document.body.classList.add('dark');
+          document.body.classList.remove('light');
+          document.body.setAttribute('data-theme', 'dark');
+        }
+        styleEl.textContent = `
+          :root {
+            color-scheme: dark !important;
+            --background: 222.2 84% 4.9% !important;
+            --foreground: 210 40% 98% !important;
+          }
+        `;
+        try {
+          localStorage.setItem('vite-ui-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+        } catch (e) {}
+      } else if (scheme === 'light') {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+        document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.setAttribute('data-bs-theme', 'light');
+        document.documentElement.setAttribute('data-mode', 'light');
+        document.documentElement.style.colorScheme = 'light';
+        if (document.body) {
+          document.body.classList.add('light');
+          document.body.classList.remove('dark');
+          document.body.setAttribute('data-theme', 'light');
+        }
+        styleEl.textContent = `
+          :root {
+            color-scheme: light !important;
+            --background: 0 0% 100% !important;
+            --foreground: 222.2 84% 4.9% !important;
+          }
+        `;
+        try {
+          localStorage.setItem('vite-ui-theme', 'light');
+          localStorage.setItem('theme', 'light');
+        } catch (e) {}
+      } else {
+        // System / Auto
+        document.documentElement.classList.remove('dark', 'light');
+        document.documentElement.removeAttribute('data-theme');
+        document.documentElement.removeAttribute('data-bs-theme');
+        document.documentElement.removeAttribute('data-mode');
+        document.documentElement.style.colorScheme = 'normal';
+        if (document.body) {
+          document.body.classList.remove('dark', 'light');
+          document.body.removeAttribute('data-theme');
+        }
+        styleEl.textContent = ``;
+        try {
+          localStorage.setItem('vite-ui-theme', 'system');
+          localStorage.setItem('theme', 'system');
+        } catch (e) {}
+      }
+
+      // Trigger standard web theme change events
+      try {
+        window.dispatchEvent(new Event('themechange'));
+        window.dispatchEvent(new StorageEvent('storage', { key: 'vite-ui-theme', newValue: scheme }));
+      } catch (e) {}
+    } catch (e) {}
+  }
 
   // =========================================================================
   // In-Frame Simulated Touch Dot Pointer & Ripple Indicator
