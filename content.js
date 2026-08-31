@@ -742,6 +742,57 @@
     window.open(activeLoadedUrl || window.location.href, '_blank');
   });
 
+  // Capture device snapshot and download as JPEG
+  function captureSnapshot() {
+    try {
+      const targetFrame = shadowRoot.getElementById('mv-frame') || shadowRoot.getElementById('mv-stage');
+      const rect = targetFrame.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+
+      chrome.runtime.sendMessage({
+        type: 'CAPTURE_DEVICE_SNAPSHOT'
+      }, (response) => {
+        if (response && response.success && response.dataUrl) {
+          const img = new Image();
+          img.onload = () => {
+            try {
+              const canvas = document.createElement('canvas');
+              const cropX = Math.max(0, (rect.left - 4) * dpr);
+              const cropY = Math.max(0, (rect.top - 4) * dpr);
+              const cropW = Math.min(img.width - cropX, (rect.width + 8) * dpr);
+              const cropH = Math.min(img.height - cropY, (rect.height + 8) * dpr);
+
+              canvas.width = Math.round(cropW);
+              canvas.height = Math.round(cropH);
+              const ctx = canvas.getContext('2d');
+
+              ctx.fillStyle = '#ffffff';
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, canvas.width, canvas.height);
+
+              const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+              const a = document.createElement('a');
+              const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+              a.download = `mobileview-${currentDeviceId || 'device'}-${timestamp}.jpeg`;
+              a.href = jpegDataUrl;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+            } catch (err) {
+              const a = document.createElement('a');
+              a.download = `mobileview-display-${Date.now()}.jpeg`;
+              a.href = response.dataUrl;
+              a.click();
+            }
+          };
+          img.src = response.dataUrl;
+        }
+      });
+    } catch (e) {
+      console.error('[MobileView] Snapshot error:', e);
+    }
+  }
+
   // Backdrop click to dismiss
   backdrop.addEventListener('click', (e) => {
     if (e.target === backdrop || e.target.classList.contains('mv-workspace')) {
