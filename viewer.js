@@ -617,6 +617,16 @@
   let latestSessionStorage = {};
   let latestCookies = {};
 
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   function copyTextWithFeedback(text, btnEl) {
     if (!text || !navigator.clipboard) return;
     navigator.clipboard.writeText(text).then(() => {
@@ -636,24 +646,27 @@
 
   function renderStorageTable(tableEl, dataObj, storeType) {
     if (!tableEl) return;
-    if (!dataObj || Object.keys(dataObj).length === 0) {
-      tableEl.innerHTML = `<div class="mv-storage-row" style="color: #64748b; font-style: italic;">No items found</div>`;
+    const entries = dataObj && typeof dataObj === 'object' ? Object.entries(dataObj) : [];
+    if (entries.length === 0) {
+      tableEl.innerHTML = `<div class="mv-storage-row" style="color: #64748b; font-style: italic;">No ${storeType === 'cookie' ? 'Cookies' : (storeType === 'session' ? 'SessionStorage' : 'LocalStorage')} items found</div>`;
       return;
     }
 
     let html = '';
-    Object.entries(dataObj).forEach(([k, v]) => {
+    entries.forEach(([k, v]) => {
       const valStr = String(v ?? '');
+      const escapedKey = escapeHtml(k);
+      const escapedVal = escapeHtml(valStr);
       html += `
         <div class="mv-storage-row">
-          <span class="mv-storage-key" title="${k}">${k}</span>
-          <span class="mv-storage-val" title="Click to copy: ${valStr}" data-copy-val="${encodeURIComponent(valStr)}">${valStr}</span>
+          <span class="mv-storage-key" title="${escapedKey}">${escapedKey}</span>
+          <span class="mv-storage-val" title="Click to copy: ${escapedVal}" data-copy-val="${encodeURIComponent(valStr)}">${escapedVal}</span>
           <div class="mv-storage-actions">
             <button class="mv-storage-copy-btn" data-copy-val="${encodeURIComponent(valStr)}" title="Copy Value">
               <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
             </button>
             ${storeType !== 'cookie' ? `
-              <button class="mv-storage-del-btn" data-store="${storeType}" data-key="${k}" title="Delete Key">✕</button>
+              <button class="mv-storage-del-btn" data-store="${storeType}" data-key="${escapedKey}" title="Delete Key">✕</button>
             ` : ''}
           </div>
         </div>
@@ -981,6 +994,17 @@
       const targetPanelId = btn.getAttribute('data-tab');
       const panel = document.getElementById(targetPanelId);
       if (panel) panel.classList.add('mv-panel-active');
+
+      // Instantly request latest data for active tab
+      if (targetPanelId === 'tab-app' && iframeEl && iframeEl.contentWindow) {
+        try {
+          iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_REQUEST_STORAGE' }, '*');
+        } catch (e) {}
+      } else if (targetPanelId === 'tab-perf' && iframeEl && iframeEl.contentWindow) {
+        try {
+          iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_REQUEST_PERF' }, '*');
+        } catch (e) {}
+      }
     });
   });
 

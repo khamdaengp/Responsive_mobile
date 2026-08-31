@@ -418,24 +418,34 @@
   function collectStorage() {
     try {
       const localData = {};
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i);
-        localData[k] = localStorage.getItem(k);
-      }
+      try {
+        if (window.localStorage && window.localStorage.length !== undefined) {
+          for (let i = 0; i < window.localStorage.length; i++) {
+            const k = window.localStorage.key(i);
+            if (k) localData[k] = window.localStorage.getItem(k);
+          }
+        }
+      } catch (err) {}
 
       const sessionData = {};
-      for (let i = 0; i < sessionStorage.length; i++) {
-        const k = sessionStorage.key(i);
-        sessionData[k] = sessionStorage.getItem(k);
-      }
+      try {
+        if (window.sessionStorage && window.sessionStorage.length !== undefined) {
+          for (let i = 0; i < window.sessionStorage.length; i++) {
+            const k = window.sessionStorage.key(i);
+            if (k) sessionData[k] = window.sessionStorage.getItem(k);
+          }
+        }
+      } catch (err) {}
 
       const cookiesData = {};
-      if (document.cookie) {
-        document.cookie.split(';').forEach(c => {
-          const parts = c.trim().split('=');
-          if (parts[0]) cookiesData[parts[0]] = parts.slice(1).join('=');
-        });
-      }
+      try {
+        if (document.cookie) {
+          document.cookie.split(';').forEach(c => {
+            const parts = c.trim().split('=');
+            if (parts[0]) cookiesData[parts[0]] = parts.slice(1).join('=');
+          });
+        }
+      } catch (err) {}
 
       window.parent.postMessage({
         type: 'MOBILEVIEW_STORAGE_DATA',
@@ -448,8 +458,33 @@
     } catch (e) {}
   }
 
-  setInterval(collectStorage, 2500);
-  setTimeout(collectStorage, 500);
+  // Hook Storage mutations to broadcast updates in real time
+  try {
+    const origLocalSet = Storage.prototype.setItem;
+    Storage.prototype.setItem = function(key, val) {
+      const res = origLocalSet.apply(this, arguments);
+      setTimeout(collectStorage, 50);
+      return res;
+    };
+    const origLocalRemove = Storage.prototype.removeItem;
+    Storage.prototype.removeItem = function(key) {
+      const res = origLocalRemove.apply(this, arguments);
+      setTimeout(collectStorage, 50);
+      return res;
+    };
+    const origLocalClear = Storage.prototype.clear;
+    Storage.prototype.clear = function() {
+      const res = origLocalClear.apply(this, arguments);
+      setTimeout(collectStorage, 50);
+      return res;
+    };
+  } catch (e) {}
+
+  setInterval(collectStorage, 1000);
+  setTimeout(collectStorage, 200);
+  setTimeout(collectStorage, 800);
+  window.addEventListener('DOMContentLoaded', collectStorage);
+  window.addEventListener('load', collectStorage);
 
   // =========================================================================
   // 5. MESSAGE HANDLER: REPL EXECUTION & STORAGE MUTATIONS
