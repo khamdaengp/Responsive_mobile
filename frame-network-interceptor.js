@@ -12,6 +12,53 @@
   if (window.__mv_devtools_active) return;
   window.__mv_devtools_active = true;
 
+  // 0. High-DPI Sharp Rendering & Complete Scrollbar Elimination across all iframes & inner containers
+  const applyMobileFrameStyles = () => {
+    try {
+      if (document.getElementById('__mv_mobile_frame_styles__')) return;
+      const styleEl = document.createElement('style');
+      styleEl.id = '__mv_mobile_frame_styles__';
+      styleEl.textContent = `
+        html, body, * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+          -webkit-font-smoothing: antialiased !important;
+          -moz-osx-font-smoothing: grayscale !important;
+          text-rendering: optimizeLegibility !important;
+        }
+        *::-webkit-scrollbar,
+        html::-webkit-scrollbar,
+        body::-webkit-scrollbar,
+        div::-webkit-scrollbar,
+        main::-webkit-scrollbar,
+        section::-webkit-scrollbar,
+        article::-webkit-scrollbar,
+        nav::-webkit-scrollbar,
+        aside::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+          background: transparent !important;
+        }
+        *::-webkit-scrollbar-thumb,
+        *::-webkit-scrollbar-track,
+        *::-webkit-scrollbar-corner {
+          display: none !important;
+          background: transparent !important;
+        }
+      `;
+      const target = document.head || document.documentElement;
+      if (target) {
+        target.appendChild(styleEl);
+      }
+    } catch (e) {}
+  };
+
+  applyMobileFrameStyles();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyMobileFrameStyles);
+  }
+
   let reqCounter = 0;
 
   function safeStringify(obj) {

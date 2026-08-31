@@ -2,9 +2,12 @@
    MobileView — Native Scrollbar Elimination for Mobile Frames
    ========================================================================== */
 
-html, body {
+html, body, * {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
 }
 
 html::-webkit-scrollbar,
@@ -14,6 +17,9 @@ section::-webkit-scrollbar,
 main::-webkit-scrollbar,
 pre::-webkit-scrollbar,
 code::-webkit-scrollbar,
+nav::-webkit-scrollbar,
+aside::-webkit-scrollbar,
+article::-webkit-scrollbar,
 *::-webkit-scrollbar {
   display: none !important;
   width: 0 !important;
@@ -21,7 +27,9 @@ code::-webkit-scrollbar,
   background: transparent !important;
 }
 
-*::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-corner {
   display: none !important;
   background: transparent !important;
 }

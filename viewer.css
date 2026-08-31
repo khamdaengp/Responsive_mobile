@@ -43,7 +43,13 @@ body.mv-popout-body .mv-stage-container {
   justify-content: center;
   transform-origin: center center;
   flex-shrink: 0;
-  transition: transform 0.1s ease-out;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 body.mv-popout-body .mv-controls-dock:not(.mv-minimized) {
