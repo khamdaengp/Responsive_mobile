@@ -1224,17 +1224,6 @@
     try {
       const device = DEVICE_PRESETS[currentDeviceId] || { width: customWidth, height: customHeight, os: 'Custom' };
       const devW = isLandscape ? device.height : device.width;
-      const devH = isLandscape ? device.width : device.height;
-      const frameTotalWidth = devW + 28; // 14px border on each side
-      const frameTotalHeight = devH + 28;
-      const dockEl = document.getElementById('mv-dock');
-      const actualDockWidth = (!isDockMinimized && dockEl) ? Math.max(420, dockEl.offsetWidth || 440) : (isDockMinimized ? 60 : 440);
-      const extraSpacing = 60; // safe window margins and gap
-
-      // Detect OS window border overhead
-      const osChromeWidth = Math.max(0, window.outerWidth - window.innerWidth) || 16;
-      const osChromeHeight = Math.max(0, window.outerHeight - window.innerHeight) || 39;
-
       const isTablet = device.category === 'Tablets & iPads' || device.camera === 'tablet' || (devW >= 700);
       const frameTotalWidth = devW + (isTablet ? 20 : 28);
       const frameTotalHeight = devH + (isTablet ? 20 : 28);
