@@ -1070,20 +1070,22 @@
       const device = DEVICE_PRESETS[currentDeviceId] || { width: customWidth, height: customHeight, os: 'Custom' };
       const devW = isLandscape ? device.height : device.width;
       const devH = isLandscape ? device.width : device.height;
-      const frameTotalWidth = devW + 20; // 10px border on each side
-      const frameTotalHeight = devH + 20;
-      const extraDockWidth = isDockMinimized ? 40 : 400;
+      const frameTotalWidth = devW + 28; // 14px border on each side
+      const frameTotalHeight = devH + 28;
+      const dockEl = document.getElementById('mv-dock');
+      const actualDockWidth = (!isDockMinimized && dockEl) ? Math.max(420, dockEl.offsetWidth || 440) : (isDockMinimized ? 60 : 440);
+      const extraSpacing = 60; // safe window margins and gap
 
       // Detect OS window border overhead
       const osChromeWidth = Math.max(0, window.outerWidth - window.innerWidth) || 16;
       const osChromeHeight = Math.max(0, window.outerHeight - window.innerHeight) || 39;
 
       // Screen bounds safely accounting for taskbars on smaller laptops (e.g. 768p / 800p / 900p / 1080p)
-      const maxAllowedWidth = Math.max(400, (screen.availWidth || window.screen.width || 1280) - 20);
-      const maxAllowedHeight = Math.max(300, (screen.availHeight || window.screen.height || 800) - 30);
+      const maxAllowedWidth = Math.max(450, (screen.availWidth || window.screen.width || 1280) - 20);
+      const maxAllowedHeight = Math.max(350, (screen.availHeight || window.screen.height || 800) - 30);
 
-      const targetWidth = Math.min(maxAllowedWidth, frameTotalWidth + extraDockWidth + osChromeWidth);
-      const targetHeight = Math.min(maxAllowedHeight, frameTotalHeight + osChromeHeight);
+      const targetWidth = Math.min(maxAllowedWidth, frameTotalWidth + actualDockWidth + extraSpacing + osChromeWidth);
+      const targetHeight = Math.min(maxAllowedHeight, frameTotalHeight + extraSpacing + osChromeHeight);
 
       const currentWin = await chrome.windows.getCurrent();
       if (currentWin && currentWin.id) {
@@ -1145,26 +1147,26 @@
   }
 
   function calculateScale(deviceWidth, deviceHeight) {
-    const frameTotalWidth = deviceWidth + 20;
-    const frameTotalHeight = deviceHeight + 20;
+    const frameTotalWidth = deviceWidth + 28;
+    const frameTotalHeight = deviceHeight + 28;
 
     const dockEl = document.getElementById('mv-dock');
-    const occupiedDockWidth = (!isDockMinimized && dockEl) ? (dockEl.offsetWidth || 390) : 0;
+    const occupiedDockWidth = (!isDockMinimized && dockEl) ? Math.max(400, dockEl.offsetWidth || 440) : 0;
 
     // Margin padding
-    const paddingX = isDockMinimized ? 16 : 24;
-    const paddingY = 16;
+    const paddingX = isDockMinimized ? 32 : 56;
+    const paddingY = 36;
 
-    const availWidth = Math.max(20, window.innerWidth - occupiedDockWidth - paddingX);
-    const availHeight = Math.max(20, window.innerHeight - paddingY);
+    const availWidth = Math.max(100, window.innerWidth - occupiedDockWidth - paddingX);
+    const availHeight = Math.max(100, window.innerHeight - paddingY);
 
     let scale = 1;
     if (currentZoomMode === 'auto') {
       const scaleX = availWidth / frameTotalWidth;
       const scaleY = availHeight / frameTotalHeight;
       scale = Math.min(scaleX, scaleY);
-      // Auto-fit scales to exactly fit within whatever window size user resizes to
-      scale = Math.max(0.15, Math.min(1.0, scale));
+      // Auto-fit scales to safely fit within window without ever clipping the phone
+      scale = Math.max(0.2, Math.min(1.0, scale));
     } else {
       scale = parseInt(currentZoomMode, 10) / 100;
     }
