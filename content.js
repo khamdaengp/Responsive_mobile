@@ -105,6 +105,7 @@
   let currentZoomMode = 'auto'; // 'auto', '100', '85', '75', '60'
   let isOpen = false;
   let isDockMinimized = false;
+  let isInspectMode = false;
   let clockInterval = null;
   let activeLoadedUrl = window.location.href;
   let loadTimeout = null;
@@ -164,7 +165,9 @@
     enter: `<svg viewBox="0 0 24 24"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7h-2z"/></svg>`,
     clear: `<svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
     popout: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`,
-    minimize: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>`
+    minimize: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>`,
+    camera: `<svg viewBox="0 0 24 24"><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>`,
+    inspect: `<svg viewBox="0 0 24 24"><path d="M13.64 21.97C13.14 22.21 12.54 22 12.31 21.5L10.13 16.76L7.62 19.27C7.31 19.58 6.8 19.36 6.8 18.92V3.5C6.8 3.06 7.31 2.84 7.62 3.15L18.53 14.06C18.84 14.37 18.62 14.88 18.18 14.88H14.83L17 19.62C17.23 20.12 17.02 20.72 16.52 20.95L13.64 21.97Z"/></svg>`
   };
 
   // Build Overlay DOM Structure
@@ -237,8 +240,11 @@
           <button class="mv-toolbar-btn" id="mv-tb-rotate" title="Rotate Orientation (O)">
             ${SVG_ICONS.rotate}
           </button>
+          <button class="mv-toolbar-btn" id="mv-tb-inspect" title="Inspect DOM Elements (I)">
+            ${SVG_ICONS.inspect}
+          </button>
           <button class="mv-toolbar-btn" id="mv-tb-reload" title="Reload Viewport (R)">
-            ${SVG_ICONS.reload}
+            ${SVG_ICONS.refresh}
           </button>
           <button class="mv-toolbar-btn" id="mv-tb-screenshot" title="Take Screenshot (S)">
             ${SVG_ICONS.camera}
@@ -688,6 +694,19 @@
     e.stopPropagation();
     isLandscape = !isLandscape;
     applyDeviceLayout();
+  });
+
+  shadowRoot.getElementById('mv-tb-inspect')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    isInspectMode = !isInspectMode;
+    const btn = shadowRoot.getElementById('mv-tb-inspect');
+    if (btn) btn.classList.toggle('mv-toolbar-btn-active', isInspectMode);
+    try {
+      iframeEl?.contentWindow?.postMessage({
+        type: 'MOBILEVIEW_SET_INSPECT_MODE',
+        active: isInspectMode
+      }, '*');
+    } catch (err) {}
   });
 
   shadowRoot.getElementById('mv-tb-reload')?.addEventListener('click', (e) => {

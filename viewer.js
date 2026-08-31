@@ -501,6 +501,11 @@
         logConsoleEvent(level || 'info', String(message || ''), time || '');
       }
 
+      // 2.1 Live DOM Element Inspected
+      if (e.data.type === 'MOBILEVIEW_ELEMENT_INSPECTED' && e.data.data) {
+        displayInspectedElement(e.data.data);
+      }
+
       // 3. REPL Execution Results
       if (e.data.type === 'MOBILEVIEW_EXEC_RESULT' && e.data.data) {
         const { result, isError } = e.data.data;
@@ -1500,6 +1505,11 @@
     setGridOverlayState(!isGridActive);
   });
 
+  document.getElementById('mv-tb-inspect')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setInspectModeState(!isInspectMode);
+  });
+
   document.getElementById('mv-tb-theme')?.addEventListener('click', (e) => {
     e.stopPropagation();
     const nextTheme = activeThemeScheme === 'dark' ? 'light' : (activeThemeScheme === 'light' ? 'auto' : 'dark');
@@ -1731,6 +1741,103 @@
     });
   }
 
+  // =========================================================================
+  // Live DOM Element Inspector
+  // =========================================================================
+  let isInspectMode = false;
+  let lastInspectedElement = null;
+
+  const inspectCardEl = document.getElementById('mv-inspect-card');
+  const inspectTagEl = document.getElementById('mv-inspect-tag');
+  const inspectDimsEl = document.getElementById('mv-inspect-dims');
+  const inspectFontEl = document.getElementById('mv-inspect-font');
+  const inspectColorEl = document.getElementById('mv-inspect-color');
+  const inspectPaddingEl = document.getElementById('mv-inspect-padding');
+  const inspectMarginEl = document.getElementById('mv-inspect-margin');
+  const inspectCodeEl = document.getElementById('mv-inspect-code');
+  const inspectCloseBtn = document.getElementById('mv-inspect-close');
+  const inspectCopyBtn = document.getElementById('mv-inspect-copy-btn');
+  const inspectBtnEl = document.getElementById('mv-inspect-btn');
+
+  function setInspectModeState(active) {
+    isInspectMode = !!active;
+    const tbInspectBtn = document.getElementById('mv-tb-inspect');
+    if (tbInspectBtn) tbInspectBtn.classList.toggle('mv-toolbar-btn-active', isInspectMode);
+    if (inspectBtnEl) inspectBtnEl.classList.toggle('mv-btn-active', isInspectMode);
+
+    if (!isInspectMode && inspectCardEl) {
+      inspectCardEl.classList.remove('mv-active');
+    }
+
+    try {
+      iframeEl?.contentWindow?.postMessage({
+        type: 'MOBILEVIEW_SET_INSPECT_MODE',
+        active: isInspectMode
+      }, '*');
+    } catch (e) {}
+
+    logSecurityEvent('INSPECT', isInspectMode ? 'Live DOM Element Inspector enabled (Click element in viewport to inspect)' : 'Element Inspector closed', 'info');
+  }
+
+  function displayInspectedElement(data) {
+    if (!data) return;
+    lastInspectedElement = data;
+    if (inspectTagEl) {
+      const idStr = data.id ? `#${data.id}` : '';
+      const clsStr = data.className ? `.${data.className.trim().split(/\s+/)[0]}` : '';
+      inspectTagEl.textContent = `<${data.tagName}${idStr}${clsStr}>`;
+    }
+    if (inspectDimsEl) {
+      inspectDimsEl.textContent = `${data.rect?.width || 0} × ${data.rect?.height || 0} px`;
+    }
+    if (inspectFontEl) {
+      inspectFontEl.textContent = `${data.styles?.fontSize || ''} ${data.styles?.fontFamily?.split(',')[0] || ''}`.trim() || 'Inherited';
+    }
+    if (inspectColorEl) {
+      inspectColorEl.textContent = data.styles?.color || 'Inherited';
+    }
+    if (inspectPaddingEl) {
+      inspectPaddingEl.textContent = data.styles?.padding || '0px';
+    }
+    if (inspectMarginEl) {
+      inspectMarginEl.textContent = data.styles?.margin || '0px';
+    }
+    if (inspectCodeEl) {
+      inspectCodeEl.textContent = data.outerHTML || `<${data.tagName}></${data.tagName}>`;
+    }
+    if (inspectCardEl) {
+      inspectCardEl.classList.add('mv-active');
+    }
+
+    logSecurityEvent('INSPECT', `Inspected <${data.tagName}> (${data.rect?.width}×${data.rect?.height}px) - Color: ${data.styles?.color}`, 'pass');
+  }
+
+  if (inspectCloseBtn) {
+    inspectCloseBtn.addEventListener('click', () => {
+      if (inspectCardEl) inspectCardEl.classList.remove('mv-active');
+      setInspectModeState(false);
+    });
+  }
+
+  if (inspectCopyBtn) {
+    inspectCopyBtn.addEventListener('click', () => {
+      if (lastInspectedElement?.outerHTML) {
+        navigator.clipboard?.writeText(lastInspectedElement.outerHTML).then(() => {
+          inspectCopyBtn.textContent = 'Copied Snippet!';
+          setTimeout(() => {
+            inspectCopyBtn.textContent = 'Copy HTML Snippet';
+          }, 1400);
+        });
+      }
+    });
+  }
+
+  if (inspectBtnEl) {
+    inspectBtnEl.addEventListener('click', () => {
+      setInspectModeState(!isInspectMode);
+    });
+  }
+
   if (iframeEl) {
     iframeEl.addEventListener('load', () => {
       setTimeout(() => {
@@ -1738,6 +1845,9 @@
           try {
             if (isTouchCursorActive) {
               iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_SET_TOUCH_DOT', active: true }, '*');
+            }
+            if (isInspectMode) {
+              iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_SET_INSPECT_MODE', active: true }, '*');
             }
             if (activeThemeScheme !== 'auto') {
               iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_SET_COLOR_SCHEME', scheme: activeThemeScheme }, '*');
@@ -2064,6 +2174,8 @@
       reloadIframe();
     } else if (e.key === 'g' || e.key === 'G') {
       setGridOverlayState(!isGridActive);
+    } else if (e.key === 'i' || e.key === 'I') {
+      setInspectModeState(!isInspectMode);
     } else if (e.key === 't' || e.key === 'T') {
       setTouchCursorState(!isTouchCursorActive);
     } else if (e.key === 's' || e.key === 'S') {

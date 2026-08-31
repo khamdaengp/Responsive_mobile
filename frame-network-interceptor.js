@@ -705,6 +705,17 @@
     if (e.data.type === 'MOBILEVIEW_SET_NETWORK_THROTTLE') {
       activeThrottleProfile = e.data.profile || 'online';
     }
+
+    // 9. DOM Element Inspector Mode
+    if (e.data.type === 'MOBILEVIEW_SET_INSPECT_MODE') {
+      isInspectMode = !!e.data.active;
+      if (!isInspectMode) {
+        hideInspector();
+        document.documentElement.style.cursor = '';
+      } else {
+        document.documentElement.style.cursor = 'crosshair';
+      }
+    }
   });
 
   // =========================================================================
@@ -857,5 +868,144 @@
       }, 150);
     }
   }, { passive: true });
+
+  // =========================================================================
+  // 9. LIVE DOM ELEMENT INSPECTOR
+  // =========================================================================
+  let isInspectMode = false;
+  let inspectorOverlayEl = null;
+  let inspectorTooltipEl = null;
+  let hoveredTargetEl = null;
+
+  function ensureInspectorElements() {
+    if (!inspectorOverlayEl) {
+      inspectorOverlayEl = document.createElement('div');
+      inspectorOverlayEl.id = '__mv_inspector_overlay__';
+      inspectorOverlayEl.style.cssText = `
+        position: fixed;
+        pointer-events: none;
+        z-index: 2147483646;
+        border: 2px solid #38bdf8;
+        background: rgba(56, 189, 248, 0.2);
+        border-radius: 2px;
+        display: none;
+        transition: all 0.05s ease-out;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+      `;
+      (document.body || document.documentElement).appendChild(inspectorOverlayEl);
+    }
+    if (!inspectorTooltipEl) {
+      inspectorTooltipEl = document.createElement('div');
+      inspectorTooltipEl.id = '__mv_inspector_tooltip__';
+      inspectorTooltipEl.style.cssText = `
+        position: fixed;
+        pointer-events: none;
+        z-index: 2147483647;
+        background: #0f172a;
+        color: #f8fafc;
+        border: 1px solid #38bdf8;
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 1.3;
+        display: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        white-space: nowrap;
+      `;
+      (document.body || document.documentElement).appendChild(inspectorTooltipEl);
+    }
+  }
+
+  function hideInspector() {
+    if (inspectorOverlayEl) inspectorOverlayEl.style.display = 'none';
+    if (inspectorTooltipEl) inspectorTooltipEl.style.display = 'none';
+    hoveredTargetEl = null;
+  }
+
+  function updateInspectorHighlight(target) {
+    if (!target || target === document.body || target === document.documentElement || (target.id && String(target.id).startsWith('__mv_'))) {
+      hideInspector();
+      return;
+    }
+    ensureInspectorElements();
+    hoveredTargetEl = target;
+    const rect = target.getBoundingClientRect();
+    inspectorOverlayEl.style.left = `${rect.left}px`;
+    inspectorOverlayEl.style.top = `${rect.top}px`;
+    inspectorOverlayEl.style.width = `${rect.width}px`;
+    inspectorOverlayEl.style.height = `${rect.height}px`;
+    inspectorOverlayEl.style.display = 'block';
+
+    const tagName = target.tagName ? target.tagName.toLowerCase() : 'element';
+    const id = target.id ? `#${target.id}` : '';
+    const classes = target.className && typeof target.className === 'string'
+      ? `.${target.className.trim().split(/\s+/).slice(0, 2).join('.')}`
+      : '';
+    const tagSelector = `${tagName}${id}${classes}`;
+    const dims = `${Math.round(rect.width)} × ${Math.round(rect.height)} px`;
+
+    inspectorTooltipEl.innerHTML = `
+      <span style="color: #38bdf8; font-weight: 600;">${tagSelector}</span>
+      <span style="color: #94a3b8; margin-left: 6px;">${dims}</span>
+    `;
+
+    let tooltipTop = rect.top - 28;
+    if (tooltipTop < 4) tooltipTop = rect.bottom + 6;
+    let tooltipLeft = Math.max(4, Math.min(window.innerWidth - 180, rect.left));
+
+    inspectorTooltipEl.style.top = `${tooltipTop}px`;
+    inspectorTooltipEl.style.left = `${tooltipLeft}px`;
+    inspectorTooltipEl.style.display = 'block';
+  }
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isInspectMode) return;
+    const target = document.elementFromPoint(e.clientX, e.clientY);
+    updateInspectorHighlight(target);
+  }, { passive: true });
+
+  window.addEventListener('click', (e) => {
+    if (!isInspectMode) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    const target = hoveredTargetEl || document.elementFromPoint(e.clientX, e.clientY);
+    if (!target || (target.id && String(target.id).startsWith('__mv_'))) return;
+
+    const rect = target.getBoundingClientRect();
+    const computed = window.getComputedStyle(target);
+
+    const inspectData = {
+      tagName: target.tagName ? target.tagName.toLowerCase() : 'element',
+      id: target.id || '',
+      className: typeof target.className === 'string' ? target.className : '',
+      rect: {
+        width: Math.round(rect.width),
+        height: Math.round(rect.height),
+        top: Math.round(rect.top),
+        left: Math.round(rect.left)
+      },
+      styles: {
+        color: computed.color,
+        backgroundColor: computed.backgroundColor,
+        fontSize: computed.fontSize,
+        fontWeight: computed.fontWeight,
+        fontFamily: computed.fontFamily,
+        display: computed.display,
+        margin: `${computed.marginTop} ${computed.marginRight} ${computed.marginBottom} ${computed.marginLeft}`,
+        padding: `${computed.paddingTop} ${computed.paddingRight} ${computed.paddingBottom} ${computed.paddingLeft}`,
+        lineHeight: computed.lineHeight,
+        zIndex: computed.zIndex
+      },
+      outerHTML: target.outerHTML ? target.outerHTML.slice(0, 300) : ''
+    };
+
+    window.parent.postMessage({
+      type: 'MOBILEVIEW_ELEMENT_INSPECTED',
+      data: inspectData
+    }, '*');
+  }, true);
 })();
 

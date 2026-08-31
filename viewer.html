@@ -73,6 +73,45 @@
       </div>
     </div>
 
+    <!-- Live Element Inspector Floating Card -->
+    <div class="mv-inspect-card" id="mv-inspect-card">
+      <div class="mv-inspect-header">
+        <div class="mv-inspect-tag-group">
+          <span class="mv-inspect-tag-badge" id="mv-inspect-tag">&lt;element&gt;</span>
+          <span class="mv-inspect-dims" id="mv-inspect-dims">393 × 240 px</span>
+        </div>
+        <button class="mv-inspect-close" id="mv-inspect-close" title="Close Inspector">&times;</button>
+      </div>
+      <div class="mv-inspect-body">
+        <div class="mv-inspect-grid">
+          <div class="mv-inspect-item">
+            <span class="mv-inspect-label">Font:</span>
+            <span class="mv-inspect-value" id="mv-inspect-font">16px Inter</span>
+          </div>
+          <div class="mv-inspect-item">
+            <span class="mv-inspect-label">Color:</span>
+            <span class="mv-inspect-value" id="mv-inspect-color">#ffffff</span>
+          </div>
+          <div class="mv-inspect-item">
+            <span class="mv-inspect-label">Padding:</span>
+            <span class="mv-inspect-value" id="mv-inspect-padding">16px 20px</span>
+          </div>
+          <div class="mv-inspect-item">
+            <span class="mv-inspect-label">Margin:</span>
+            <span class="mv-inspect-value" id="mv-inspect-margin">0px auto</span>
+          </div>
+        </div>
+        <div class="mv-inspect-snippet-box">
+          <pre class="mv-inspect-code" id="mv-inspect-code">&lt;div class="container"&gt;&lt;/div&gt;</pre>
+        </div>
+      </div>
+      <div class="mv-inspect-footer">
+        <button class="mv-chip" id="mv-inspect-copy-btn" style="width: 100%; justify-content: center; padding: 4px 8px; font-size: 11px;">
+          Copy HTML Snippet
+        </button>
+      </div>
+    </div>
+
     <!-- Floating Controls Dock (Collapsible into Sleek Vertical Toolbar Strip) -->
     <div class="mv-controls-dock" id="mv-dock">
       <!-- Sleek Vertical Toolbar Strip (Shown when Minimized) -->
@@ -101,6 +140,11 @@
         <!-- 8px Alignment Grid Overlay -->
         <button class="mv-toolbar-btn" id="mv-tb-grid" title="Toggle Alignment Grid (G)">
           <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>
+        </button>
+
+        <!-- DOM Element Inspector -->
+        <button class="mv-toolbar-btn" id="mv-tb-inspect" title="Inspect DOM Elements (I)">
+          <svg viewBox="0 0 24 24"><path d="M13.64 21.97C13.14 22.21 12.54 22 12.31 21.5L10.13 16.76L7.62 19.27C7.31 19.58 6.8 19.36 6.8 18.92V3.5C6.8 3.06 7.31 2.84 7.62 3.15L18.53 14.06C18.84 14.37 18.62 14.88 18.18 14.88H14.83L17 19.62C17.23 20.12 17.02 20.72 16.52 20.95L13.64 21.97Z"/></svg>
         </button>
 
         <!-- Dark / Light Theme Toggle -->
@@ -509,14 +553,18 @@
           <div class="mv-tab-panel" id="tab-qa">
             <div class="mv-control-group">
               <label class="mv-control-label">Layout & Visual Testing</label>
-              <div class="mv-btn-grid">
-                <button class="mv-btn" id="mv-grid-btn" title="Toggle 20px Grid Ruler Overlay">
+              <div class="mv-btn-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                <button class="mv-btn" id="mv-grid-btn" title="Toggle 20px Grid Ruler Overlay (G)">
                   <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>
-                  <span>Grid Ruler</span>
+                  <span>Grid</span>
                 </button>
-                <button class="mv-btn" id="mv-touch-btn" title="Toggle Mobile Touch Cursor">
+                <button class="mv-btn" id="mv-inspect-btn" title="Inspect Live DOM Elements (I)">
+                  <svg viewBox="0 0 24 24"><path d="M13.64 21.97C13.14 22.21 12.54 22 12.31 21.5L10.13 16.76L7.62 19.27C7.31 19.58 6.8 19.36 6.8 18.92V3.5C6.8 3.06 7.31 2.84 7.62 3.15L18.53 14.06C18.84 14.37 18.62 14.88 18.18 14.88H14.83L17 19.62C17.23 20.12 17.02 20.72 16.52 20.95L13.64 21.97Z"/></svg>
+                  <span>Inspect</span>
+                </button>
+                <button class="mv-btn" id="mv-touch-btn" title="Toggle Mobile Touch Cursor (T)">
                   <svg viewBox="0 0 24 24"><path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.44-.72c-.1-.02-.21-.02-.31 0-.41.07-.76.32-.93.69l-.78 1.63 5.48 5.48c.45.45 1.07.7 1.71.7h6.7c1.09 0 2-.85 2.08-1.94l.43-5.64c.05-.71-.24-1.39-.77-1.87z"/></svg>
-                  <span>Touch Dot</span>
+                  <span>Touch</span>
                 </button>
               </div>
             </div>
