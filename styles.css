@@ -584,6 +584,12 @@
   transform: scale(1.08);
 }
 
+.mv-toolbar-btn.mv-toolbar-btn-active {
+  background: rgba(99, 102, 241, 0.25);
+  color: #818cf8;
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
 .mv-toolbar-btn.mv-toolbar-expand {
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: #ffffff;

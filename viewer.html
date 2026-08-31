@@ -77,32 +77,75 @@
     <div class="mv-controls-dock" id="mv-dock">
       <!-- Sleek Vertical Toolbar Strip (Shown when Minimized) -->
       <div class="mv-minimized-toolbar" id="mv-minimized-toolbar">
+        <!-- Expand Dashboard -->
         <button class="mv-toolbar-btn mv-toolbar-expand" id="mv-tb-expand" title="Expand Dashboard (M)">
           <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
         </button>
         <div class="mv-toolbar-divider"></div>
+        
+        <!-- Orientation Switcher -->
         <button class="mv-toolbar-btn" id="mv-tb-rotate" title="Rotate Orientation (O)">
           <svg viewBox="0 0 24 24"><path d="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h1.5C23.44 4.84 18.29 0 12 0l-.66.03 3.81 3.81 1.33-1.32zm-10.96 18.96C2.25 19.93-.09 16.76.01 13h-1.5c.51 6.16 5.66 11 11.95 11l.66-.03-3.81-3.81-1.29 1.32z"/></svg>
         </button>
+
+        <!-- Display Frame Mode Switcher -->
         <button class="mv-toolbar-btn" id="mv-tb-mode" title="Toggle Mockup / Chrome Mode">
           <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
         </button>
+
+        <!-- Touch Pointer Toggle -->
         <button class="mv-toolbar-btn" id="mv-tb-touch" title="Toggle Touch Pointer (T)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/></svg>
         </button>
+
+        <!-- 8px Alignment Grid Overlay -->
+        <button class="mv-toolbar-btn" id="mv-tb-grid" title="Toggle Alignment Grid (G)">
+          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>
+        </button>
+
+        <!-- Dark / Light Theme Toggle -->
         <button class="mv-toolbar-btn" id="mv-tb-theme" title="Toggle Dark / Light Theme (D)">
           <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
         </button>
-        <button class="mv-toolbar-btn" id="mv-tb-screenshot" title="Take Screenshot (S)">
+
+        <!-- Network Throttling Preset -->
+        <button class="mv-toolbar-btn" id="mv-tb-throttle" title="Cycle Network Speed (Fast 4G / 3G / Offline)">
+          <svg viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4z"/></svg>
+        </button>
+
+        <!-- QR Code Share -->
+        <button class="mv-toolbar-btn" id="mv-tb-qrcode" title="Show Mobile QR Code (Q)">
+          <svg viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+        </button>
+
+        <!-- Screenshot / Snapshot Export -->
+        <button class="mv-toolbar-btn" id="mv-tb-screenshot" title="Take Screenshot & Save JPEG (S)">
           <svg viewBox="0 0 24 24"><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
         </button>
+
+        <!-- Scroll to Top -->
+        <button class="mv-toolbar-btn" id="mv-tb-scrolltop" title="Scroll to Top">
+          <svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+        </button>
+
+        <!-- Reload Viewport -->
         <button class="mv-toolbar-btn" id="mv-tb-reload" title="Reload Viewport (R)">
           <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
         </button>
-        <button class="mv-toolbar-btn" id="mv-tb-open" title="Open Target URL in New Tab">
+
+        <!-- Copy URL to Clipboard -->
+        <button class="mv-toolbar-btn" id="mv-tb-copy" title="Copy Target URL">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        </button>
+
+        <!-- Open in New Tab -->
+        <button class="mv-toolbar-btn" id="mv-tb-open" title="Open in New Tab">
           <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
         </button>
+
         <div class="mv-toolbar-spacer"></div>
+
+        <!-- Bottom Expand Button -->
         <button class="mv-toolbar-btn mv-toolbar-expand-btm" id="mv-tb-expand-btm" title="Expand Dashboard (M)">
           <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
         </button>

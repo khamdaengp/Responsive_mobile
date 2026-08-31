@@ -1496,15 +1496,51 @@
     try {
       iframeEl?.contentWindow?.postMessage({ type: 'MOBILEVIEW_SET_TOUCH_DOT', active: isTouchDotActive }, '*');
     } catch {}
+    const btn = document.getElementById('mv-tb-touch');
+    if (btn) btn.style.color = isTouchDotActive ? '#38bdf8' : '';
+  });
+
+  document.getElementById('mv-tb-grid')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    isGridActive = !isGridActive;
+    if (isGridActive) {
+      gridOverlayEl?.classList.add('mv-active');
+      gridBtnEl?.classList.add('mv-btn-active');
+      document.getElementById('mv-tb-grid')?.classList.add('mv-toolbar-btn-active');
+      logSecurityEvent('GRID', '8px baseline alignment grid enabled', 'info');
+    } else {
+      gridOverlayEl?.classList.remove('mv-active');
+      gridBtnEl?.classList.remove('mv-btn-active');
+      document.getElementById('mv-tb-grid')?.classList.remove('mv-toolbar-btn-active');
+      logSecurityEvent('GRID', 'Alignment grid disabled', 'info');
+    }
   });
 
   document.getElementById('mv-tb-theme')?.addEventListener('click', (e) => {
     e.stopPropagation();
-    const nextTheme = currentColorTheme === 'dark' ? 'light' : (currentColorTheme === 'light' ? 'auto' : 'dark');
-    currentColorTheme = nextTheme;
-    try {
-      iframeEl?.contentWindow?.postMessage({ type: 'MOBILEVIEW_SET_COLOR_SCHEME', scheme: nextTheme }, '*');
-    } catch {}
+    const nextTheme = activeThemeScheme === 'dark' ? 'light' : (activeThemeScheme === 'light' ? 'auto' : 'dark');
+    setColorScheme(nextTheme);
+  });
+
+  const throttleProfiles = ['online', 'fast4g', 'slow4g', 'fast3g', 'offline'];
+  let currentThrottleIdx = 0;
+  document.getElementById('mv-tb-throttle')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    currentThrottleIdx = (currentThrottleIdx + 1) % throttleProfiles.length;
+    const prof = throttleProfiles[currentThrottleIdx];
+    setNetworkProfile(prof);
+  });
+
+  document.getElementById('mv-tb-qrcode')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (isDockMinimized) {
+      toggleDockMinimize();
+    }
+    const tabQA = document.querySelector('.mv-tab-btn[data-tab="tab-qa"]');
+    tabQA?.click();
+    if (genQrBtn && qrContainer && qrContainer.style.display !== 'block') {
+      genQrBtn.click();
+    }
   });
 
   document.getElementById('mv-tb-screenshot')?.addEventListener('click', (e) => {
@@ -1512,9 +1548,33 @@
     captureSnapshot();
   });
 
+  document.getElementById('mv-tb-scrolltop')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    try {
+      if (iframeEl?.contentDocument) {
+        iframeEl.contentWindow.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (iframeEl?.contentWindow) {
+        iframeEl.contentWindow.postMessage({ type: 'SCROLL_TOP' }, '*');
+      }
+    } catch {}
+  });
+
   document.getElementById('mv-tb-reload')?.addEventListener('click', (e) => {
     e.stopPropagation();
     reloadIframe();
+  });
+
+  document.getElementById('mv-tb-copy')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const url = activeLoadedUrl || iframeEl?.src || urlInputEl?.value || 'https://google.com';
+    navigator.clipboard?.writeText(url).then(() => {
+      logSecurityEvent('CLIPBOARD', `Copied URL to clipboard: ${url}`, 'pass');
+      const btn = document.getElementById('mv-tb-copy');
+      if (btn) {
+        btn.style.color = '#34d399';
+        setTimeout(() => { btn.style.color = ''; }, 1200);
+      }
+    });
   });
 
   document.getElementById('mv-tb-open')?.addEventListener('click', (e) => {
