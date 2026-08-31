@@ -1018,7 +1018,7 @@
 .mv-device-frame.mv-landscape .mv-status-bar {
   position: relative !important;
   width: 100% !important;
-  height: 28px !important;
+  height: 34px !important;
   padding: 0 24px !important;
   display: flex !important;
   align-items: center !important;
