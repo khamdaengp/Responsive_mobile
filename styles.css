@@ -1033,6 +1033,40 @@
   display: none;
 }
 
+/* Tablet Sleek Uniform Aluminum Bezel */
+.mv-device-frame.mv-tablet-frame {
+  padding: 10px;
+  background: #0b0f19;
+  border-radius: 28px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 0 2.5px #1e293b,
+    0 0 0 3.5px #0f172a,
+    0 25px 60px -15px rgba(0, 0, 0, 0.85);
+}
+
+.mv-device-frame.mv-tablet-frame .mv-screen-housing {
+  border-radius: 20px;
+}
+
+.mv-device-frame.mv-tablet-frame .mv-status-bar {
+  height: 28px;
+  padding: 0 16px;
+  font-size: 11.5px;
+}
+
+.mv-device-frame.mv-tablet-frame .mv-home-indicator {
+  width: 180px;
+  height: 4px;
+  bottom: 6px;
+}
+
+.mv-device-frame.mv-tablet-frame .mv-btn-action,
+.mv-device-frame.mv-tablet-frame .mv-btn-vol-up,
+.mv-device-frame.mv-tablet-frame .mv-btn-vol-down {
+  display: none;
+}
+
 /* ==========================================================================
    Advanced QA Tester & Pentester Developer Suite Styles
    ========================================================================== */

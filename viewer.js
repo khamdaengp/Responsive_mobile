@@ -87,23 +87,56 @@
       name: 'iPad Mini (6th Gen)',
       width: 744,
       height: 1133,
-      radius: 30,
+      radius: 26,
       camera: 'tablet',
       os: 'iPadOS',
       dpr: '2.00x Liquid Retina',
       aspect: '3 : 2',
-      category: 'Tablets'
+      category: 'Tablets & iPads'
     },
     'ipad-air': {
       name: 'iPad Air / Pro 11"',
       width: 820,
       height: 1180,
-      radius: 34,
+      radius: 28,
       camera: 'tablet',
       os: 'iPadOS',
       dpr: '2.00x Liquid Retina',
       aspect: '4.3 : 3',
-      category: 'Tablets'
+      category: 'Tablets & iPads'
+    },
+    'ipad-pro-129': {
+      name: 'iPad Pro 12.9" (Liquid Retina XDR)',
+      width: 1024,
+      height: 1366,
+      radius: 30,
+      camera: 'tablet',
+      os: 'iPadOS',
+      dpr: '2.00x Retina XDR',
+      aspect: '4 : 3',
+      category: 'Tablets & iPads'
+    },
+    'galaxy-tab-s9': {
+      name: 'Samsung Galaxy Tab S9 Ultra',
+      width: 920,
+      height: 1472,
+      radius: 24,
+      camera: 'punch-hole',
+      os: 'Android',
+      dpr: '2.75x Dynamic AMOLED 2X',
+      aspect: '16 : 10',
+      category: 'Tablets & iPads'
+    },
+    'surface-pro-9': {
+      name: 'Microsoft Surface Pro 9 / 10',
+      width: 912,
+      height: 1368,
+      radius: 18,
+      camera: 'tablet',
+      os: 'Windows',
+      dpr: '2.00x PixelSense Flow',
+      aspect: '3 : 2',
+      category: 'Tablets & iPads'
     }
   };
 
@@ -1202,7 +1235,18 @@
       const osChromeWidth = Math.max(0, window.outerWidth - window.innerWidth) || 16;
       const osChromeHeight = Math.max(0, window.outerHeight - window.innerHeight) || 39;
 
-      // Screen bounds safely accounting for taskbars on smaller laptops (e.g. 768p / 800p / 900p / 1080p)
+      const isTablet = device.category === 'Tablets & iPads' || device.camera === 'tablet' || (devW >= 700);
+      const frameTotalWidth = devW + (isTablet ? 20 : 28);
+      const frameTotalHeight = devH + (isTablet ? 20 : 28);
+      const dockEl = document.getElementById('mv-dock');
+      const actualDockWidth = (!isDockMinimized && dockEl) ? Math.max(400, dockEl.offsetWidth || 440) : (isDockMinimized ? 60 : 440);
+      const extraSpacing = isTablet ? 40 : 50;
+
+      // Detect OS window border overhead
+      const osChromeWidth = Math.max(0, window.outerWidth - window.innerWidth) || 16;
+      const osChromeHeight = Math.max(0, window.outerHeight - window.innerHeight) || 39;
+
+      // Screen bounds safely accounting for taskbars on smaller laptops (e.g. 768p / 800p / 900p / 1080p / 1440p)
       const maxAllowedWidth = Math.max(450, (screen.availWidth || window.screen.width || 1280) - 20);
       const maxAllowedHeight = Math.max(350, (screen.availHeight || window.screen.height || 800) - 30);
 
@@ -1234,10 +1278,17 @@
 
     const width = isLandscape ? device.height : device.width;
     const height = isLandscape ? device.width : device.height;
+    const isTablet = device.category === 'Tablets & iPads' || device.camera === 'tablet' || (width >= 700);
 
     frameEl.style.width = `${width}px`;
     frameEl.style.height = `${height}px`;
-    frameEl.style.borderRadius = `${device.radius || 36}px`;
+    frameEl.style.borderRadius = `${device.radius || (isTablet ? 28 : 36)}px`;
+
+    if (isTablet) {
+      frameEl.classList.add('mv-tablet-frame');
+    } else {
+      frameEl.classList.remove('mv-tablet-frame');
+    }
 
     if (customWInput) customWInput.value = width;
     if (customHInput) customHInput.value = height;
@@ -1269,15 +1320,17 @@
   }
 
   function calculateScale(deviceWidth, deviceHeight) {
-    const frameTotalWidth = deviceWidth + 28;
-    const frameTotalHeight = deviceHeight + 28;
+    const isTablet = (deviceWidth >= 700 || deviceHeight >= 1100);
+    const frameBorder = isTablet ? 20 : 28;
+    const frameTotalWidth = deviceWidth + frameBorder;
+    const frameTotalHeight = deviceHeight + frameBorder;
 
     const dockEl = document.getElementById('mv-dock');
-    const occupiedDockWidth = (!isDockMinimized && dockEl) ? Math.max(400, dockEl.offsetWidth || 440) : 0;
+    const occupiedDockWidth = (!isDockMinimized && dockEl) ? Math.max(380, dockEl.offsetWidth || 440) : 0;
 
     // Margin padding
-    const paddingX = isDockMinimized ? 32 : 56;
-    const paddingY = 36;
+    const paddingX = isDockMinimized ? 20 : (isTablet ? 36 : 48);
+    const paddingY = isTablet ? 20 : 28;
 
     const availWidth = Math.max(100, window.innerWidth - occupiedDockWidth - paddingX);
     const availHeight = Math.max(100, window.innerHeight - paddingY);
@@ -1287,8 +1340,8 @@
       const scaleX = availWidth / frameTotalWidth;
       const scaleY = availHeight / frameTotalHeight;
       scale = Math.min(scaleX, scaleY);
-      // If scale is near 100% (>= 0.94), snap to 1.0 for 100% native pixel-perfect sharpness
-      if (scale >= 0.94) {
+      // If scale is near 100% (>= 0.92), snap to 1.0 for 100% native pixel-perfect sharpness
+      if (scale >= 0.92) {
         scale = 1.0;
       } else {
         scale = Math.max(0.2, Math.min(1.0, scale));
