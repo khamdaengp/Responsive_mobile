@@ -1497,18 +1497,7 @@
 
   document.getElementById('mv-tb-grid')?.addEventListener('click', (e) => {
     e.stopPropagation();
-    isGridActive = !isGridActive;
-    if (isGridActive) {
-      gridOverlayEl?.classList.add('mv-active');
-      gridBtnEl?.classList.add('mv-btn-active');
-      document.getElementById('mv-tb-grid')?.classList.add('mv-toolbar-btn-active');
-      logSecurityEvent('GRID', '8px baseline alignment grid enabled', 'info');
-    } else {
-      gridOverlayEl?.classList.remove('mv-active');
-      gridBtnEl?.classList.remove('mv-btn-active');
-      document.getElementById('mv-tb-grid')?.classList.remove('mv-toolbar-btn-active');
-      logSecurityEvent('GRID', 'Alignment grid disabled', 'info');
-    }
+    setGridOverlayState(!isGridActive);
   });
 
   document.getElementById('mv-tb-theme')?.addEventListener('click', (e) => {
@@ -1678,11 +1667,24 @@
   }
 
   // Grid Overlay Toggle
+  function setGridOverlayState(active) {
+    isGridActive = !!active;
+    if (gridOverlayEl) {
+      gridOverlayEl.classList.toggle('mv-grid-active', isGridActive);
+    }
+    if (gridBtnEl) {
+      gridBtnEl.classList.toggle('mv-btn-active', isGridActive);
+    }
+    const tbGrid = document.getElementById('mv-tb-grid');
+    if (tbGrid) {
+      tbGrid.classList.toggle('mv-toolbar-btn-active', isGridActive);
+    }
+    logSecurityEvent('GRID', isGridActive ? '8px baseline alignment grid enabled' : 'Alignment grid disabled', 'info');
+  }
+
   if (gridBtnEl) {
     gridBtnEl.addEventListener('click', () => {
-      isGridActive = !isGridActive;
-      gridOverlayEl.classList.toggle('mv-grid-active', isGridActive);
-      gridBtnEl.classList.toggle('mv-btn-active', isGridActive);
+      setGridOverlayState(!isGridActive);
     });
   }
 
@@ -2035,6 +2037,15 @@
       applyDeviceLayout();
     } else if (e.key === 'r' || e.key === 'R') {
       reloadIframe();
+    } else if (e.key === 'g' || e.key === 'G') {
+      setGridOverlayState(!isGridActive);
+    } else if (e.key === 't' || e.key === 'T') {
+      setTouchCursorState(!isTouchCursorActive);
+    } else if (e.key === 's' || e.key === 'S') {
+      captureSnapshot();
+    } else if (e.key === 'd' || e.key === 'D') {
+      const nextTheme = activeThemeScheme === 'dark' ? 'light' : 'dark';
+      setColorScheme(nextTheme);
     }
   });
 
