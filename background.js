@@ -106,8 +106,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         const devH = landscape ? dims.w : dims.h;
 
         // Pixel-perfect outer window size (frame = dev + 20px, OS window chrome = 16px W / 39px H)
-        const targetWidth = Math.min(1600, devW + 20 + 16);
-        const targetHeight = Math.min(1050, devH + 20 + 39);
+        const targetWidth = Math.min(1400, Math.max(760, devW + 430));
+        const targetHeight = Math.min(920, Math.max(580, devH + 60));
 
         const viewerUrl = chrome.runtime.getURL(`viewer.html?url=${encodeURIComponent(url)}&device=${encodeURIComponent(deviceId)}&landscape=${landscape}`);
         
@@ -143,8 +143,8 @@ chrome.action.onClicked.addListener(async (tab) => {
     await chrome.windows.create({
       url: viewerUrl,
       type: 'popup',
-      width: 850,
-      height: 960,
+      width: 860,
+      height: 840,
       focused: true
     });
   } catch (err) {

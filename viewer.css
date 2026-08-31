@@ -114,3 +114,69 @@ body.mv-popout-body .mv-encoder-output {
   -webkit-user-select: text !important;
 }
 
+/* ==========================================================================
+   Responsive Adaptations for Diverse Laptop Display Sizes & Windows DPI Scaling
+   (1366x768, 1440x900, 1600x900, 1920x1080 @ 125%/150%)
+   ========================================================================== */
+@media (max-height: 840px) {
+  body.mv-popout-body .mv-controls-dock:not(.mv-minimized) {
+    height: calc(100vh - 12px);
+    margin: 6px 6px 6px 8px;
+  }
+  body.mv-popout-body .mv-dock-inner {
+    gap: 8px !important;
+  }
+  body.mv-popout-body .mv-dock-header {
+    padding-bottom: 6px;
+  }
+  body.mv-popout-body .mv-dock-tabs {
+    padding: 3px;
+    gap: 3px;
+  }
+  body.mv-popout-body .mv-tab-btn {
+    padding: 5px 2px;
+    font-size: 10px;
+    gap: 3px;
+  }
+  body.mv-popout-body .mv-tab-btn svg {
+    width: 12px;
+    height: 12px;
+  }
+  body.mv-popout-body .mv-control-group {
+    gap: 4px;
+    margin-bottom: 2px;
+  }
+  body.mv-popout-body .mv-control-label {
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+  body.mv-popout-body .mv-vitals-grid {
+    gap: 5px;
+  }
+  body.mv-popout-body .mv-vital-card {
+    padding: 5px 6px;
+  }
+  body.mv-popout-body .mv-vital-val {
+    font-size: 13px;
+  }
+  body.mv-popout-body .mv-http-body-textarea {
+    height: 55px;
+  }
+  body.mv-popout-body .mv-sec-console {
+    height: 75px;
+  }
+  body.mv-popout-body .mv-net-code-box {
+    max-height: 100px;
+  }
+}
+
+@media (max-width: 1100px) {
+  body.mv-popout-body .mv-controls-dock:not(.mv-minimized) {
+    width: clamp(290px, 34vw, 340px);
+  }
+  body.mv-popout-body .mv-workspace {
+    gap: 12px;
+  }
+}
+
+

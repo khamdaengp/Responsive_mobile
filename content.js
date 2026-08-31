@@ -474,21 +474,26 @@
     const frameTotalWidth = deviceWidth + 24;
     const frameTotalHeight = deviceHeight + 24;
 
-    const availWidth = window.innerWidth - (isDockMinimized ? 90 : 410); // Reserve room for dock and padding
-    const availHeight = window.innerHeight - 60;
+    const dockEl = shadowRoot.getElementById('mv-dock');
+    const occupiedDockWidth = (!isDockMinimized && dockEl) ? (dockEl.offsetWidth || 390) : 0;
+    const clearanceX = isDockMinimized ? 40 : 60;
+    const clearanceY = 40;
+
+    const availWidth = Math.max(40, window.innerWidth - occupiedDockWidth - clearanceX);
+    const availHeight = Math.max(40, window.innerHeight - clearanceY);
 
     let scale = 1;
     if (currentZoomMode === 'auto') {
       const scaleX = availWidth / frameTotalWidth;
       const scaleY = availHeight / frameTotalHeight;
-      scale = Math.min(1.0, scaleX, scaleY);
-      scale = Math.max(0.25, scale);
+      scale = Math.min(scaleX, scaleY);
+      scale = Math.max(0.2, Math.min(1.0, scale));
     } else {
       scale = parseInt(currentZoomMode, 10) / 100;
     }
 
     const scaledHeight = frameTotalHeight * scale;
-    const topOffset = Math.max(10, (window.innerHeight - scaledHeight) / 2);
+    const topOffset = Math.max(8, (window.innerHeight - scaledHeight) / 2);
 
     stageEl.style.transformOrigin = 'top center';
     stageEl.style.transform = `translateY(${topOffset.toFixed(1)}px) scale(${scale.toFixed(4)})`;

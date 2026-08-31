@@ -992,14 +992,15 @@
       const devH = isLandscape ? device.width : device.height;
       const frameTotalWidth = devW + 20; // 10px border on each side
       const frameTotalHeight = devH + 20;
-      const extraDockWidth = isDockMinimized ? 0 : 400;
+      const extraDockWidth = isDockMinimized ? 40 : 400;
 
       // Detect OS window border overhead
       const osChromeWidth = Math.max(0, window.outerWidth - window.innerWidth) || 16;
       const osChromeHeight = Math.max(0, window.outerHeight - window.innerHeight) || 39;
 
-      const maxAllowedWidth = screen.availWidth;
-      const maxAllowedHeight = screen.availHeight;
+      // Screen bounds safely accounting for taskbars on smaller laptops (e.g. 768p / 800p / 900p / 1080p)
+      const maxAllowedWidth = Math.max(400, (screen.availWidth || window.screen.width || 1280) - 20);
+      const maxAllowedHeight = Math.max(300, (screen.availHeight || window.screen.height || 800) - 30);
 
       const targetWidth = Math.min(maxAllowedWidth, frameTotalWidth + extraDockWidth + osChromeWidth);
       const targetHeight = Math.min(maxAllowedHeight, frameTotalHeight + osChromeHeight);
@@ -1067,20 +1068,23 @@
     const frameTotalWidth = deviceWidth + 20;
     const frameTotalHeight = deviceHeight + 20;
 
-    const occupiedDockWidth = isDockMinimized ? 0 : 400;
-    const availWidth = Math.max(10, window.innerWidth - occupiedDockWidth);
-    const availHeight = window.innerHeight;
+    const dockEl = document.getElementById('mv-dock');
+    const occupiedDockWidth = (!isDockMinimized && dockEl) ? (dockEl.offsetWidth || 390) : 0;
+
+    // Generous padding clearance so phone frame never touches window edges on small laptop screens
+    const clearanceX = isDockMinimized ? 24 : 36;
+    const clearanceY = 24;
+
+    const availWidth = Math.max(40, window.innerWidth - occupiedDockWidth - clearanceX);
+    const availHeight = Math.max(40, window.innerHeight - clearanceY);
 
     let scale = 1;
     if (currentZoomMode === 'auto') {
-      if (isDockMinimized) {
-        scale = availWidth / frameTotalWidth;
-      } else {
-        const scaleX = availWidth / frameTotalWidth;
-        const scaleY = availHeight / frameTotalHeight;
-        scale = Math.min(scaleX, scaleY);
-      }
-      scale = Math.max(0.25, scale);
+      const scaleX = availWidth / frameTotalWidth;
+      const scaleY = availHeight / frameTotalHeight;
+      scale = Math.min(scaleX, scaleY);
+      // Auto-fit scales down proportionally for small laptop screens, capped at 1.0
+      scale = Math.max(0.2, Math.min(1.0, scale));
     } else {
       scale = parseInt(currentZoomMode, 10) / 100;
     }
