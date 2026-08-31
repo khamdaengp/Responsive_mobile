@@ -1195,8 +1195,15 @@
   });
   deviceSelectEl.value = currentDeviceId;
 
-  // Render Camera Element
+  // Render Camera Element (Dynamic Island, Notch, Punch Hole)
   function renderCameraElement(cameraType) {
+    if (!cameraContainerEl) return;
+    if (isFramelessMode) {
+      cameraContainerEl.innerHTML = '';
+      cameraContainerEl.style.display = 'none';
+      return;
+    }
+    cameraContainerEl.style.display = 'block';
     if (cameraType === 'island') {
       cameraContainerEl.innerHTML = `
         <div class="mv-dynamic-island">

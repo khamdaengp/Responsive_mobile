@@ -171,6 +171,11 @@
   border: none !important;
 }
 
+.mv-device-frame.mv-frameless #mv-camera-container,
+.mv-device-frame.mv-frameless .mv-dynamic-island,
+.mv-device-frame.mv-frameless .mv-notch,
+.mv-device-frame.mv-frameless .mv-punch-hole,
+.mv-device-frame.mv-frameless .mv-tablet-camera,
 .mv-device-frame.mv-frameless .mv-status-bar,
 .mv-device-frame.mv-frameless .mv-home-indicator,
 .mv-device-frame.mv-frameless .mv-home-indicator-area,
