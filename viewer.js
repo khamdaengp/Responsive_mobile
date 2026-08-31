@@ -155,10 +155,11 @@
   let loadTimeout = null;
   let loadStartTime = 0;
   let customWidth = 393;
+  let customHeight = 852;
   let isDarkMode = false;
   let isGridActive = false;
   let isTouchCursorActive = false;
-  let isFramelessMode = true;
+  let isFramelessMode = false;
 
   // DOM Elements
   const frameEl = document.getElementById('mv-frame');
@@ -1276,7 +1277,7 @@
 
     if (isFramelessMode) {
       frameEl.classList.add('mv-frameless');
-      frameEl.classList.remove('mv-tablet-frame');
+      frameEl.classList.remove('mv-tablet-frame', 'mv-android');
       frameEl.style.borderRadius = '6px';
     } else {
       frameEl.classList.remove('mv-frameless');
@@ -1285,6 +1286,11 @@
         frameEl.classList.add('mv-tablet-frame');
       } else {
         frameEl.classList.remove('mv-tablet-frame');
+      }
+      if (device.os === 'Android') {
+        frameEl.classList.add('mv-android');
+      } else {
+        frameEl.classList.remove('mv-android');
       }
     }
 

@@ -64,7 +64,9 @@
             </div>
 
             <!-- Bottom Gesture / Home Indicator -->
-            <div class="mv-home-indicator" id="mv-home-bar"></div>
+            <div class="mv-home-indicator-area" id="mv-home-bar">
+              <div class="mv-home-indicator-pill"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -181,13 +183,13 @@
             <div class="mv-control-group">
               <label class="mv-control-label">Display Frame Mode</label>
               <div class="mv-btn-grid" style="grid-template-columns: 1fr 1fr;">
-                <button class="mv-btn mv-btn-active mv-frame-mode-btn" id="mv-frame-mode-clean" data-mode="clean" title="Full Clean Screen (Chrome DevTools Mode - Edge-to-Edge 100% Viewport)" style="padding: 7px 4px; font-size: 10.5px;">
-                  <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10z"/></svg>
-                  <span>Full Screen (Chrome)</span>
-                </button>
-                <button class="mv-btn mv-frame-mode-btn" id="mv-frame-mode-mockup" data-mode="mockup" title="Physical Phone / Tablet Chassis Mockup Frame" style="padding: 7px 4px; font-size: 10.5px;">
+                <button class="mv-btn mv-btn-active mv-frame-mode-btn" id="mv-frame-mode-mockup" data-mode="mockup" title="Physical Phone / Tablet Chassis Mockup Frame" style="padding: 7px 4px; font-size: 10.5px;">
                   <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
                   <span>Device Mockup</span>
+                </button>
+                <button class="mv-btn mv-frame-mode-btn" id="mv-frame-mode-clean" data-mode="clean" title="Full Clean Screen (Chrome DevTools Mode - Edge-to-Edge 100% Viewport)" style="padding: 7px 4px; font-size: 10.5px;">
+                  <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10z"/></svg>
+                  <span>Full Screen (Chrome)</span>
                 </button>
               </div>
             </div>
