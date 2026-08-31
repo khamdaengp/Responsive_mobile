@@ -619,17 +619,43 @@
 
     let html = '';
     Object.entries(dataObj).forEach(([k, v]) => {
+      const valStr = String(v ?? '');
       html += `
         <div class="mv-storage-row">
           <span class="mv-storage-key" title="${k}">${k}</span>
-          <span class="mv-storage-val" title="${v}">${v}</span>
-          ${storeType !== 'cookie' ? `
-            <button class="mv-storage-del-btn" data-store="${storeType}" data-key="${k}" title="Delete Key">✕</button>
-          ` : ''}
+          <span class="mv-storage-val" title="Click to copy: ${valStr}" data-copy-val="${encodeURIComponent(valStr)}">${valStr}</span>
+          <div class="mv-storage-actions">
+            <button class="mv-storage-copy-btn" data-copy-val="${encodeURIComponent(valStr)}" title="Copy Value">
+              <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            </button>
+            ${storeType !== 'cookie' ? `
+              <button class="mv-storage-del-btn" data-store="${storeType}" data-key="${k}" title="Delete Key">✕</button>
+            ` : ''}
+          </div>
         </div>
       `;
     });
     tableEl.innerHTML = html;
+
+    // Attach copy listeners
+    tableEl.querySelectorAll('[data-copy-val]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const valToCopy = decodeURIComponent(btn.getAttribute('data-copy-val') || '');
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(valToCopy).then(() => {
+            const originalTitle = btn.getAttribute('title') || '';
+            btn.setAttribute('title', 'Copied!');
+            if (btn.classList.contains('mv-storage-copy-btn')) {
+              btn.style.color = '#34d399';
+              setTimeout(() => {
+                btn.style.color = '';
+                btn.setAttribute('title', originalTitle);
+              }, 1200);
+            }
+          }).catch(() => {});
+        }
+      });
+    });
 
     // Attach delete listeners
     tableEl.querySelectorAll('.mv-storage-del-btn').forEach((btn) => {
