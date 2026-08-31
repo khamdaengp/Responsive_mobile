@@ -228,9 +228,25 @@
 
       <!-- Floating Controls Dock (Collapsible into Bubble) -->
       <div class="mv-controls-dock" id="mv-dock">
-        <!-- Floating Bubble View (Shown when Minimized) -->
-        <div class="mv-bubble-view" id="mv-bubble-view" title="Expand MobileView Controls (M)">
-          ${SVG_ICONS.phone}
+        <!-- Sleek Vertical Toolbar Strip (Shown when Minimized) -->
+        <div class="mv-minimized-toolbar" id="mv-minimized-toolbar">
+          <button class="mv-toolbar-btn mv-toolbar-expand" id="mv-tb-expand" title="Expand Dashboard (M)">
+            ${SVG_ICONS.phone}
+          </button>
+          <div class="mv-toolbar-divider"></div>
+          <button class="mv-toolbar-btn" id="mv-tb-rotate" title="Rotate Orientation (O)">
+            ${SVG_ICONS.rotate}
+          </button>
+          <button class="mv-toolbar-btn" id="mv-tb-reload" title="Reload Viewport (R)">
+            ${SVG_ICONS.reload}
+          </button>
+          <button class="mv-toolbar-btn" id="mv-tb-screenshot" title="Take Screenshot (S)">
+            ${SVG_ICONS.camera}
+          </button>
+          <div class="mv-toolbar-spacer"></div>
+          <button class="mv-toolbar-btn mv-toolbar-expand-btm" id="mv-tb-close" title="Close Preview (Esc)">
+            ${SVG_ICONS.close}
+          </button>
         </div>
 
         <!-- Full Dock Contents -->
@@ -663,11 +679,30 @@
     toggleDockMinimize();
   });
 
-  // Clicking the fixed bubble expands the dock
-  dockEl.addEventListener('click', () => {
-    if (isDockMinimized) {
-      toggleDockMinimize();
-    }
+  shadowRoot.getElementById('mv-tb-expand')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDockMinimize();
+  });
+
+  shadowRoot.getElementById('mv-tb-rotate')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    isLandscape = !isLandscape;
+    applyDeviceLayout();
+  });
+
+  shadowRoot.getElementById('mv-tb-reload')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    reloadIframe();
+  });
+
+  shadowRoot.getElementById('mv-tb-screenshot')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    captureSnapshot();
+  });
+
+  shadowRoot.getElementById('mv-tb-close')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeOverlay();
   });
 
   // Close button

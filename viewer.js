@@ -1458,10 +1458,68 @@
     });
   }
 
-  dockEl?.addEventListener('click', () => {
-    if (isDockMinimized) {
-      toggleDockMinimize();
+  // Minimized Vertical Toolbar Actions
+  document.getElementById('mv-tb-expand')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDockMinimize();
+  });
+
+  document.getElementById('mv-tb-expand-btm')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleDockMinimize();
+  });
+
+  document.getElementById('mv-tb-rotate')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    isLandscape = !isLandscape;
+    applyDeviceLayout();
+  });
+
+  document.getElementById('mv-tb-mode')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    isFramelessMode = !isFramelessMode;
+    const modeBtnMockup = document.getElementById('mv-mode-mockup');
+    const modeBtnFrameless = document.getElementById('mv-mode-frameless');
+    if (isFramelessMode) {
+      modeBtnFrameless?.classList.add('mv-btn-active');
+      modeBtnMockup?.classList.remove('mv-btn-active');
+    } else {
+      modeBtnMockup?.classList.add('mv-btn-active');
+      modeBtnFrameless?.classList.remove('mv-btn-active');
     }
+    applyDeviceLayout();
+  });
+
+  document.getElementById('mv-tb-touch')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    isTouchDotActive = !isTouchDotActive;
+    try {
+      iframeEl?.contentWindow?.postMessage({ type: 'MOBILEVIEW_SET_TOUCH_DOT', active: isTouchDotActive }, '*');
+    } catch {}
+  });
+
+  document.getElementById('mv-tb-theme')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const nextTheme = currentColorTheme === 'dark' ? 'light' : (currentColorTheme === 'light' ? 'auto' : 'dark');
+    currentColorTheme = nextTheme;
+    try {
+      iframeEl?.contentWindow?.postMessage({ type: 'MOBILEVIEW_SET_COLOR_SCHEME', scheme: nextTheme }, '*');
+    } catch {}
+  });
+
+  document.getElementById('mv-tb-screenshot')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    captureSnapshot();
+  });
+
+  document.getElementById('mv-tb-reload')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    reloadIframe();
+  });
+
+  document.getElementById('mv-tb-open')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    window.open(activeLoadedUrl || iframeEl?.src, '_blank');
   });
 
   iframeEl?.addEventListener('load', () => {

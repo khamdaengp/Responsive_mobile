@@ -65,6 +65,28 @@ body.mv-popout-body .mv-controls-dock:not(.mv-minimized) {
   box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
+body.mv-popout-body .mv-controls-dock.mv-minimized {
+  width: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+  height: calc(100vh - 20px) !important;
+  max-height: 960px !important;
+  margin: 10px !important;
+  padding: 10px 4px !important;
+  border-radius: 16px !important;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(9, 13, 22, 0.99) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  position: static !important;
+  overflow: hidden !important;
+  cursor: default !important;
+  flex-shrink: 0 !important;
+}
+
 body.mv-popout-body .mv-dock-inner {
   height: 100%;
   display: flex;
