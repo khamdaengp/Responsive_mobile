@@ -497,6 +497,9 @@
     // 5. Application Storage
     if (e.data.type === 'MOBILEVIEW_STORAGE_DATA' && e.data.data) {
       const { localStorage: loc, sessionStorage: sess, cookies: cook } = e.data.data;
+      latestLocalStorage = loc || {};
+      latestSessionStorage = sess || {};
+      latestCookies = cook || {};
       renderStorageTable(document.getElementById('mv-localstorage-table'), loc, 'local');
       renderStorageTable(document.getElementById('mv-sessionstorage-table'), sess, 'session');
       renderStorageTable(document.getElementById('mv-cookies-table'), cook, 'cookie');
@@ -608,8 +611,29 @@
   });
 
   // =========================================================================
-  // Application Storage Handlers
+  // Application Storage Handlers & Copy All
   // =========================================================================
+  let latestLocalStorage = {};
+  let latestSessionStorage = {};
+  let latestCookies = {};
+
+  function copyTextWithFeedback(text, btnEl) {
+    if (!text || !navigator.clipboard) return;
+    navigator.clipboard.writeText(text).then(() => {
+      if (btnEl) {
+        const origText = btnEl.textContent;
+        btnEl.textContent = 'Copied!';
+        btnEl.style.borderColor = '#34d399';
+        btnEl.style.color = '#34d399';
+        setTimeout(() => {
+          btnEl.textContent = origText;
+          btnEl.style.borderColor = '';
+          btnEl.style.color = '';
+        }, 1200);
+      }
+    }).catch(() => {});
+  }
+
   function renderStorageTable(tableEl, dataObj, storeType) {
     if (!tableEl) return;
     if (!dataObj || Object.keys(dataObj).length === 0) {
@@ -707,6 +731,36 @@
     if (iframeEl && iframeEl.contentWindow) {
       iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_MUTATE_STORAGE', action: 'clear', store: 'local' }, '*');
       iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_MUTATE_STORAGE', action: 'clear', store: 'session' }, '*');
+    }
+  });
+
+  const copyLocalStorageBtn = document.getElementById('mv-copy-localstorage-btn');
+  const copySessionStorageBtn = document.getElementById('mv-copy-sessionstorage-btn');
+  const copyCookiesBtn = document.getElementById('mv-copy-cookies-btn');
+  const copyConsoleBtn = document.getElementById('mv-con-filter-copy-all');
+
+  copyLocalStorageBtn?.addEventListener('click', () => {
+    const text = JSON.stringify(latestLocalStorage, null, 2);
+    copyTextWithFeedback(text, copyLocalStorageBtn);
+  });
+
+  copySessionStorageBtn?.addEventListener('click', () => {
+    const text = JSON.stringify(latestSessionStorage, null, 2);
+    copyTextWithFeedback(text, copySessionStorageBtn);
+  });
+
+  copyCookiesBtn?.addEventListener('click', () => {
+    const text = JSON.stringify(latestCookies, null, 2);
+    copyTextWithFeedback(text, copyCookiesBtn);
+  });
+
+  copyConsoleBtn?.addEventListener('click', () => {
+    const stream = document.getElementById('mv-console-stream');
+    if (stream) {
+      const text = Array.from(stream.querySelectorAll('.mv-con-entry'))
+        .map(el => el.innerText)
+        .join('\n');
+      copyTextWithFeedback(text, copyConsoleBtn);
     }
   });
 

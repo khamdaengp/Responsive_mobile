@@ -243,6 +243,7 @@
                   <button class="mv-chip" id="mv-con-filter-error" style="padding: 2px 6px; font-size: 9px;">Errors</button>
                   <button class="mv-chip" id="mv-con-filter-warn" style="padding: 2px 6px; font-size: 9px;">Warnings</button>
                   <button class="mv-chip" id="mv-con-filter-log" style="padding: 2px 6px; font-size: 9px;">Logs</button>
+                  <button class="mv-chip" id="mv-con-filter-copy-all" style="padding: 2px 6px; font-size: 9px;" title="Copy all console output">Copy All</button>
                   <button class="mv-chip" id="mv-con-filter-clear" style="padding: 2px 6px; font-size: 9px;">Clear</button>
                 </div>
               </div>
@@ -326,7 +327,10 @@
             <div class="mv-control-group">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
                 <label class="mv-control-label">LocalStorage</label>
-                <button class="mv-chip" id="mv-refresh-storage-btn" style="padding: 2px 6px; font-size: 9px;">Refresh</button>
+                <div style="display: flex; gap: 4px;">
+                  <button class="mv-chip" id="mv-copy-localstorage-btn" title="Copy all LocalStorage as JSON" style="padding: 2px 6px; font-size: 9px;">Copy All</button>
+                  <button class="mv-chip" id="mv-refresh-storage-btn" style="padding: 2px 6px; font-size: 9px;">Refresh</button>
+                </div>
               </div>
               <div class="mv-storage-table" id="mv-localstorage-table">
                 <div class="mv-storage-row" style="color: #64748b; font-style: italic;">No LocalStorage items found</div>
@@ -341,7 +345,10 @@
 
             <!-- SessionStorage -->
             <div class="mv-control-group">
-              <label class="mv-control-label">SessionStorage</label>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                <label class="mv-control-label">SessionStorage</label>
+                <button class="mv-chip" id="mv-copy-sessionstorage-btn" title="Copy all SessionStorage as JSON" style="padding: 2px 6px; font-size: 9px;">Copy All</button>
+              </div>
               <div class="mv-storage-table" id="mv-sessionstorage-table">
                 <div class="mv-storage-row" style="color: #64748b; font-style: italic;">No SessionStorage items found</div>
               </div>
@@ -349,7 +356,10 @@
 
             <!-- Cookies -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Document Cookies</label>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                <label class="mv-control-label">Document Cookies</label>
+                <button class="mv-chip" id="mv-copy-cookies-btn" title="Copy all Cookies as JSON" style="padding: 2px 6px; font-size: 9px;">Copy All</button>
+              </div>
               <div class="mv-storage-table" id="mv-cookies-table">
                 <div class="mv-storage-row" style="color: #64748b; font-style: italic;">No Cookies found</div>
               </div>
