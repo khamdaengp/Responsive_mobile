@@ -1350,23 +1350,58 @@
   }
 
   // Simulated Tap / Touch Feedback Indicator
-  let touchFadeTimeout = null;
+  function setTouchCursorState(active) {
+    isTouchCursorActive = !!active;
+    if (touchBtnEl) touchBtnEl.classList.toggle('mv-btn-active', isTouchCursorActive);
+    const touchToggleBtnEl = document.getElementById('mv-touch-toggle-btn');
+    if (touchToggleBtnEl) touchToggleBtnEl.classList.toggle('mv-btn-active', isTouchCursorActive);
+
+    // Send state to in-frame interceptor
+    if (iframeEl && iframeEl.contentWindow) {
+      try {
+        iframeEl.contentWindow.postMessage({
+          type: 'MOBILEVIEW_SET_TOUCH_DOT',
+          active: isTouchCursorActive
+        }, '*');
+      } catch (e) {}
+    }
+
+    if (!isTouchCursorActive && touchCursorEl) {
+      touchCursorEl.style.display = 'none';
+      touchCursorEl.classList.remove('mv-touching');
+    }
+  }
 
   if (touchBtnEl) {
     touchBtnEl.addEventListener('click', () => {
-      isTouchCursorActive = !isTouchCursorActive;
-      touchBtnEl.classList.toggle('mv-btn-active', isTouchCursorActive);
-      if (!isTouchCursorActive) {
-        touchCursorEl.style.display = 'none';
-        touchCursorEl.classList.remove('mv-touching');
+      setTouchCursorState(!isTouchCursorActive);
+    });
+  }
+
+  const touchToggleBtn = document.getElementById('mv-touch-toggle-btn');
+  if (touchToggleBtn) {
+    touchToggleBtn.addEventListener('click', () => {
+      setTouchCursorState(!isTouchCursorActive);
+    });
+  }
+
+  if (iframeEl) {
+    iframeEl.addEventListener('load', () => {
+      if (isTouchCursorActive && iframeEl.contentWindow) {
+        try {
+          iframeEl.contentWindow.postMessage({
+            type: 'MOBILEVIEW_SET_TOUCH_DOT',
+            active: true
+          }, '*');
+        } catch (e) {}
       }
     });
   }
 
-  // Tap feedback on click / tap (Does NOT follow cursor continuously)
+  // Tap feedback on click / tap across outer frame
   if (iframeBoxEl) {
     iframeBoxEl.addEventListener('mousedown', (e) => {
-      if (!isTouchCursorActive) return;
+      if (!isTouchCursorActive || !touchCursorEl) return;
       const rect = iframeBoxEl.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
@@ -1375,39 +1410,18 @@
       touchCursorEl.style.top = `${clickY}px`;
       touchCursorEl.style.display = 'block';
       touchCursorEl.classList.add('mv-touching');
-
-      if (touchFadeTimeout) clearTimeout(touchFadeTimeout);
     });
 
     iframeBoxEl.addEventListener('mouseup', () => {
-      if (!isTouchCursorActive) return;
-      touchFadeTimeout = setTimeout(() => {
+      if (!isTouchCursorActive || !touchCursorEl) return;
+      setTimeout(() => {
         touchCursorEl.classList.remove('mv-touching');
         setTimeout(() => {
           if (!touchCursorEl.classList.contains('mv-touching')) {
             touchCursorEl.style.display = 'none';
           }
-        }, 200);
-      }, 250);
-    });
-
-    iframeBoxEl.addEventListener('mouseleave', () => {
-      touchCursorEl.classList.remove('mv-touching');
-      touchCursorEl.style.display = 'none';
-    });
-  }
-
-  // Touch Toggle Button in Viewport Tab
-  const touchToggleBtn = document.getElementById('mv-touch-toggle-btn');
-  if (touchToggleBtn) {
-    touchToggleBtn.addEventListener('click', () => {
-      isTouchCursorActive = !isTouchCursorActive;
-      touchToggleBtn.classList.toggle('mv-btn-active', isTouchCursorActive);
-      if (touchBtnEl) touchBtnEl.classList.toggle('mv-btn-active', isTouchCursorActive);
-      if (!isTouchCursorActive) {
-        touchCursorEl.style.display = 'none';
-        touchCursorEl.classList.remove('mv-touching');
-      }
+        }, 150);
+      }, 150);
     });
   }
 

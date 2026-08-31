@@ -557,6 +557,84 @@
         }
       })();
     }
+
+    // 6. Touch Dot Pointer Simulator Toggle
+    if (e.data.type === 'MOBILEVIEW_SET_TOUCH_DOT') {
+      isTouchDotEnabled = !!e.data.active;
+      const dot = ensureTouchDotElement();
+      if (!isTouchDotEnabled && dot) {
+        dot.style.display = 'none';
+        dot.style.opacity = '0';
+      }
+    }
+  });
+
+  // =========================================================================
+  // In-Frame Simulated Touch Dot Pointer & Ripple Indicator
+  // =========================================================================
+  let isTouchDotEnabled = false;
+  let touchDotEl = null;
+
+  function ensureTouchDotElement() {
+    if (touchDotEl && document.body && document.body.contains(touchDotEl)) return touchDotEl;
+    touchDotEl = document.getElementById('__mv_touch_dot__');
+    if (!touchDotEl) {
+      touchDotEl = document.createElement('div');
+      touchDotEl.id = '__mv_touch_dot__';
+      touchDotEl.style.cssText = `
+        position: fixed !important;
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 50% !important;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.45) 0%, rgba(139, 92, 246, 0.2) 60%, rgba(99, 102, 241, 0.05) 100%) !important;
+        border: 2px solid rgba(255, 255, 255, 0.9) !important;
+        box-shadow: 0 0 14px rgba(99, 102, 241, 0.65), inset 0 0 6px rgba(255, 255, 255, 0.6) !important;
+        pointer-events: none !important;
+        transform: translate(-50%, -50%) scale(1) !important;
+        transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease !important;
+        z-index: 2147483647 !important;
+        display: none !important;
+        opacity: 0 !important;
+      `;
+      (document.body || document.documentElement).appendChild(touchDotEl);
+    }
+    return touchDotEl;
+  }
+
+  window.addEventListener('pointermove', (e) => {
+    if (!isTouchDotEnabled) return;
+    const dot = ensureTouchDotElement();
+    dot.style.left = `${e.clientX}px`;
+    dot.style.top = `${e.clientY}px`;
+    dot.style.display = 'block';
+    dot.style.opacity = '1';
+  }, { passive: true });
+
+  window.addEventListener('pointerdown', (e) => {
+    if (!isTouchDotEnabled) return;
+    const dot = ensureTouchDotElement();
+    dot.style.left = `${e.clientX}px`;
+    dot.style.top = `${e.clientY}px`;
+    dot.style.display = 'block';
+    dot.style.opacity = '1';
+    dot.style.transform = 'translate(-50%, -50%) scale(1.4)';
+  }, { passive: true });
+
+  window.addEventListener('pointerup', () => {
+    if (!isTouchDotEnabled || !touchDotEl) return;
+    touchDotEl.style.transform = 'translate(-50%, -50%) scale(1)';
+  }, { passive: true });
+
+  window.addEventListener('pointerleave', () => {
+    if (touchDotEl) {
+      touchDotEl.style.opacity = '0';
+      setTimeout(() => {
+        if (!isTouchDotEnabled || touchDotEl.style.opacity === '0') {
+          touchDotEl.style.display = 'none';
+        }
+      }, 150);
+    }
+  }, { passive: true });
   });
 })();
 
