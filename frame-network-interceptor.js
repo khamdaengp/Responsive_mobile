@@ -22,8 +22,10 @@
         html, body, * {
           scrollbar-width: none !important;
           -ms-overflow-style: none !important;
-          -webkit-font-smoothing: subpixel-antialiased !important;
-          text-rendering: geometricPrecision !important;
+          -webkit-font-smoothing: antialiased !important;
+          -moz-osx-font-smoothing: grayscale !important;
+          text-rendering: optimizeLegibility !important;
+          image-rendering: -webkit-optimize-contrast !important;
         }
         *::-webkit-scrollbar,
         html::-webkit-scrollbar,

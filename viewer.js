@@ -1287,14 +1287,18 @@
       const scaleX = availWidth / frameTotalWidth;
       const scaleY = availHeight / frameTotalHeight;
       scale = Math.min(scaleX, scaleY);
-      // Auto-fit scales to safely fit within window without ever clipping the phone
-      scale = Math.max(0.2, Math.min(1.0, scale));
+      // If scale is near 100% (>= 0.94), snap to 1.0 for 100% native pixel-perfect sharpness
+      if (scale >= 0.94) {
+        scale = 1.0;
+      } else {
+        scale = Math.max(0.2, Math.min(1.0, scale));
+      }
     } else {
       scale = parseInt(currentZoomMode, 10) / 100;
     }
 
     stageEl.style.transformOrigin = 'center center';
-    stageEl.style.transform = `scale(${scale.toFixed(4)})`;
+    stageEl.style.transform = `scale(${scale.toFixed(4)}) translateZ(0)`;
   }
 
   // Load URL

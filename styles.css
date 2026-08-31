@@ -65,8 +65,12 @@
   transform-origin: center center;
   flex-shrink: 0;
   transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-  -webkit-font-smoothing: subpixel-antialiased !important;
-  text-rendering: geometricPrecision !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* Realistic Smartphone & Tablet Frame */
@@ -344,8 +348,11 @@
   position: relative;
   overflow: hidden;
   background: #ffffff;
-  -webkit-font-smoothing: subpixel-antialiased !important;
-  text-rendering: geometricPrecision !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  transform: translateZ(0);
 }
 
 .mv-device-iframe {
@@ -356,8 +363,13 @@
   background: #ffffff;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
-  -webkit-font-smoothing: subpixel-antialiased !important;
-  text-rendering: geometricPrecision !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: optimizeLegibility !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .mv-device-iframe::-webkit-scrollbar {
