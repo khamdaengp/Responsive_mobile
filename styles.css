@@ -157,20 +157,23 @@
 .mv-device-frame.mv-frameless {
   padding: 0 !important;
   background: #ffffff !important;
-  border-radius: 6px !important;
+  border-radius: 4px !important;
+  border: 1px solid #94a3b8 !important;
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.12),
-    0 16px 48px -12px rgba(0, 0, 0, 0.3),
-    0 4px 14px rgba(0, 0, 0, 0.12) !important;
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 12px 32px -6px rgba(0, 0, 0, 0.18),
+    0 2px 6px -1px rgba(0, 0, 0, 0.08) !important;
 }
 
 .mv-device-frame.mv-frameless .mv-screen-housing {
-  border-radius: 6px !important;
+  border-radius: 3px !important;
   box-shadow: none !important;
+  border: none !important;
 }
 
 .mv-device-frame.mv-frameless .mv-status-bar,
 .mv-device-frame.mv-frameless .mv-home-indicator,
+.mv-device-frame.mv-frameless .mv-home-indicator-area,
 .mv-device-frame.mv-frameless .mv-side-buttons,
 .mv-device-frame.mv-frameless .mv-btn-action,
 .mv-device-frame.mv-frameless .mv-btn-vol-up,

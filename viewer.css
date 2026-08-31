@@ -91,9 +91,18 @@ body.mv-popout-body .mv-side-buttons {
   display: none !important;
 }
 
-body.mv-popout-body .mv-device-frame {
-  box-shadow: none !important;
+body.mv-popout-body .mv-device-frame:not(.mv-frameless) {
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.4) !important;
   margin: 0 !important;
+}
+
+body.mv-popout-body .mv-device-frame.mv-frameless {
+  margin: 0 !important;
+  border: 1px solid #94a3b8 !important;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 12px 32px -6px rgba(0, 0, 0, 0.18),
+    0 2px 6px -1px rgba(0, 0, 0, 0.08) !important;
 }
 
 /* Enable drag-to-highlight text selection & copy across pop-out developer tools */
