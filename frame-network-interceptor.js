@@ -75,32 +75,50 @@
     if (obj === undefined) return 'undefined';
     if (obj === null) return 'null';
     if (typeof obj === 'string') return obj;
+    if (typeof obj === 'number' || typeof obj === 'boolean' || typeof obj === 'bigint') return String(obj);
+    if (typeof obj === 'function') return `ƒ ${obj.name || 'anonymous'}()`;
+    if (obj instanceof Error) return `${obj.name}: ${obj.message}\n${obj.stack || ''}`;
+
+    const seen = new WeakSet();
     try {
-      return JSON.stringify(obj, null, 2);
+      return JSON.stringify(obj, (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+          if (seen.has(value)) {
+            return '[Circular Reference]';
+          }
+          seen.add(value);
+        }
+        return value;
+      }, 2);
     } catch (e) {
-      return String(obj);
+      try {
+        return String(obj);
+      } catch (err) {
+        return '[Unserializable Object]';
+      }
     }
   }
 
   // =========================================================================
   // 1. CONSOLE LOGS INTERCEPTION
   // =========================================================================
-  const levels = ['log', 'info', 'warn', 'error'];
+  const levels = ['log', 'info', 'warn', 'error', 'debug'];
   levels.forEach((lvl) => {
     const orig = console[lvl];
+    if (typeof orig !== 'function') return;
     console[lvl] = function(...args) {
       try {
         const formatted = args.map(a => safeStringify(a)).join(' ');
         window.parent.postMessage({
           type: 'MOBILEVIEW_CONSOLE_LOG',
           data: {
-            level: lvl,
+            level: lvl === 'debug' ? 'info' : lvl,
             message: formatted,
             time: new Date().toTimeString().split(' ')[0]
           }
         }, '*');
       } catch (e) {}
-      return orig.apply(this, args);
+      return Function.prototype.apply.call(orig, console, args);
     };
   });
 
