@@ -223,13 +223,52 @@
               </div>
             </div>
 
-            <!-- Haptic / Vibration Simulator -->
+            <!-- Hardware & Simulation Controls -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Hardware Simulation</label>
-              <button class="mv-btn" id="mv-haptic-btn" style="width: 100%;">
-                <svg viewBox="0 0 24 24"><path d="M0 15h2V9H0v6zm3 2h2V7H3v10zm19-8v6h2V9h-2zm-3 8h2V7h-2v10zM16.5 3h-9C6.67 3 6 3.67 6 4.5v15c0 .83.67 1.5 1.5 1.5h9c.83 0 1.5-.67 1.5-1.5v-15c0-.83-.67-1.5-1.5-1.5zM16 19H8V5h8v14z"/></svg>
-                <span>Trigger Haptic Vibration</span>
-              </button>
+              <label class="mv-control-label">Hardware & Touch Simulation</label>
+              <div class="mv-btn-grid">
+                <button class="mv-btn" id="mv-haptic-btn" title="Simulate iPhone Taptic Engine Vibration">
+                  <svg viewBox="0 0 24 24"><path d="M0 15h2V9H0v6zm3 2h2V7H3v10zm19-8v6h2V9h-2zm-3 8h2V7h-2v10zM16.5 3h-9C6.67 3 6 3.67 6 4.5v15c0 .83.67 1.5 1.5 1.5h9c.83 0 1.5-.67 1.5-1.5v-15c0-.83-.67-1.5-1.5-1.5zM16 19H8V5h8v14z"/></svg>
+                  <span>Haptic Vibration</span>
+                </button>
+                <button class="mv-btn" id="mv-touch-toggle-btn" title="Toggle Virtual Touch Cursor">
+                  <svg viewBox="0 0 24 24"><path d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.02-.24-.02-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.43 1.06.43h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z"/></svg>
+                  <span id="mv-touch-toggle-text">Touch Cursor</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Color Scheme / Dark Mode Simulation -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Color Scheme & Media Features</label>
+              <div class="mv-btn-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <button class="mv-btn mv-btn-active mv-theme-btn" id="mv-theme-auto" data-theme="auto" title="Follow System Theme" style="font-size: 10px; padding: 7px 4px;">⚙️ System</button>
+                <button class="mv-btn mv-theme-btn" id="mv-theme-light" data-theme="light" title="Force Light Theme" style="font-size: 10px; padding: 7px 4px;">☀️ Light</button>
+                <button class="mv-btn mv-theme-btn" id="mv-theme-dark" data-theme="dark" title="Force Dark Theme" style="font-size: 10px; padding: 7px 4px;">🌙 Dark</button>
+              </div>
+            </div>
+
+            <!-- Network Profile Quick Switcher -->
+            <div class="mv-control-group">
+              <label class="mv-control-label">Network Throttling</label>
+              <div class="mv-btn-grid" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mv-btn mv-btn-active mv-quick-net-btn" data-profile="online" style="font-size: 9.5px; padding: 6px 2px;">Online</button>
+                <button class="mv-btn mv-quick-net-btn" data-profile="fast3g" style="font-size: 9.5px; padding: 6px 2px;">Fast 4G</button>
+                <button class="mv-btn mv-quick-net-btn" data-profile="slow3g" style="font-size: 9.5px; padding: 6px 2px;">Slow 3G</button>
+                <button class="mv-btn mv-quick-net-btn" data-profile="offline" style="font-size: 9.5px; padding: 6px 2px;">Offline</button>
+              </div>
+            </div>
+
+            <!-- Real Mobile QR Code Generator -->
+            <div class="mv-control-group">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                <label class="mv-control-label">Real Mobile Device Testing</label>
+                <button class="mv-chip" id="mv-gen-qr-btn" style="padding: 2px 6px; font-size: 9px;">Generate QR</button>
+              </div>
+              <div id="mv-qr-container" style="display: none; background: #ffffff; padding: 10px; border-radius: 8px; text-align: center; margin-top: 4px;">
+                <div id="mv-qr-code-img" style="display: flex; justify-content: center; align-items: center;"></div>
+                <div style="font-size: 10px; color: #1e293b; margin-top: 6px; font-weight: 500;">Scan with your physical smartphone camera</div>
+              </div>
             </div>
           </div>
 

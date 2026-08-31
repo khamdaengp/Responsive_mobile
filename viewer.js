@@ -1397,15 +1397,64 @@
     });
   }
 
-  // Dark / Light Theme Toggle
-  if (themeBtnEl) {
-    themeBtnEl.addEventListener('click', () => {
-      isDarkMode = !isDarkMode;
-      themeTextEl.textContent = isDarkMode ? 'Mode: Dark Theme' : 'Mode: Light Theme';
-      themeBtnEl.classList.toggle('mv-btn-active', isDarkMode);
+  // Touch Toggle Button in Viewport Tab
+  const touchToggleBtn = document.getElementById('mv-touch-toggle-btn');
+  if (touchToggleBtn) {
+    touchToggleBtn.addEventListener('click', () => {
+      isTouchCursorActive = !isTouchCursorActive;
+      touchToggleBtn.classList.toggle('mv-btn-active', isTouchCursorActive);
+      if (touchBtnEl) touchBtnEl.classList.toggle('mv-btn-active', isTouchCursorActive);
+      if (!isTouchCursorActive) {
+        touchCursorEl.style.display = 'none';
+        touchCursorEl.classList.remove('mv-touching');
+      }
+    });
+  }
+
+  // Dark / Light Theme Toggles
+  const themeButtons = document.querySelectorAll('.mv-theme-btn');
+  themeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      themeButtons.forEach(b => b.classList.remove('mv-btn-active'));
+      btn.classList.add('mv-btn-active');
+      const theme = btn.getAttribute('data-theme') || 'auto';
       try {
-        iframeEl.contentWindow.postMessage({ type: 'SET_COLOR_SCHEME', scheme: isDarkMode ? 'dark' : 'light' }, '*');
+        iframeEl.contentWindow.postMessage({ type: 'SET_COLOR_SCHEME', scheme: theme }, '*');
       } catch (e) {}
+    });
+  });
+
+  // Quick Network Profile Switcher
+  const quickNetButtons = document.querySelectorAll('.mv-quick-net-btn');
+  quickNetButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      quickNetButtons.forEach(b => b.classList.remove('mv-btn-active'));
+      btn.classList.add('mv-btn-active');
+      activeNetProfile = btn.getAttribute('data-profile') || 'online';
+      if (netProfileSelect) netProfileSelect.value = activeNetProfile;
+      logNetworkEvent('THROTTLE', `Profile switched to ${activeNetProfile}`, 'info');
+    });
+  });
+
+  // Real Mobile QR Code Generator
+  const genQrBtn = document.getElementById('mv-gen-qr-btn');
+  const qrContainer = document.getElementById('mv-qr-container');
+  const qrImgContainer = document.getElementById('mv-qr-code-img');
+
+  if (genQrBtn && qrContainer) {
+    genQrBtn.addEventListener('click', () => {
+      const isVisible = qrContainer.style.display === 'block';
+      if (isVisible) {
+        qrContainer.style.display = 'none';
+        genQrBtn.textContent = 'Generate QR';
+      } else {
+        const urlToEncode = activeLoadedUrl || iframeEl.src || 'https://google.com';
+        if (qrImgContainer) {
+          qrImgContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(urlToEncode)}" style="width: 130px; height: 130px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" alt="Mobile QR Code" />`;
+        }
+        qrContainer.style.display = 'block';
+        genQrBtn.textContent = 'Hide QR';
+      }
     });
   }
 

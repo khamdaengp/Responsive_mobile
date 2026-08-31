@@ -50,8 +50,10 @@ body.mv-popout-body .mv-stage-container {
 
 body.mv-popout-body .mv-controls-dock:not(.mv-minimized) {
   height: calc(100vh - 20px);
-  max-height: 940px;
-  width: clamp(400px, 34vw, 480px) !important;
+  max-height: 960px;
+  width: clamp(420px, 48vw, 1020px) !important;
+  max-width: 1020px !important;
+  min-width: 380px !important;
   margin: 10px;
   padding: 16px;
   box-sizing: border-box;
