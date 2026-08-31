@@ -155,10 +155,10 @@
   let loadTimeout = null;
   let loadStartTime = 0;
   let customWidth = 393;
-  let customHeight = 852;
   let isDarkMode = false;
   let isGridActive = false;
   let isTouchCursorActive = false;
+  let isFramelessMode = true;
 
   // DOM Elements
   const frameEl = document.getElementById('mv-frame');
@@ -1224,12 +1224,14 @@
     try {
       const device = DEVICE_PRESETS[currentDeviceId] || { width: customWidth, height: customHeight, os: 'Custom' };
       const devW = isLandscape ? device.height : device.width;
+      const devH = isLandscape ? device.width : device.height;
       const isTablet = device.category === 'Tablets & iPads' || device.camera === 'tablet' || (devW >= 700);
-      const frameTotalWidth = devW + (isTablet ? 20 : 28);
-      const frameTotalHeight = devH + (isTablet ? 20 : 28);
+      const frameBorder = isFramelessMode ? 0 : (isTablet ? 20 : 28);
+      const frameTotalWidth = devW + frameBorder;
+      const frameTotalHeight = devH + frameBorder;
       const dockEl = document.getElementById('mv-dock');
       const actualDockWidth = (!isDockMinimized && dockEl) ? Math.max(400, dockEl.offsetWidth || 440) : (isDockMinimized ? 60 : 440);
-      const extraSpacing = isTablet ? 40 : 50;
+      const extraSpacing = isTablet ? 36 : 46;
 
       // Detect OS window border overhead
       const osChromeWidth = Math.max(0, window.outerWidth - window.innerWidth) || 16;
@@ -1271,12 +1273,19 @@
 
     frameEl.style.width = `${width}px`;
     frameEl.style.height = `${height}px`;
-    frameEl.style.borderRadius = `${device.radius || (isTablet ? 28 : 36)}px`;
 
-    if (isTablet) {
-      frameEl.classList.add('mv-tablet-frame');
-    } else {
+    if (isFramelessMode) {
+      frameEl.classList.add('mv-frameless');
       frameEl.classList.remove('mv-tablet-frame');
+      frameEl.style.borderRadius = '6px';
+    } else {
+      frameEl.classList.remove('mv-frameless');
+      frameEl.style.borderRadius = `${device.radius || (isTablet ? 28 : 36)}px`;
+      if (isTablet) {
+        frameEl.classList.add('mv-tablet-frame');
+      } else {
+        frameEl.classList.remove('mv-tablet-frame');
+      }
     }
 
     if (customWInput) customWInput.value = width;
@@ -1310,7 +1319,7 @@
 
   function calculateScale(deviceWidth, deviceHeight) {
     const isTablet = (deviceWidth >= 700 || deviceHeight >= 1100);
-    const frameBorder = isTablet ? 20 : 28;
+    const frameBorder = isFramelessMode ? 0 : (isTablet ? 20 : 28);
     const frameTotalWidth = deviceWidth + frameBorder;
     const frameTotalHeight = deviceHeight + frameBorder;
 
@@ -1318,8 +1327,8 @@
     const occupiedDockWidth = (!isDockMinimized && dockEl) ? Math.max(380, dockEl.offsetWidth || 440) : 0;
 
     // Margin padding
-    const paddingX = isDockMinimized ? 20 : (isTablet ? 36 : 48);
-    const paddingY = isTablet ? 20 : 28;
+    const paddingX = isDockMinimized ? 20 : (isTablet ? 32 : 44);
+    const paddingY = isTablet ? 18 : 24;
 
     const availWidth = Math.max(100, window.innerWidth - occupiedDockWidth - paddingX);
     const availHeight = Math.max(100, window.innerHeight - paddingY);
@@ -1415,13 +1424,13 @@
     });
   }
 
-  dockEl.addEventListener('click', () => {
+  dockEl?.addEventListener('click', () => {
     if (isDockMinimized) {
       toggleDockMinimize();
     }
   });
 
-  iframeEl.addEventListener('load', () => {
+  iframeEl?.addEventListener('load', () => {
     loadingEl.classList.remove('mv-active');
     if (loadTimeout) clearTimeout(loadTimeout);
     const duration = Math.round(performance.now() - loadStartTime);
@@ -1431,45 +1440,58 @@
     logNetworkEvent('200 OK', `DOM Assets Loaded (${duration}ms)`, 'pass');
   });
 
-  urlGoBtnEl.addEventListener('click', () => {
-    loadUrl(urlInputEl.value);
+  urlGoBtnEl?.addEventListener('click', () => {
+    loadUrl(urlInputEl?.value);
   });
 
-  urlInputEl.addEventListener('keydown', (e) => {
+  urlInputEl?.addEventListener('keydown', (e) => {
     e.stopPropagation();
     if (e.key === 'Enter') {
       e.preventDefault();
-      loadUrl(urlInputEl.value);
+      loadUrl(urlInputEl?.value);
     }
   });
 
-  urlInputEl.addEventListener('input', () => {
-    urlClearBtnEl.style.display = urlInputEl.value ? 'flex' : 'none';
+  urlInputEl?.addEventListener('input', () => {
+    if (urlClearBtnEl) urlClearBtnEl.style.display = urlInputEl?.value ? 'flex' : 'none';
   });
 
-  urlClearBtnEl.addEventListener('click', () => {
-    urlInputEl.value = '';
-    urlClearBtnEl.style.display = 'none';
-    urlInputEl.focus();
+  urlClearBtnEl?.addEventListener('click', () => {
+    if (urlInputEl) urlInputEl.value = '';
+    if (urlClearBtnEl) urlClearBtnEl.style.display = 'none';
+    urlInputEl?.focus();
   });
 
-  quickChips.forEach((chip) => {
+  quickChips?.forEach((chip) => {
     chip.addEventListener('click', () => {
       loadUrl(chip.getAttribute('data-url'));
     });
   });
 
-  deviceSelectEl.addEventListener('change', (e) => {
+  deviceSelectEl?.addEventListener('change', (e) => {
     currentDeviceId = e.target.value;
     applyDeviceLayout();
   });
 
-  orientationBtnEl.addEventListener('click', () => {
+  // Display Frame Mode (Full Screen Chrome vs Device Mockup)
+  const frameModeButtons = document.querySelectorAll('.mv-frame-mode-btn');
+  frameModeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      frameModeButtons.forEach(b => b.classList.remove('mv-btn-active'));
+      btn.classList.add('mv-btn-active');
+      const mode = btn.getAttribute('data-mode') || 'clean';
+      isFramelessMode = (mode === 'clean');
+      applyDeviceLayout();
+      logSecurityEvent('FRAME', `Display style switched to ${isFramelessMode ? 'Full Screen (Chrome)' : 'Device Mockup'}`, 'info');
+    });
+  });
+
+  orientationBtnEl?.addEventListener('click', () => {
     isLandscape = !isLandscape;
     applyDeviceLayout();
   });
 
-  zoomSelectEl.addEventListener('change', (e) => {
+  zoomSelectEl?.addEventListener('change', (e) => {
     currentZoomMode = e.target.value;
     const device = DEVICE_PRESETS[currentDeviceId] || { width: customWidth, height: customHeight };
     const width = isLandscape ? device.height : device.width;
@@ -1477,20 +1499,20 @@
     calculateScale(width, height);
   });
 
-  reloadBtnEl.addEventListener('click', reloadIframe);
+  reloadBtnEl?.addEventListener('click', reloadIframe);
 
-  scrollTopBtnEl.addEventListener('click', () => {
+  scrollTopBtnEl?.addEventListener('click', () => {
     try {
-      if (iframeEl.contentDocument) {
+      if (iframeEl?.contentDocument) {
         iframeEl.contentWindow.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
+      } else if (iframeEl?.contentWindow) {
         iframeEl.contentWindow.postMessage({ type: 'SCROLL_TOP' }, '*');
       }
     } catch {}
   });
 
-  openNewTabBtnEl.addEventListener('click', () => {
-    window.open(activeLoadedUrl || iframeEl.src, '_blank');
+  openNewTabBtnEl?.addEventListener('click', () => {
+    window.open(activeLoadedUrl || iframeEl?.src, '_blank');
   });
 
   // Custom Dimensions Apply

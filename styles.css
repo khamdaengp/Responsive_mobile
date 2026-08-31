@@ -153,6 +153,32 @@
   flex-direction: column;
 }
 
+/* Clean Edge-to-Edge Full Screen (Chrome DevTools Responsive Style) */
+.mv-device-frame.mv-frameless {
+  padding: 0 !important;
+  background: #ffffff !important;
+  border-radius: 6px !important;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.12),
+    0 16px 48px -12px rgba(0, 0, 0, 0.3),
+    0 4px 14px rgba(0, 0, 0, 0.12) !important;
+}
+
+.mv-device-frame.mv-frameless .mv-screen-housing {
+  border-radius: 6px !important;
+  box-shadow: none !important;
+}
+
+.mv-device-frame.mv-frameless .mv-status-bar,
+.mv-device-frame.mv-frameless .mv-home-indicator,
+.mv-device-frame.mv-frameless .mv-side-buttons,
+.mv-device-frame.mv-frameless .mv-btn-action,
+.mv-device-frame.mv-frameless .mv-btn-vol-up,
+.mv-device-frame.mv-frameless .mv-btn-vol-down,
+.mv-device-frame.mv-frameless .mv-btn-power {
+  display: none !important;
+}
+
 /* Screen Housing / Viewport */
 .mv-screen-housing {
   position: relative;
@@ -171,23 +197,25 @@
   display: none !important;
 }
 
-/* Realistic Status Bar Header */
+/* Realistic Status Bar Header (Discreet Overlay) */
 .mv-status-bar {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  height: 36px;
+  height: 32px;
   padding: 0 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   color: #0f172a;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   z-index: 50;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-  flex-shrink: 0;
+  background: transparent;
   pointer-events: none;
+  opacity: 0.85;
 }
 
 .mv-status-left {
