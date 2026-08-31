@@ -58,6 +58,17 @@
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', applyMobileFrameStyles);
   }
+  window.addEventListener('load', applyMobileFrameStyles);
+
+  // Continuous observer ensuring scrollbar suppression remains active even on heavy SPAs
+  try {
+    const observer = new MutationObserver(() => {
+      if (!document.getElementById('__mv_mobile_frame_styles__')) {
+        applyMobileFrameStyles();
+      }
+    });
+    observer.observe(document.documentElement, { childList: true });
+  } catch (e) {}
 
   let reqCounter = 0;
 
