@@ -2,11 +2,11 @@
    MobileView — Standalone Pop-out Window Stylesheet
    ========================================================================== */
 
-body.mv-popout-body {
+html, body.mv-popout-body {
   margin: 0 !important;
   padding: 0 !important;
-  background-color: #0b0f19 !important;
-  background: radial-gradient(circle at 50% 30%, #151d30 0%, #080c14 100%) !important;
+  background-color: #ffffff !important;
+  background: #ffffff !important;
   width: 100vw;
   height: 100vh;
   min-height: 100vh;
