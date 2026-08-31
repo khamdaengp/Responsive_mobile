@@ -1232,7 +1232,7 @@
       const device = DEVICE_PRESETS[currentDeviceId] || { width: customWidth, height: customHeight, os: 'Custom' };
       const devW = isLandscape ? device.height : device.width;
       const devH = isLandscape ? device.width : device.height;
-      const isTablet = device.category === 'Tablets & iPads' || device.camera === 'tablet' || (devW >= 700);
+      const isTablet = device.category === 'Tablets & iPads' || device.camera === 'tablet' || (Math.min(device.width, device.height) >= 600);
       const frameBorder = isFramelessMode ? 0 : (isTablet ? 20 : 28);
       const frameTotalWidth = devW + frameBorder;
       const frameTotalHeight = devH + frameBorder;
@@ -1276,7 +1276,7 @@
 
     const width = isLandscape ? device.height : device.width;
     const height = isLandscape ? device.width : device.height;
-    const isTablet = device.category === 'Tablets & iPads' || device.camera === 'tablet' || (width >= 700);
+    const isTablet = device.category === 'Tablets & iPads' || device.camera === 'tablet' || (Math.min(device.width, device.height) >= 600);
 
     frameEl.style.width = `${width}px`;
     frameEl.style.height = `${height}px`;
@@ -1312,10 +1312,14 @@
           cameraContainerEl.style.top = '10px';
           cameraContainerEl.style.left = '50%';
           cameraContainerEl.style.transform = 'translateX(-50%)';
+          cameraContainerEl.style.width = 'auto';
+          cameraContainerEl.style.height = 'auto';
         } else {
           cameraContainerEl.style.top = '50%';
           cameraContainerEl.style.left = '20px';
           cameraContainerEl.style.transform = 'translate(-50%, -50%)';
+          cameraContainerEl.style.width = '26px';
+          cameraContainerEl.style.height = '90px';
         }
       }
     } else {
@@ -1326,6 +1330,8 @@
         cameraContainerEl.style.top = '0px';
         cameraContainerEl.style.left = '50%';
         cameraContainerEl.style.transform = 'translateX(-50%)';
+        cameraContainerEl.style.width = 'auto';
+        cameraContainerEl.style.height = device.os === 'Android' ? '34px' : '44px';
       }
     }
 
@@ -1346,7 +1352,7 @@
   }
 
   function calculateScale(deviceWidth, deviceHeight) {
-    const isTablet = (deviceWidth >= 700 || deviceHeight >= 1100);
+    const isTablet = (Math.min(deviceWidth, deviceHeight) >= 600);
     const frameBorder = isFramelessMode ? 0 : (isTablet ? 20 : 28);
     const frameTotalWidth = deviceWidth + frameBorder;
     const frameTotalHeight = deviceHeight + frameBorder;

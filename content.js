@@ -456,6 +456,8 @@
         cameraContainerEl.style.top = '50%';
         cameraContainerEl.style.left = '20px';
         cameraContainerEl.style.transform = 'translate(-50%, -50%)';
+        cameraContainerEl.style.width = '26px';
+        cameraContainerEl.style.height = '90px';
       }
     } else {
       frameEl.classList.remove('mv-landscape');
@@ -465,6 +467,8 @@
         cameraContainerEl.style.top = '0px';
         cameraContainerEl.style.left = '50%';
         cameraContainerEl.style.transform = 'translateX(-50%)';
+        cameraContainerEl.style.width = 'auto';
+        cameraContainerEl.style.height = device.os === 'Android' ? '34px' : '44px';
       }
     }
 
