@@ -1529,7 +1529,12 @@
 
   document.getElementById('mv-tb-screenshot')?.addEventListener('click', (e) => {
     e.stopPropagation();
-    captureSnapshot();
+    captureSnapshot(false);
+  });
+
+  document.getElementById('mv-tb-copy-img')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    captureSnapshot(true);
   });
 
   document.getElementById('mv-tb-scrolltop')?.addEventListener('click', (e) => {
@@ -1921,14 +1926,14 @@
     });
   }
 
-  // Screenshot / Snapshot (Device Display cropped & exported as JPEG)
-  function captureSnapshot() {
-    const btn = document.getElementById('mv-screenshot-btn');
+  // Screenshot / Snapshot (Device Display cropped & exported as JPEG / Copied to Clipboard)
+  function captureSnapshot(copyOnly = false) {
+    const btn = copyOnly ? document.getElementById('mv-copy-screenshot-btn') : document.getElementById('mv-screenshot-btn');
     const originalHtml = btn ? btn.innerHTML : '';
     if (btn) {
       btn.innerHTML = `
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>
-        <span>Capturing...</span>
+        <span>${copyOnly ? 'Copying...' : 'Capturing...'}</span>
       `;
       btn.disabled = true;
     }
@@ -1943,7 +1948,7 @@
       }, (response) => {
         if (response && response.success && response.dataUrl) {
           const img = new Image();
-          img.onload = () => {
+          img.onload = async () => {
             try {
               const canvas = document.createElement('canvas');
               // Calculate cropped bounds around device frame
@@ -1963,33 +1968,48 @@
               // Draw cropped device display
               ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, canvas.width, canvas.height);
 
-              // Convert to JPEG format
-              const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+              // 1. Copy Image to OS Clipboard (for instant Ctrl+V pasting)
+              try {
+                canvas.toBlob(async (blob) => {
+                  if (blob && navigator.clipboard && navigator.clipboard.write) {
+                    try {
+                      await navigator.clipboard.write([
+                        new ClipboardItem({ 'image/png': blob })
+                      ]);
+                    } catch (e) {}
+                  }
+                }, 'image/png');
+              } catch (clipErr) {}
 
-              // Download JPEG file
-              const a = document.createElement('a');
-              const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-              a.download = `mobileview-${currentDeviceId || 'device'}-${timestamp}.jpeg`;
-              a.href = jpegDataUrl;
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
+              // 2. Download JPEG File (unless copyOnly is requested)
+              if (!copyOnly) {
+                const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                const a = document.createElement('a');
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+                a.download = `mobileview-${currentDeviceId || 'device'}-${timestamp}.jpeg`;
+                a.href = jpegDataUrl;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+              }
 
               if (btn) {
                 btn.innerHTML = `
                   <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                  <span>Saved JPEG!</span>
+                  <span>${copyOnly ? 'Copied to Clipboard!' : 'Saved & Copied! (Ctrl+V)'}</span>
                 `;
                 btn.style.borderColor = '#34d399';
                 btn.style.color = '#34d399';
               }
-              logSecurityEvent('SNAPSHOT', `Device screenshot saved as JPEG (${Math.round(cropW)}×${Math.round(cropH)})`, 'pass');
+              logSecurityEvent('SNAPSHOT', copyOnly ? 'Device screenshot copied to clipboard' : `Device screenshot saved as JPEG & copied to clipboard (${Math.round(cropW)}×${Math.round(cropH)})`, 'pass');
             } catch (err) {
               console.error('[MobileView] Canvas crop error:', err);
-              const a = document.createElement('a');
-              a.download = `mobileview-display-${Date.now()}.jpeg`;
-              a.href = response.dataUrl;
-              a.click();
+              if (!copyOnly) {
+                const a = document.createElement('a');
+                a.download = `mobileview-display-${Date.now()}.jpeg`;
+                a.href = response.dataUrl;
+                a.click();
+              }
             }
 
             if (btn) {
@@ -1998,7 +2018,7 @@
                 btn.style.borderColor = '';
                 btn.style.color = '';
                 btn.disabled = false;
-              }, 1600);
+              }, 1800);
             }
           };
           img.src = response.dataUrl;
@@ -2021,7 +2041,12 @@
   }
 
   if (screenshotBtnEl) {
-    screenshotBtnEl.addEventListener('click', captureSnapshot);
+    screenshotBtnEl.addEventListener('click', () => captureSnapshot(false));
+  }
+
+  const copyScreenshotBtn = document.getElementById('mv-copy-screenshot-btn');
+  if (copyScreenshotBtn) {
+    copyScreenshotBtn.addEventListener('click', () => captureSnapshot(true));
   }
 
   // Keybindings
@@ -2042,7 +2067,9 @@
     } else if (e.key === 't' || e.key === 'T') {
       setTouchCursorState(!isTouchCursorActive);
     } else if (e.key === 's' || e.key === 'S') {
-      captureSnapshot();
+      captureSnapshot(false);
+    } else if (e.key === 'c' || e.key === 'C') {
+      captureSnapshot(true);
     } else if (e.key === 'd' || e.key === 'D') {
       const nextTheme = activeThemeScheme === 'dark' ? 'light' : 'dark';
       setColorScheme(nextTheme);

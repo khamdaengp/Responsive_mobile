@@ -742,8 +742,8 @@
     window.open(activeLoadedUrl || window.location.href, '_blank');
   });
 
-  // Capture device snapshot and download as JPEG
-  function captureSnapshot() {
+  // Capture device snapshot, download as JPEG and copy to clipboard
+  function captureSnapshot(copyOnly = false) {
     try {
       const targetFrame = shadowRoot.getElementById('mv-frame') || shadowRoot.getElementById('mv-stage');
       const rect = targetFrame.getBoundingClientRect();
@@ -770,14 +770,30 @@
               ctx.fillRect(0, 0, canvas.width, canvas.height);
               ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, canvas.width, canvas.height);
 
-              const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.95);
-              const a = document.createElement('a');
-              const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-              a.download = `mobileview-${currentDeviceId || 'device'}-${timestamp}.jpeg`;
-              a.href = jpegDataUrl;
-              document.body.appendChild(a);
-              a.click();
-              document.body.removeChild(a);
+              // 1. Copy Image to OS Clipboard (for instant Ctrl+V pasting)
+              try {
+                canvas.toBlob(async (blob) => {
+                  if (blob && navigator.clipboard && navigator.clipboard.write) {
+                    try {
+                      await navigator.clipboard.write([
+                        new ClipboardItem({ 'image/png': blob })
+                      ]);
+                    } catch (e) {}
+                  }
+                }, 'image/png');
+              } catch (clipErr) {}
+
+              // 2. Download JPEG File
+              if (!copyOnly) {
+                const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                const a = document.createElement('a');
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+                a.download = `mobileview-${currentDeviceId || 'device'}-${timestamp}.jpeg`;
+                a.href = jpegDataUrl;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+              }
             } catch (err) {
               const a = document.createElement('a');
               a.download = `mobileview-display-${Date.now()}.jpeg`;
