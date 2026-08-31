@@ -342,7 +342,7 @@
   flex: 1;
   width: 100%;
   position: relative;
-  overflow: hidden !important;
+  overflow: hidden;
   background: #ffffff;
   -webkit-font-smoothing: subpixel-antialiased !important;
   text-rendering: geometricPrecision !important;
@@ -354,7 +354,6 @@
   border: none !important;
   display: block;
   background: #ffffff;
-  overflow: hidden !important;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
   -webkit-font-smoothing: subpixel-antialiased !important;
@@ -365,6 +364,7 @@
   display: none !important;
   width: 0 !important;
   height: 0 !important;
+  background: transparent !important;
 }
 
 

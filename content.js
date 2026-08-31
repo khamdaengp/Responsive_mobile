@@ -208,7 +208,7 @@
                   class="mv-device-iframe" 
                   id="mv-iframe" 
                   src="about:blank"
-                  scrolling="no"
+                  scrolling="yes"
                   referrerpolicy="no-referrer"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 ></iframe>
