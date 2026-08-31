@@ -1492,12 +1492,7 @@
 
   document.getElementById('mv-tb-touch')?.addEventListener('click', (e) => {
     e.stopPropagation();
-    isTouchDotActive = !isTouchDotActive;
-    try {
-      iframeEl?.contentWindow?.postMessage({ type: 'MOBILEVIEW_SET_TOUCH_DOT', active: isTouchDotActive }, '*');
-    } catch {}
-    const btn = document.getElementById('mv-tb-touch');
-    if (btn) btn.style.color = isTouchDotActive ? '#38bdf8' : '';
+    setTouchCursorState(!isTouchCursorActive);
   });
 
   document.getElementById('mv-tb-grid')?.addEventListener('click', (e) => {
@@ -1697,6 +1692,8 @@
     if (touchBtnEl) touchBtnEl.classList.toggle('mv-btn-active', isTouchCursorActive);
     const touchToggleBtnEl = document.getElementById('mv-touch-toggle-btn');
     if (touchToggleBtnEl) touchToggleBtnEl.classList.toggle('mv-btn-active', isTouchCursorActive);
+    const tbTouchBtn = document.getElementById('mv-tb-touch');
+    if (tbTouchBtn) tbTouchBtn.classList.toggle('mv-toolbar-btn-active', isTouchCursorActive);
 
     // Send state to in-frame interceptor
     if (iframeEl && iframeEl.contentWindow) {
