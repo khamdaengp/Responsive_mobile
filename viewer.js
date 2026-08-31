@@ -1339,11 +1339,22 @@
       orientationBtnEl.classList.remove('mv-btn-active');
       orientationTextEl.textContent = 'Portrait';
       if (cameraContainerEl) {
-        cameraContainerEl.style.top = '0px';
+        if (device.camera === 'island') {
+          cameraContainerEl.style.top = '9px';
+          cameraContainerEl.style.height = '32px';
+        } else if (device.camera === 'punch-hole') {
+          cameraContainerEl.style.top = '8px';
+          cameraContainerEl.style.height = '20px';
+        } else if (device.camera === 'notch') {
+          cameraContainerEl.style.top = '0px';
+          cameraContainerEl.style.height = '30px';
+        } else {
+          cameraContainerEl.style.top = '6px';
+          cameraContainerEl.style.height = '16px';
+        }
         cameraContainerEl.style.left = '50%';
         cameraContainerEl.style.transform = 'translateX(-50%)';
         cameraContainerEl.style.width = 'auto';
-        cameraContainerEl.style.height = device.os === 'Android' ? '34px' : '44px';
       }
     }
 
