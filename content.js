@@ -452,10 +452,20 @@
       frameEl.classList.add('mv-landscape');
       orientationBtnEl.classList.add('mv-btn-active');
       orientationTextEl.textContent = 'Landscape';
+      if (cameraContainerEl) {
+        cameraContainerEl.style.top = '50%';
+        cameraContainerEl.style.left = '20px';
+        cameraContainerEl.style.transform = 'translate(-50%, -50%)';
+      }
     } else {
       frameEl.classList.remove('mv-landscape');
       orientationBtnEl.classList.remove('mv-btn-active');
       orientationTextEl.textContent = 'Portrait';
+      if (cameraContainerEl) {
+        cameraContainerEl.style.top = '0px';
+        cameraContainerEl.style.left = '50%';
+        cameraContainerEl.style.transform = 'translateX(-50%)';
+      }
     }
 
     dimensionBadgeEl.textContent = `${width} × ${height} px (${device.os})`;
