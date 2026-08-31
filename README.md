@@ -78,7 +78,7 @@ A modern, high-performance **Manifest V3 Chrome Extension** that allows develope
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+   git clone https://github.com/khamdaengp/Responsive.git
    ```
 2. Open **Google Chrome** and navigate to:
    ```text

@@ -916,7 +916,7 @@
   border-radius: 4px;
   padding: 1px 5px;
   font-size: 9px;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
   color: #cbd5e1;
 }
 
@@ -1088,7 +1088,8 @@
   font-size: 11px;
   color: #f8fafc;
   outline: none;
-  font-family: monospace;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 600;
   text-align: center;
 }
 
@@ -1230,8 +1231,9 @@
 .mv-metric-val {
   font-size: 11px;
   color: #f1f5f9;
-  font-family: monospace;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 600;
+  line-height: 1.35;
 }
 
 /* Security Console / Event Log */
@@ -1240,7 +1242,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 8px;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
   font-size: 10px;
   color: #94a3b8;
   height: 90px;
@@ -1289,7 +1291,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 6px 8px;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
   font-size: 10px;
   color: #38bdf8;
   word-break: break-all;
@@ -1335,7 +1337,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 6px 8px;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
   font-size: 10px;
   color: #94a3b8;
   height: 140px;
@@ -1351,13 +1353,13 @@
 }
 
 .mv-chip.mv-chip-active {
-  background: #6366f1 !important;
-  color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
+  background: #6366f1;
+  color: #ffffff;
+  border-color: rgba(165, 180, 252, 0.4);
 }
 
 .mv-log-tag-xhr {
-  color: #c084fc;
+  color: #a855f7;
   font-weight: bold;
 }
 
@@ -1412,7 +1414,7 @@
   font-size: 11px;
   font-weight: 700;
   color: #f1f5f9;
-  font-family: monospace;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1516,7 +1518,7 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
   font-size: 9.5px;
   background: rgba(15, 23, 42, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -1554,7 +1556,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 6px;
   padding: 6px 8px;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
   font-size: 9.5px;
   color: #a5f3fc;
   max-height: 150px;
@@ -1627,7 +1629,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 8px;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
   font-size: 10px;
   color: #f1f5f9;
   height: 250px;
@@ -1692,7 +1694,7 @@
   font-size: 11px;
   color: #f8fafc;
   outline: none;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
 }
 
 .mv-con-repl-input:focus {
@@ -1730,7 +1732,7 @@
   font-size: 16px;
   font-weight: 800;
   color: #34d399;
-  font-family: monospace;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .mv-vital-sub {
@@ -1749,7 +1751,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
   font-size: 10px;
 }
 
@@ -1826,7 +1828,7 @@
   font-size: 11px;
   padding: 6px 8px;
   outline: none;
-  font-family: monospace;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   cursor: pointer;
 }
 
@@ -1840,7 +1842,7 @@
   font-size: 11px;
   color: #f8fafc;
   outline: none;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
 }
 
 .mv-http-url-input:focus {
@@ -1894,7 +1896,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   padding: 6px 8px;
-  font-family: monospace;
+  font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
   font-size: 10px;
   color: #a5f3fc;
   height: 75px;
