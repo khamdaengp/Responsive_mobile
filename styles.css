@@ -2017,23 +2017,52 @@
   background: rgba(15, 23, 42, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
-  padding: 6px 8px;
+  padding: 8px 10px;
   font-family: 'Consolas', 'Cascadia Code', 'SF Mono', monospace;
-  font-size: 10px;
+  font-size: 11px;
+  line-height: 1.45;
   color: #a5f3fc;
-  height: 75px;
-  resize: vertical;
+  min-height: 85px;
+  max-height: 550px;
+  resize: vertical !important;
   outline: none;
-  scrollbar-width: none !important;
-}
-
-.mv-http-body-textarea::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  transition: border-color 0.2s, height 0.2s ease, min-height 0.2s ease;
 }
 
 .mv-http-body-textarea:focus {
   border-color: #6366f1;
+}
+
+.mv-http-body-textarea.mv-expanded {
+  min-height: 240px !important;
+  height: 280px !important;
+}
+
+.mv-sec-console.mv-expanded {
+  min-height: 240px !important;
+  height: 300px !important;
+  max-height: 600px !important;
+}
+
+.mv-net-code-box.mv-expanded {
+  min-height: 220px !important;
+  height: 260px !important;
+  max-height: 600px !important;
+}
+
+.mv-console-stream.mv-expanded {
+  min-height: 320px !important;
+  height: 380px !important;
+  max-height: 650px !important;
+}
+
+.mv-sec-console,
+.mv-net-code-box,
+.mv-console-stream,
+.mv-net-stream {
+  resize: vertical !important;
 }
 
 

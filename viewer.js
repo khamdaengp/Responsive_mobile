@@ -870,6 +870,43 @@
     setTimeout(() => { httpCopyRespBtn.textContent = originalText; }, 1500);
   });
 
+  // Expand / Format Block Toggles
+  const httpFormatJsonBtn = document.getElementById('mv-http-format-json');
+  httpFormatJsonBtn?.addEventListener('click', () => {
+    if (!httpBodyInput) return;
+    try {
+      const parsed = JSON.parse(httpBodyInput.value.trim());
+      httpBodyInput.value = JSON.stringify(parsed, null, 2);
+    } catch (err) {
+      httpFormatJsonBtn.textContent = 'Invalid JSON';
+      setTimeout(() => { httpFormatJsonBtn.textContent = '✨ Format'; }, 1200);
+    }
+  });
+
+  const httpExpandBodyBtn = document.getElementById('mv-http-expand-body');
+  httpExpandBodyBtn?.addEventListener('click', () => {
+    if (!httpBodyInput) return;
+    const isExpanded = httpBodyInput.classList.toggle('mv-expanded');
+    httpExpandBodyBtn.textContent = isExpanded ? 'Collapse' : '⛶ Expand';
+    httpExpandBodyBtn.classList.toggle('mv-chip-active', isExpanded);
+  });
+
+  const httpExpandHeadersBtn = document.getElementById('mv-http-expand-headers');
+  httpExpandHeadersBtn?.addEventListener('click', () => {
+    if (!httpHeadersInput) return;
+    const isExpanded = httpHeadersInput.classList.toggle('mv-expanded');
+    httpExpandHeadersBtn.textContent = isExpanded ? 'Collapse' : '⛶ Expand';
+    httpExpandHeadersBtn.classList.toggle('mv-chip-active', isExpanded);
+  });
+
+  const httpExpandRespBtn = document.getElementById('mv-http-expand-resp');
+  httpExpandRespBtn?.addEventListener('click', () => {
+    if (!httpRespBodyEl) return;
+    const isExpanded = httpRespBodyEl.classList.toggle('mv-expanded');
+    httpExpandRespBtn.textContent = isExpanded ? 'Collapse' : '⛶ Expand';
+    httpExpandRespBtn.classList.toggle('mv-chip-active', isExpanded);
+  });
+
   // Send HTTP Request
   httpSendBtn?.addEventListener('click', async () => {
     const method = (httpMethodSelect?.value || 'GET').toUpperCase();
@@ -1023,6 +1060,28 @@
     secConsoleEl.appendChild(entry);
     secConsoleEl.scrollTop = secConsoleEl.scrollHeight;
   }
+
+  const secExpandBtn = document.getElementById('mv-sec-expand-btn');
+  secExpandBtn?.addEventListener('click', () => {
+    if (!secConsoleEl) return;
+    const isExpanded = secConsoleEl.classList.toggle('mv-expanded');
+    secExpandBtn.textContent = isExpanded ? 'Collapse' : '⛶ Expand';
+    secExpandBtn.classList.toggle('mv-chip-active', isExpanded);
+  });
+
+  const secClearBtn = document.getElementById('mv-sec-clear-btn');
+  secClearBtn?.addEventListener('click', () => {
+    if (secConsoleEl) secConsoleEl.innerHTML = '';
+  });
+
+  const conExpandBtn = document.getElementById('mv-con-expand-btn');
+  const consoleStreamEl = document.getElementById('mv-console-stream');
+  conExpandBtn?.addEventListener('click', () => {
+    if (!consoleStreamEl) return;
+    const isExpanded = consoleStreamEl.classList.toggle('mv-expanded');
+    conExpandBtn.textContent = isExpanded ? 'Collapse' : '⛶ Expand';
+    conExpandBtn.classList.toggle('mv-chip-active', isExpanded);
+  });
 
   // Tab switching
   tabBtns.forEach((btn) => {

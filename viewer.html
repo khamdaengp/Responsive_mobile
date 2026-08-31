@@ -283,6 +283,7 @@
                   <button class="mv-chip" id="mv-con-filter-warn" style="padding: 2px 6px; font-size: 9px;">Warnings</button>
                   <button class="mv-chip" id="mv-con-filter-log" style="padding: 2px 6px; font-size: 9px;">Logs</button>
                   <button class="mv-chip" id="mv-con-filter-copy-all" style="padding: 2px 6px; font-size: 9px;" title="Copy all console output">Copy All</button>
+                  <button class="mv-chip" id="mv-con-expand-btn" style="padding: 2px 6px; font-size: 9px;" title="Toggle Expand Console">⛶ Expand</button>
                   <button class="mv-chip" id="mv-con-filter-clear" style="padding: 2px 6px; font-size: 9px;">Clear</button>
                 </div>
               </div>
@@ -625,7 +626,11 @@
               <div class="mv-http-tab-pane mv-pane-active" id="http-pane-body">
                 <div class="mv-net-pane-toolbar">
                   <span class="mv-net-pane-title">JSON / Raw Body</span>
-                  <button class="mv-chip" id="mv-http-sample-json" style="padding: 2px 6px; font-size: 9px;">Preset JSON</button>
+                  <div style="display: flex; gap: 4px;">
+                    <button class="mv-chip" id="mv-http-format-json" title="Prettify JSON" style="padding: 2px 6px; font-size: 9px;">✨ Format</button>
+                    <button class="mv-chip" id="mv-http-expand-body" title="Toggle Expand Body" style="padding: 2px 6px; font-size: 9px;">⛶ Expand</button>
+                    <button class="mv-chip" id="mv-http-sample-json" style="padding: 2px 6px; font-size: 9px;">Preset JSON</button>
+                  </div>
                 </div>
                 <textarea class="mv-http-body-textarea" id="mv-http-body" placeholder='{\n  "username": "admin@gmail.com",\n  "status": "active"\n}' spellcheck="false"></textarea>
               </div>
@@ -634,7 +639,10 @@
               <div class="mv-http-tab-pane" id="http-pane-headers">
                 <div class="mv-net-pane-toolbar">
                   <span class="mv-net-pane-title">Request Headers (Key: Value)</span>
-                  <button class="mv-chip" id="mv-http-preset-auth" style="padding: 2px 6px; font-size: 9px;">+ Auth Header</button>
+                  <div style="display: flex; gap: 4px;">
+                    <button class="mv-chip" id="mv-http-expand-headers" title="Toggle Expand Headers" style="padding: 2px 6px; font-size: 9px;">⛶ Expand</button>
+                    <button class="mv-chip" id="mv-http-preset-auth" style="padding: 2px 6px; font-size: 9px;">+ Auth Header</button>
+                  </div>
                 </div>
                 <textarea class="mv-http-body-textarea" id="mv-http-headers" placeholder="Content-Type: application/json&#10;Authorization: Bearer my_token" spellcheck="false"></textarea>
               </div>
@@ -646,7 +654,10 @@
                     <span class="mv-badge-pill mv-badge-green" id="mv-http-resp-status">Status: Ready</span>
                     <span class="mv-badge-pill mv-badge-cyan" id="mv-http-resp-time">0 ms</span>
                   </div>
-                  <button class="mv-net-copy-btn" id="mv-http-copy-resp-btn">Copy</button>
+                  <div style="display: flex; gap: 4px;">
+                    <button class="mv-chip" id="mv-http-expand-resp" title="Toggle Expand Response" style="padding: 2px 6px; font-size: 9px;">⛶ Expand</button>
+                    <button class="mv-net-copy-btn" id="mv-http-copy-resp-btn">Copy</button>
+                  </div>
                 </div>
                 <div class="mv-net-code-box" id="mv-http-resp-body" style="max-height: 120px;">Dispatch a request to inspect response</div>
               </div>
@@ -688,7 +699,13 @@
 
             <!-- Real-time Security Event Console -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Live Security Event Log</label>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                <label class="mv-control-label">Live Security Event Log</label>
+                <div style="display: flex; gap: 4px;">
+                  <button class="mv-chip" id="mv-sec-expand-btn" title="Toggle Expand Event Log" style="padding: 2px 6px; font-size: 9px;">⛶ Expand</button>
+                  <button class="mv-chip" id="mv-sec-clear-btn" title="Clear Event Log" style="padding: 2px 6px; font-size: 9px;">Clear</button>
+                </div>
+              </div>
               <div class="mv-sec-console" id="mv-sec-console">
                 <div class="mv-log-entry">
                   <span class="mv-log-time">00:00</span>

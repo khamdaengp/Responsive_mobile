@@ -170,13 +170,16 @@ body.mv-popout-body .mv-encoder-output {
     font-size: 13px;
   }
   body.mv-popout-body .mv-http-body-textarea {
-    height: 55px;
+    min-height: 75px;
+    resize: vertical !important;
   }
   body.mv-popout-body .mv-sec-console {
-    height: 75px;
+    min-height: 80px;
+    resize: vertical !important;
   }
   body.mv-popout-body .mv-net-code-box {
-    max-height: 100px;
+    min-height: 80px;
+    resize: vertical !important;
   }
 }
 
