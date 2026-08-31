@@ -497,12 +497,34 @@
     // 5. Application Storage
     if (e.data.type === 'MOBILEVIEW_STORAGE_DATA' && e.data.data) {
       const { localStorage: loc, sessionStorage: sess, cookies: cook } = e.data.data;
-      latestLocalStorage = loc || {};
-      latestSessionStorage = sess || {};
-      latestCookies = cook || {};
-      renderStorageTable(document.getElementById('mv-localstorage-table'), loc, 'local');
-      renderStorageTable(document.getElementById('mv-sessionstorage-table'), sess, 'session');
-      renderStorageTable(document.getElementById('mv-cookies-table'), cook, 'cookie');
+      const isDirectChild = !e.source || !iframeEl || e.source === iframeEl.contentWindow;
+      const locKeys = loc ? Object.keys(loc).length : 0;
+      const sessKeys = sess ? Object.keys(sess).length : 0;
+      const cookKeys = cook ? Object.keys(cook).length : 0;
+
+      // Update LocalStorage if non-empty or from direct child
+      if (loc && (locKeys > 0 || isDirectChild || Object.keys(latestLocalStorage).length === 0)) {
+        if (locKeys > 0 || isDirectChild) {
+          latestLocalStorage = loc;
+          renderStorageTable(document.getElementById('mv-localstorage-table'), latestLocalStorage, 'local');
+        }
+      }
+
+      // Update SessionStorage if non-empty or from direct child
+      if (sess && (sessKeys > 0 || isDirectChild || Object.keys(latestSessionStorage).length === 0)) {
+        if (sessKeys > 0 || isDirectChild) {
+          latestSessionStorage = sess;
+          renderStorageTable(document.getElementById('mv-sessionstorage-table'), latestSessionStorage, 'session');
+        }
+      }
+
+      // Update Cookies if non-empty or from direct child
+      if (cook && (cookKeys > 0 || isDirectChild || Object.keys(latestCookies).length === 0)) {
+        if (cookKeys > 0 || isDirectChild) {
+          latestCookies = cook;
+          renderStorageTable(document.getElementById('mv-cookies-table'), latestCookies, 'cookie');
+        }
+      }
     }
 
     // 6. Custom HTTP Dispatch Result

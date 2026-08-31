@@ -419,20 +419,34 @@
     try {
       const localData = {};
       try {
-        if (window.localStorage && window.localStorage.length !== undefined) {
-          for (let i = 0; i < window.localStorage.length; i++) {
-            const k = window.localStorage.key(i);
+        if (window.localStorage) {
+          const keys = Object.keys(window.localStorage);
+          for (let i = 0; i < keys.length; i++) {
+            const k = keys[i];
             if (k) localData[k] = window.localStorage.getItem(k);
+          }
+          if (keys.length === 0 && window.localStorage.length > 0) {
+            for (let i = 0; i < window.localStorage.length; i++) {
+              const k = window.localStorage.key(i);
+              if (k) localData[k] = window.localStorage.getItem(k);
+            }
           }
         }
       } catch (err) {}
 
       const sessionData = {};
       try {
-        if (window.sessionStorage && window.sessionStorage.length !== undefined) {
-          for (let i = 0; i < window.sessionStorage.length; i++) {
-            const k = window.sessionStorage.key(i);
+        if (window.sessionStorage) {
+          const keys = Object.keys(window.sessionStorage);
+          for (let i = 0; i < keys.length; i++) {
+            const k = keys[i];
             if (k) sessionData[k] = window.sessionStorage.getItem(k);
+          }
+          if (keys.length === 0 && window.sessionStorage.length > 0) {
+            for (let i = 0; i < window.sessionStorage.length; i++) {
+              const k = window.sessionStorage.key(i);
+              if (k) sessionData[k] = window.sessionStorage.getItem(k);
+            }
           }
         }
       } catch (err) {}
@@ -447,14 +461,21 @@
         }
       } catch (err) {}
 
-      window.parent.postMessage({
+      const payload = {
         type: 'MOBILEVIEW_STORAGE_DATA',
         data: {
           localStorage: localData,
           sessionStorage: sessionData,
           cookies: cookiesData
         }
-      }, '*');
+      };
+
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage(payload, '*');
+      }
+      if (window.top && window.top !== window && window.top !== window.parent) {
+        window.top.postMessage(payload, '*');
+      }
     } catch (e) {}
   }
 
