@@ -176,25 +176,26 @@
       <!-- Scalable Stage Container -->
       <div class="mv-stage-container" id="mv-stage">
         <div class="mv-device-wrapper">
-          <!-- Physical Hardware Buttons -->
-          <div class="mv-side-buttons">
-            <div class="mv-btn-action"></div>
-            <div class="mv-btn-vol-up"></div>
-            <div class="mv-btn-vol-down"></div>
-            <div class="mv-btn-power"></div>
-          </div>
-
           <!-- Device Outer Frame -->
           <div class="mv-device-frame" id="mv-frame">
+            <!-- Physical Hardware Buttons -->
+            <div class="mv-side-buttons">
+              <div class="mv-btn-action"></div>
+              <div class="mv-btn-vol-up"></div>
+              <div class="mv-btn-vol-down"></div>
+              <div class="mv-btn-power"></div>
+            </div>
+
             <!-- Screen Housing -->
             <div class="mv-screen-housing">
-              <!-- Realistic Status Bar with Nested Camera Element -->
+              <!-- Hardware Camera Element (Dynamic Island, Notch, Punch Hole) -->
+              <div id="mv-camera-container"></div>
+
+              <!-- Realistic Status Bar -->
               <div class="mv-status-bar" id="mv-status-bar">
                 <div class="mv-status-left">
                   <span id="mv-clock">9:41</span>
                 </div>
-                <!-- Top Camera Element (Dynamic Island, Notch, etc.) -->
-                <div id="mv-camera-container"></div>
                 <div class="mv-status-right">
                   <span class="mv-status-icon">${SVG_ICONS.signal}</span>
                   <span class="mv-status-icon">${SVG_ICONS.wifi}</span>
