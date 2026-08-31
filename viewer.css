@@ -49,16 +49,18 @@ body.mv-popout-body .mv-stage-container {
 }
 
 body.mv-popout-body .mv-controls-dock:not(.mv-minimized) {
-  height: calc(100vh - 16px);
-  max-height: 960px;
-  width: 390px;
-  margin: 8px;
+  height: calc(100vh - 20px);
+  max-height: 940px;
+  width: 350px;
+  margin: 10px;
+  padding: 16px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  border-radius: 16px;
-  background: rgba(15, 23, 42, 0.95);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(9, 13, 22, 0.99) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 body.mv-popout-body .mv-dock-inner {

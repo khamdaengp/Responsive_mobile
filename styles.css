@@ -410,22 +410,22 @@
 
 /* Floating Controls Dock */
 .mv-controls-dock {
-  background: rgba(15, 23, 42, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.05);
-  padding: 18px 20px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.96) 0%, rgba(9, 13, 22, 0.98) 100%);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: 16px;
   color: #f8fafc;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  width: 320px;
+  gap: 12px;
+  width: 340px;
   flex-shrink: 0;
   z-index: 60;
   user-select: none;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Minimized Floating Bubble Mode (Fixed in corner, never follows mouse) */
@@ -494,7 +494,7 @@
 .mv-dock-inner {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   width: 100%;
 }
 
@@ -502,56 +502,61 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 12px;
+  padding-bottom: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .mv-dock-title-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 }
 
 .mv-dock-badge-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #6366f1, #06b6d4);
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+  flex-shrink: 0;
 }
 
 .mv-dock-badge-icon svg {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
   fill: currentColor;
 }
 
 .mv-dock-title {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
-  color: #f8fafc;
+  color: #ffffff;
   letter-spacing: -0.2px;
+  line-height: 1.2;
 }
 
 .mv-dock-subtitle {
-  font-size: 11px;
+  font-size: 10px;
   color: #94a3b8;
-  font-weight: 400;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 1px;
 }
 
 .mv-dock-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .mv-minimize-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #94a3b8;
   width: 28px;
   height: 28px;
   border-radius: 8px;
@@ -563,23 +568,23 @@
 }
 
 .mv-minimize-btn:hover {
-  background: rgba(99, 102, 241, 0.25);
+  background: rgba(99, 102, 241, 0.2);
   border-color: rgba(99, 102, 241, 0.4);
   color: #ffffff;
   transform: scale(1.05);
 }
 
 .mv-minimize-btn svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   stroke: currentColor;
-  stroke-width: 2.2;
+  stroke-width: 2.4;
 }
 
 .mv-close-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #94a3b8;
   width: 28px;
   height: 28px;
   border-radius: 8px;
@@ -598,24 +603,24 @@
 }
 
 .mv-close-btn svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   stroke: currentColor;
-  stroke-width: 2.2;
+  stroke-width: 2.4;
 }
 
 .mv-control-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .mv-control-label {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 9.5px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: #94a3b8;
+  letter-spacing: 0.7px;
+  color: #64748b;
 }
 
 /* Interactive URL Address Bar */
@@ -650,20 +655,20 @@
 
 .mv-url-input {
   width: 100%;
-  background: rgba(30, 41, 59, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  padding: 9px 28px 9px 30px;
-  font-size: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  padding: 8px 28px 8px 30px;
+  font-size: 11.5px;
   color: #f1f5f9;
   outline: none;
   font-family: inherit;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
 }
 
 .mv-url-input:hover {
   border-color: rgba(99, 102, 241, 0.4);
-  background: rgba(30, 41, 59, 1);
+  background: rgba(30, 41, 59, 0.95);
 }
 
 .mv-url-input:focus {
@@ -701,9 +706,9 @@
   background: linear-gradient(135deg, #6366f1, #4f46e5);
   border: 1px solid rgba(165, 180, 252, 0.3);
   color: #ffffff;
-  padding: 9px 12px;
-  border-radius: 10px;
-  font-size: 12px;
+  padding: 8px 11px;
+  border-radius: 9px;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -711,6 +716,7 @@
   justify-content: center;
   gap: 4px;
   transition: all 0.18s ease;
+  flex-shrink: 0;
 }
 
 .mv-url-go-btn:hover {
@@ -734,9 +740,9 @@
 }
 
 .mv-chip {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
   font-size: 10px;
   font-weight: 500;
   color: #94a3b8;
@@ -763,16 +769,16 @@
   width: 100%;
   appearance: none;
   -webkit-appearance: none;
-  background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  padding: 10px 32px 10px 12px;
-  font-size: 13px;
-  font-weight: 500;
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 9px;
+  padding: 8px 30px 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
   color: #f1f5f9;
   cursor: pointer;
   outline: none;
-  transition: all 0.2s ease;
+  transition: all 0.18s ease;
   font-family: inherit;
 }
 
@@ -794,7 +800,7 @@
 
 .mv-select-arrow {
   position: absolute;
-  right: 12px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -804,8 +810,8 @@
 }
 
 .mv-select-arrow svg {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   fill: currentColor;
 }
 
@@ -813,20 +819,20 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 11px;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.2);
+  font-size: 10px;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.14);
+  border: 1px solid rgba(99, 102, 241, 0.28);
   border-radius: 6px;
-  padding: 3px 8px;
+  padding: 2.5px 7px;
   width: fit-content;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .mv-btn-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 7px;
 }
 
 .mv-btn {
@@ -834,12 +840,12 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 9px 12px;
+  padding: 8px 10px;
   background: rgba(30, 41, 59, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 9px;
   color: #e2e8f0;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
   outline: none;
@@ -849,7 +855,7 @@
 
 .mv-btn:hover {
   background: rgba(51, 65, 85, 0.9);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.18);
   color: #ffffff;
   transform: translateY(-1px);
 }
@@ -862,12 +868,12 @@
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.85), rgba(79, 70, 229, 0.85));
   border-color: rgba(165, 180, 252, 0.4);
   color: #ffffff;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3);
 }
 
 .mv-btn svg {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   fill: currentColor;
 }
 
@@ -875,16 +881,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 10px;
+  padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .mv-icon-btn {
-  background: transparent;
-  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   color: #94a3b8;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -894,20 +900,20 @@
 }
 
 .mv-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.15);
   color: #f8fafc;
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
 .mv-icon-btn svg {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   fill: currentColor;
 }
 
 .mv-keyboard-hint {
-  font-size: 10px;
+  font-size: 9.5px;
   color: #64748b;
   text-align: center;
   display: flex;
@@ -917,8 +923,8 @@
 }
 
 .mv-kbd {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 4px;
   padding: 1px 5px;
   font-size: 9px;
@@ -1002,20 +1008,20 @@
 .mv-dock-tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 11px;
   padding: 4px;
   gap: 4px;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .mv-tab-btn {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: transparent;
+  border: 1px solid transparent;
   color: #94a3b8;
   padding: 7px 4px;
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 600;
   border-radius: 7px;
   cursor: pointer;
@@ -1024,23 +1030,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 4.5px;
   white-space: nowrap;
 }
 
 .mv-tab-btn svg {
-  width: 12.5px;
-  height: 12.5px;
+  width: 13px;
+  height: 13px;
   fill: currentColor;
   flex-shrink: 0;
-  opacity: 0.8;
+  opacity: 0.85;
   transition: transform 0.18s ease;
 }
 
 .mv-tab-btn:hover {
   color: #f8fafc;
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .mv-tab-btn:hover svg {
@@ -1051,8 +1057,8 @@
 .mv-tab-btn.mv-tab-active {
   background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 3px 10px rgba(99, 102, 241, 0.45);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 3px 10px rgba(99, 102, 241, 0.4);
   font-weight: 700;
 }
 
@@ -1218,28 +1224,29 @@
 }
 
 .mv-metric-item {
-  background: rgba(30, 41, 59, 0.5);
+  background: rgba(30, 41, 59, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  padding: 6px 8px;
+  border-radius: 9px;
+  padding: 7px 9px;
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
 .mv-metric-label {
-  font-size: 9px;
+  font-size: 8.5px;
   color: #64748b;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.4px;
 }
 
 .mv-metric-val {
-  font-size: 11px;
-  color: #f1f5f9;
+  font-size: 11.5px;
+  color: #f8fafc;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.3;
 }
 
 /* Security Console / Event Log */
