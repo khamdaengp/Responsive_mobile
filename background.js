@@ -80,6 +80,30 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
+  if (message && message.type === 'CAPTURE_DEVICE_SNAPSHOT') {
+    (async () => {
+      try {
+        let winId = null;
+        if (sender.tab && sender.tab.windowId) {
+          winId = sender.tab.windowId;
+        } else {
+          const currentWin = await chrome.windows.getCurrent();
+          winId = currentWin ? currentWin.id : null;
+        }
+
+        const dataUrl = await chrome.tabs.captureVisibleTab(winId, {
+          format: 'jpeg',
+          quality: 95
+        });
+        sendResponse({ success: true, dataUrl: dataUrl });
+      } catch (err) {
+        console.error('[MobileView] captureVisibleTab failed:', err);
+        sendResponse({ success: false, error: err.message });
+      }
+    })();
+    return true;
+  }
+
   // Handle Pop-out to standalone window request with snug device fitting
   if (message && message.type === 'OPEN_POPOUT_WINDOW') {
     (async () => {

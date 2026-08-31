@@ -1527,10 +1527,93 @@
     });
   }
 
-  // Screenshot / Snapshot
+  // Screenshot / Snapshot (Device Display cropped & exported as JPEG)
   if (screenshotBtnEl) {
     screenshotBtnEl.addEventListener('click', () => {
-      window.print();
+      const originalHtml = screenshotBtnEl.innerHTML;
+      screenshotBtnEl.innerHTML = `
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5" fill="none"/></svg>
+        <span>Capturing...</span>
+      `;
+      screenshotBtnEl.disabled = true;
+
+      try {
+        const frameEl = document.getElementById('mv-frame') || document.getElementById('mv-stage');
+        const rect = frameEl.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+
+        chrome.runtime.sendMessage({
+          type: 'CAPTURE_DEVICE_SNAPSHOT'
+        }, (response) => {
+          if (response && response.success && response.dataUrl) {
+            const img = new Image();
+            img.onload = () => {
+              try {
+                const canvas = document.createElement('canvas');
+                // Calculate cropped bounds around device frame
+                const cropX = Math.max(0, (rect.left - 4) * dpr);
+                const cropY = Math.max(0, (rect.top - 4) * dpr);
+                const cropW = Math.min(img.width - cropX, (rect.width + 8) * dpr);
+                const cropH = Math.min(img.height - cropY, (rect.height + 8) * dpr);
+
+                canvas.width = Math.round(cropW);
+                canvas.height = Math.round(cropH);
+                const ctx = canvas.getContext('2d');
+
+                // White canvas background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Draw cropped device display
+                ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, canvas.width, canvas.height);
+
+                // Convert to JPEG format
+                const jpegDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+
+                // Download JPEG file
+                const a = document.createElement('a');
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+                a.download = `mobileview-${currentDeviceId || 'device'}-${timestamp}.jpeg`;
+                a.href = jpegDataUrl;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                screenshotBtnEl.innerHTML = `
+                  <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                  <span>Saved JPEG!</span>
+                `;
+                screenshotBtnEl.style.borderColor = '#34d399';
+                screenshotBtnEl.style.color = '#34d399';
+                logSecurityEvent('SNAPSHOT', `Device screenshot saved as JPEG (${Math.round(cropW)}×${Math.round(cropH)})`, 'pass');
+              } catch (err) {
+                console.error('[MobileView] Canvas crop error:', err);
+                const a = document.createElement('a');
+                a.download = `mobileview-display-${Date.now()}.jpeg`;
+                a.href = response.dataUrl;
+                a.click();
+              }
+
+              setTimeout(() => {
+                screenshotBtnEl.innerHTML = originalHtml;
+                screenshotBtnEl.style.borderColor = '';
+                screenshotBtnEl.style.color = '';
+                screenshotBtnEl.disabled = false;
+              }, 1600);
+            };
+            img.src = response.dataUrl;
+          } else {
+            window.print();
+            screenshotBtnEl.innerHTML = originalHtml;
+            screenshotBtnEl.disabled = false;
+          }
+        });
+      } catch (e) {
+        console.error('[MobileView] Snapshot error:', e);
+        window.print();
+        screenshotBtnEl.innerHTML = originalHtml;
+        screenshotBtnEl.disabled = false;
+      }
     });
   }
 
