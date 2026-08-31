@@ -492,11 +492,8 @@
       scale = parseInt(currentZoomMode, 10) / 100;
     }
 
-    const scaledHeight = frameTotalHeight * scale;
-    const topOffset = Math.max(8, (window.innerHeight - scaledHeight) / 2);
-
-    stageEl.style.transformOrigin = 'top center';
-    stageEl.style.transform = `translateY(${topOffset.toFixed(1)}px) scale(${scale.toFixed(4)})`;
+    stageEl.style.transformOrigin = 'center center';
+    stageEl.style.transform = `scale(${scale.toFixed(4)})`;
   }
 
   // Navigate to Target URL

@@ -1071,29 +1071,26 @@
     const dockEl = document.getElementById('mv-dock');
     const occupiedDockWidth = (!isDockMinimized && dockEl) ? (dockEl.offsetWidth || 390) : 0;
 
-    // Generous padding clearance so phone frame never touches window edges on small laptop screens
-    const clearanceX = isDockMinimized ? 24 : 36;
-    const clearanceY = 24;
+    // Margin padding
+    const paddingX = isDockMinimized ? 16 : 24;
+    const paddingY = 16;
 
-    const availWidth = Math.max(40, window.innerWidth - occupiedDockWidth - clearanceX);
-    const availHeight = Math.max(40, window.innerHeight - clearanceY);
+    const availWidth = Math.max(20, window.innerWidth - occupiedDockWidth - paddingX);
+    const availHeight = Math.max(20, window.innerHeight - paddingY);
 
     let scale = 1;
     if (currentZoomMode === 'auto') {
       const scaleX = availWidth / frameTotalWidth;
       const scaleY = availHeight / frameTotalHeight;
       scale = Math.min(scaleX, scaleY);
-      // Auto-fit scales down proportionally for small laptop screens, capped at 1.0
-      scale = Math.max(0.2, Math.min(1.0, scale));
+      // Auto-fit scales to exactly fit within whatever window size user resizes to
+      scale = Math.max(0.15, Math.min(1.0, scale));
     } else {
       scale = parseInt(currentZoomMode, 10) / 100;
     }
 
-    const scaledHeight = frameTotalHeight * scale;
-    const topOffset = Math.max(0, (window.innerHeight - scaledHeight) / 2);
-
-    stageEl.style.transformOrigin = 'top center';
-    stageEl.style.transform = `translateY(${topOffset.toFixed(1)}px) scale(${scale.toFixed(4)})`;
+    stageEl.style.transformOrigin = 'center center';
+    stageEl.style.transform = `scale(${scale.toFixed(4)})`;
   }
 
   // Load URL
