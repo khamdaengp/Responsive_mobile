@@ -474,113 +474,119 @@
 
   // Intercept incoming events from iframe (Network, Console, Performance, Storage, REPL)
   window.addEventListener('message', (e) => {
-    if (!e.data) return;
+    try {
+      if (!e.data || typeof e.data !== 'object') return;
 
-    // 1. Network Traffic
-    if (e.data.type === 'MOBILEVIEW_NETWORK_REQ' && e.data.data) {
-      const data = e.data.data;
-      const { id, reqType, method, url, status, duration } = data;
-      const reqId = id || ('req_' + Date.now() + '_' + Math.random());
-      capturedRequestsMap.set(reqId, { ...data, id: reqId });
+      // 1. Network Traffic
+      if (e.data.type === 'MOBILEVIEW_NETWORK_REQ' && e.data.data) {
+        const data = e.data.data;
+        const id = data.id || ('req_' + Date.now() + '_' + Math.random());
+        const reqType = String(data.reqType || 'FETCH');
+        const method = String(data.method || 'GET');
+        const url = String(data.url || '');
+        const status = Number(data.status) || 0;
+        const duration = Number(data.duration) || 0;
+        capturedRequestsMap.set(id, { ...data, id });
 
-      const statusType = status >= 200 && status < 300 ? 'pass' : (status >= 400 ? 'warn' : 'info');
-      const label = `${reqType} ${method}`;
-      const detail = `${url} (${status} · ${duration}ms)`;
-      logNetworkEvent(label, detail, statusType, reqType, reqId);
-      logSecurityEvent(reqType, `${method} ${url.substring(0, 30)} (${status})`, statusType);
-    }
-
-    // 2. Console Logs
-    if (e.data.type === 'MOBILEVIEW_CONSOLE_LOG' && e.data.data) {
-      const { level, message, time } = e.data.data;
-      logConsoleEvent(level, message, time);
-    }
-
-    // 3. REPL Execution Results
-    if (e.data.type === 'MOBILEVIEW_EXEC_RESULT' && e.data.data) {
-      const { result, isError } = e.data.data;
-      logConsoleEvent(isError ? 'error' : 'repl-out', `< ${result}`);
-    }
-
-    // 4. Performance & Core Web Vitals
-    if (e.data.type === 'MOBILEVIEW_PERF_DATA' && e.data.data) {
-      const { ttfb, domReady, loadTime, totalKb, resourceCount, scriptCount, cssCount, imgCount, memory } = e.data.data;
-      const lcpEl = document.getElementById('mv-perf-lcp');
-      const inpEl = document.getElementById('mv-perf-inp');
-      const clsEl = document.getElementById('mv-perf-cls');
-      const ttfbEl = document.getElementById('mv-perf-ttfb');
-      const weightEl = document.getElementById('mv-perf-weight');
-      const domEl = document.getElementById('mv-perf-dom');
-      const loadEl = document.getElementById('mv-perf-load');
-      const memEl = document.getElementById('mv-perf-mem');
-      const countsEl = document.getElementById('mv-perf-counts');
-
-      if (ttfbEl) ttfbEl.textContent = `~${ttfb} ms`;
-      if (domEl) domEl.textContent = `~${domReady} ms`;
-      if (loadEl) loadEl.textContent = `~${loadTime} ms`;
-      if (lcpEl) lcpEl.textContent = `${(domReady / 1000 + 0.2).toFixed(2)} s`;
-      if (inpEl) inpEl.textContent = `~${Math.round(Math.random() * 15 + 10)} ms`;
-      if (clsEl) clsEl.textContent = (Math.random() * 0.03).toFixed(2);
-      if (weightEl) weightEl.textContent = `~${totalKb > 0 ? totalKb : 380} KB`;
-      if (countsEl) countsEl.textContent = `${scriptCount} JS · ${cssCount} CSS · ${imgCount} IMG (${resourceCount} Total)`;
-      if (memEl && memory) {
-        memEl.textContent = `~${memory.usedJSHeapSize} MB / ${memory.totalJSHeapSize} MB`;
+        const statusType = status >= 200 && status < 300 ? 'pass' : (status >= 400 ? 'warn' : 'info');
+        const label = `${reqType} ${method}`;
+        const detail = `${url} (${status} · ${duration}ms)`;
+        logNetworkEvent(label, detail, statusType, reqType, id);
+        logSecurityEvent(reqType, `${method} ${url.substring(0, 30)} (${status})`, statusType);
       }
-    }
 
-    // 5. Application Storage
-    if (e.data.type === 'MOBILEVIEW_STORAGE_DATA' && e.data.data) {
-      const { localStorage: loc, sessionStorage: sess, cookies: cook } = e.data.data;
-      const isDirectChild = !e.source || !iframeEl || e.source === iframeEl.contentWindow;
-      const locKeys = loc ? Object.keys(loc).length : 0;
-      const sessKeys = sess ? Object.keys(sess).length : 0;
-      const cookKeys = cook ? Object.keys(cook).length : 0;
+      // 2. Console Logs
+      if (e.data.type === 'MOBILEVIEW_CONSOLE_LOG' && e.data.data) {
+        const { level, message, time } = e.data.data;
+        logConsoleEvent(level || 'info', String(message || ''), time || '');
+      }
 
-      // Update LocalStorage if non-empty or from direct child
-      if (loc && (locKeys > 0 || isDirectChild || Object.keys(latestLocalStorage).length === 0)) {
-        if (locKeys > 0 || isDirectChild) {
-          latestLocalStorage = loc;
-          renderStorageTable(document.getElementById('mv-localstorage-table'), latestLocalStorage, 'local');
+      // 3. REPL Execution Results
+      if (e.data.type === 'MOBILEVIEW_EXEC_RESULT' && e.data.data) {
+        const { result, isError } = e.data.data;
+        logConsoleEvent(isError ? 'error' : 'repl-out', `< ${String(result || '')}`);
+      }
+
+      // 4. Performance & Core Web Vitals
+      if (e.data.type === 'MOBILEVIEW_PERF_DATA' && e.data.data) {
+        const { ttfb, domReady, loadTime, totalKb, resourceCount, scriptCount, cssCount, imgCount, memory } = e.data.data;
+        const lcpEl = document.getElementById('mv-perf-lcp');
+        const inpEl = document.getElementById('mv-perf-inp');
+        const clsEl = document.getElementById('mv-perf-cls');
+        const ttfbEl = document.getElementById('mv-perf-ttfb');
+        const weightEl = document.getElementById('mv-perf-weight');
+        const domEl = document.getElementById('mv-perf-dom');
+        const loadEl = document.getElementById('mv-perf-load');
+        const memEl = document.getElementById('mv-perf-mem');
+        const countsEl = document.getElementById('mv-perf-counts');
+
+        if (ttfbEl) ttfbEl.textContent = `~${ttfb} ms`;
+        if (domEl) domEl.textContent = `~${domReady} ms`;
+        if (loadEl) loadEl.textContent = `~${loadTime} ms`;
+        if (lcpEl) lcpEl.textContent = `${(domReady / 1000 + 0.2).toFixed(2)} s`;
+        if (inpEl) inpEl.textContent = `~${Math.round(Math.random() * 15 + 10)} ms`;
+        if (clsEl) clsEl.textContent = (Math.random() * 0.03).toFixed(2);
+        if (weightEl) weightEl.textContent = `~${totalKb > 0 ? totalKb : 380} KB`;
+        if (countsEl) countsEl.textContent = `${scriptCount} JS · ${cssCount} CSS · ${imgCount} IMG (${resourceCount} Total)`;
+        if (memEl && memory) {
+          memEl.textContent = `~${memory.usedJSHeapSize} MB / ${memory.totalJSHeapSize} MB`;
         }
       }
 
-      // Update SessionStorage if non-empty or from direct child
-      if (sess && (sessKeys > 0 || isDirectChild || Object.keys(latestSessionStorage).length === 0)) {
-        if (sessKeys > 0 || isDirectChild) {
-          latestSessionStorage = sess;
-          renderStorageTable(document.getElementById('mv-sessionstorage-table'), latestSessionStorage, 'session');
+      // 5. Application Storage
+      if (e.data.type === 'MOBILEVIEW_STORAGE_DATA' && e.data.data) {
+        const { localStorage: loc, sessionStorage: sess, cookies: cook } = e.data.data;
+        const isDirectChild = !e.source || !iframeEl || e.source === iframeEl.contentWindow;
+        const locKeys = loc ? Object.keys(loc).length : 0;
+        const sessKeys = sess ? Object.keys(sess).length : 0;
+        const cookKeys = cook ? Object.keys(cook).length : 0;
+
+        // Update LocalStorage if non-empty or from direct child
+        if (loc && (locKeys > 0 || isDirectChild || Object.keys(latestLocalStorage).length === 0)) {
+          if (locKeys > 0 || isDirectChild) {
+            latestLocalStorage = loc;
+            renderStorageTable(document.getElementById('mv-localstorage-table'), latestLocalStorage, 'local');
+          }
+        }
+
+        // Update SessionStorage if non-empty or from direct child
+        if (sess && (sessKeys > 0 || isDirectChild || Object.keys(latestSessionStorage).length === 0)) {
+          if (sessKeys > 0 || isDirectChild) {
+            latestSessionStorage = sess;
+            renderStorageTable(document.getElementById('mv-sessionstorage-table'), latestSessionStorage, 'session');
+          }
+        }
+
+        // Update Cookies if non-empty or from direct child
+        if (cook && (cookKeys > 0 || isDirectChild || Object.keys(latestCookies).length === 0)) {
+          if (cookKeys > 0 || isDirectChild) {
+            latestCookies = cook;
+            renderStorageTable(document.getElementById('mv-cookies-table'), latestCookies, 'cookie');
+          }
         }
       }
 
-      // Update Cookies if non-empty or from direct child
-      if (cook && (cookKeys > 0 || isDirectChild || Object.keys(latestCookies).length === 0)) {
-        if (cookKeys > 0 || isDirectChild) {
-          latestCookies = cook;
-          renderStorageTable(document.getElementById('mv-cookies-table'), latestCookies, 'cookie');
-        }
-      }
-    }
+      // 6. Custom HTTP Dispatch Result
+      if (e.data.type === 'MOBILEVIEW_HTTP_DISPATCH_RESULT' && e.data.data) {
+        const { status, statusText, duration, responseHeaders, responseBody } = e.data.data;
+        const statusEl = document.getElementById('mv-http-resp-status');
+        const timeEl = document.getElementById('mv-http-resp-time');
+        const bodyEl = document.getElementById('mv-http-resp-body');
 
-    // 6. Custom HTTP Dispatch Result
-    if (e.data.type === 'MOBILEVIEW_HTTP_DISPATCH_RESULT' && e.data.data) {
-      const { status, statusText, duration, responseHeaders, responseBody } = e.data.data;
-      const statusEl = document.getElementById('mv-http-resp-status');
-      const timeEl = document.getElementById('mv-http-resp-time');
-      const bodyEl = document.getElementById('mv-http-resp-body');
-
-      if (statusEl) {
-        statusEl.textContent = `Status: ${status} ${statusText}`;
-        if (status >= 200 && status < 300) {
-          statusEl.className = 'mv-badge-pill mv-badge-green';
-        } else if (status >= 400) {
-          statusEl.className = 'mv-badge-pill mv-badge-red';
-        } else {
-          statusEl.className = 'mv-badge-pill mv-badge-cyan';
+        if (statusEl) {
+          statusEl.textContent = `Status: ${status} ${statusText}`;
+          if (status >= 200 && status < 300) {
+            statusEl.className = 'mv-badge-pill mv-badge-green';
+          } else if (status >= 400) {
+            statusEl.className = 'mv-badge-pill mv-badge-red';
+          } else {
+            statusEl.className = 'mv-badge-pill mv-badge-cyan';
+          }
         }
+        if (timeEl) timeEl.textContent = `${duration} ms`;
+        if (bodyEl) bodyEl.textContent = formatJsonSafe(responseBody);
       }
-      if (timeEl) timeEl.textContent = `${duration} ms`;
-      if (bodyEl) bodyEl.textContent = formatJsonSafe(responseBody);
-    }
+    } catch (err) {}
   });
 
   // =========================================================================
