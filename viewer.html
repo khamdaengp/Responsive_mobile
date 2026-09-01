@@ -177,24 +177,6 @@
 
       <!-- Full Dock Contents -->
       <div class="mv-dock-inner">
-        <!-- Dock Header -->
-        <div class="mv-dock-header">
-          <div class="mv-dock-title-group">
-            <div class="mv-dock-badge-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" focusable="false"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
-            </div>
-            <div>
-              <h1 class="mv-dock-title">MobileView Pro</h1>
-              <div class="mv-dock-subtitle">Developer & Security Suite</div>
-            </div>
-          </div>
-          <div class="mv-dock-actions">
-            <button class="mv-minimize-btn" id="mv-minimize-btn" aria-label="Minimize Dock to Floating Strip (Press M)" title="Minimize to Floating Bubble (M)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" focusable="false"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            </button>
-          </div>
-        </div>
-
         <!-- Navigation Tabs (WCAG 1.3.1 ARIA Tablist Pattern) -->
         <nav class="mv-dock-tabs" role="tablist" aria-label="MobileView Control Panels">
           <button class="mv-tab-btn mv-tab-active" id="tab-btn-viewport" role="tab" aria-selected="true" aria-controls="tab-viewport" tabindex="0" data-tab="tab-viewport">
@@ -863,6 +845,9 @@
           </button>
           <button class="mv-icon-btn" id="mv-open-new-tab-btn" aria-label="Open active URL in new browser tab" title="Open loaded URL in new tab">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+          </button>
+          <button class="mv-icon-btn" id="mv-minimize-btn" aria-label="Minimize Dock to Floating Toolbar Strip (Press M)" title="Minimize (M)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           </button>
         </div>
 
