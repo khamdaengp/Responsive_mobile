@@ -525,26 +525,26 @@
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Minimized Floating Bubble Mode (Fixed in corner, never follows mouse) */
-/* Minimized Mode: Sleek Vertical Toolbar Strip (Docked on Right Edge) */
+/* Minimized Mode: Sleek Compact Floating Toolbar Pill */
 .mv-controls-dock.mv-minimized {
-  width: 48px !important;
-  min-width: 48px !important;
-  max-width: 48px !important;
-  height: calc(100vh - 20px) !important;
-  max-height: 960px !important;
-  margin: 10px !important;
-  padding: 10px 4px !important;
-  border-radius: 16px !important;
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(9, 13, 22, 0.99) 100%) !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  height: auto !important;
+  max-height: fit-content !important;
+  align-self: center !important;
+  margin: 0 8px !important;
+  padding: 6px 4px !important;
+  border-radius: 24px !important;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(9, 13, 22, 0.98) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
   position: static !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   animation: none !important;
   cursor: default !important;
   z-index: 60 !important;
@@ -561,17 +561,16 @@
 
 .mv-minimized-toolbar {
   width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   box-sizing: border-box;
 }
 
 .mv-toolbar-btn {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 10px;
   border: 1px solid transparent;
   background: transparent;
@@ -580,14 +579,14 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
   padding: 0;
   flex-shrink: 0;
 }
 
 .mv-toolbar-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.09);
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.18);
   transform: scale(1.08);
@@ -604,6 +603,7 @@
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.3);
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.45);
+  margin-bottom: 2px;
 }
 
 .mv-toolbar-btn.mv-toolbar-expand:hover {
@@ -612,34 +612,18 @@
   box-shadow: 0 6px 16px rgba(99, 102, 241, 0.65);
 }
 
-.mv-toolbar-btn.mv-toolbar-expand-btm {
-  background: rgba(255, 255, 255, 0.06);
-  color: #94a3b8;
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.mv-toolbar-btn.mv-toolbar-expand-btm:hover {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
 .mv-toolbar-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   fill: currentColor;
 }
 
 .mv-toolbar-divider {
-  width: 24px;
+  width: 20px;
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   margin: 2px 0;
   flex-shrink: 0;
-}
-
-.mv-toolbar-spacer {
-  flex: 1;
 }
 
 .mv-dock-inner {
