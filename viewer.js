@@ -1380,6 +1380,26 @@
 
     calculateScale(width, height);
     fitWindowToDevice();
+    requestAnimationFrame(() => syncDockHeight());
+  }
+
+  function syncDockHeight() {
+    const dock = document.getElementById('mv-dock');
+    const frame = document.getElementById('mv-frame');
+    if (!dock || !frame) return;
+    if (isDockMinimized || dock.classList.contains('mv-minimized')) {
+      dock.style.height = 'auto';
+      dock.style.maxHeight = 'fit-content';
+      dock.style.minHeight = '';
+      return;
+    }
+    const frameRect = frame.getBoundingClientRect();
+    if (frameRect && frameRect.height > 100) {
+      const targetHeight = Math.round(frameRect.height);
+      dock.style.height = `${targetHeight}px`;
+      dock.style.maxHeight = `${targetHeight}px`;
+      dock.style.minHeight = `${targetHeight}px`;
+    }
   }
 
   function calculateScale(deviceWidth, deviceHeight) {
@@ -1415,6 +1435,7 @@
 
     stageEl.style.transformOrigin = 'center center';
     stageEl.style.transform = `scale(${scale.toFixed(4)}) translateZ(0)`;
+    requestAnimationFrame(() => syncDockHeight());
   }
 
   // Load URL
@@ -1479,6 +1500,7 @@
     const height = isLandscape ? device.width : device.height;
     calculateScale(width, height);
     fitWindowToDevice();
+    requestAnimationFrame(() => syncDockHeight());
   }
 
   // Event Listeners
@@ -2219,11 +2241,23 @@
     const width = isLandscape ? device.height : device.width;
     const height = isLandscape ? device.width : device.height;
     calculateScale(width, height);
+    requestAnimationFrame(() => syncDockHeight());
   });
+
+  // Watch frame and stage for dynamic height synchronization
+  if (typeof ResizeObserver !== 'undefined') {
+    const dockResizeObs = new ResizeObserver(() => {
+      syncDockHeight();
+    });
+    if (frameEl) dockResizeObs.observe(frameEl);
+    if (stageEl) dockResizeObs.observe(stageEl);
+  }
 
   // Init
   updateClock();
   setInterval(updateClock, 10000);
   applyDeviceLayout();
   loadUrl(initialUrl);
+  setTimeout(() => syncDockHeight(), 100);
+  setTimeout(() => syncDockHeight(), 500);
 })();
