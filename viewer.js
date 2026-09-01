@@ -1128,26 +1128,34 @@
     conExpandBtn.classList.toggle('mv-chip-active', isExpanded);
   });
 
-  // Tab switching
+  // Tab switching with WCAG ARIA synchronization
+  function switchActiveTab(targetTabId) {
+    tabBtns.forEach((b) => {
+      const isTarget = b.getAttribute('data-tab') === targetTabId;
+      b.classList.toggle('mv-tab-active', isTarget);
+      b.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+      b.setAttribute('tabindex', isTarget ? '0' : '-1');
+    });
+    tabPanels.forEach((p) => {
+      p.classList.toggle('mv-panel-active', p.id === targetTabId);
+    });
+
+    // Instantly request latest data for active tab
+    if (targetTabId === 'tab-app' && iframeEl && iframeEl.contentWindow) {
+      try {
+        iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_REQUEST_STORAGE' }, '*');
+      } catch (e) {}
+    } else if (targetTabId === 'tab-perf' && iframeEl && iframeEl.contentWindow) {
+      try {
+        iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_REQUEST_PERF' }, '*');
+      } catch (e) {}
+    }
+  }
+
   tabBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
-      tabBtns.forEach((b) => b.classList.remove('mv-tab-active'));
-      tabPanels.forEach((p) => p.classList.remove('mv-panel-active'));
-      btn.classList.add('mv-tab-active');
       const targetPanelId = btn.getAttribute('data-tab');
-      const panel = document.getElementById(targetPanelId);
-      if (panel) panel.classList.add('mv-panel-active');
-
-      // Instantly request latest data for active tab
-      if (targetPanelId === 'tab-app' && iframeEl && iframeEl.contentWindow) {
-        try {
-          iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_REQUEST_STORAGE' }, '*');
-        } catch (e) {}
-      } else if (targetPanelId === 'tab-perf' && iframeEl && iframeEl.contentWindow) {
-        try {
-          iframeEl.contentWindow.postMessage({ type: 'MOBILEVIEW_REQUEST_PERF' }, '*');
-        } catch (e) {}
-      }
+      switchActiveTab(targetPanelId);
     });
   });
 

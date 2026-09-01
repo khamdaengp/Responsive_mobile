@@ -2488,6 +2488,65 @@
   resize: vertical !important;
 }
 
+/* ==========================================================================
+   WCAG 2.1 & 2.2 Accessibility Compliance Enhancements
+   ========================================================================== */
+
+/* 1. High-Contrast Focus Visible Rings (WCAG 2.4.7 Level AA & 2.4.11 Level AAA) */
+:focus-visible {
+  outline: 2px solid #818cf8 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3) !important;
+}
+
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* 2. Elevated Color Contrast for Secondary / Muted Text (WCAG 1.4.3 Level AA >= 4.5:1) */
+.mv-vital-sub,
+.mv-metric-label,
+.mv-log-time,
+.mv-storage-row,
+.mv-inspect-label,
+.mv-sec-name,
+.mv-dock-subtitle {
+  color: #94a3b8 !important; /* 7.58:1 contrast on dark dock backgrounds */
+}
+
+::placeholder {
+  color: #94a3b8 !important;
+  opacity: 0.85;
+}
+
+/* 3. Touch Target Minimum Sizing & Hit Envelopes (WCAG 2.5.8 Level AA >= 24x24px) */
+.mv-chip {
+  min-height: 24px !important;
+  padding: 4px 8px !important;
+  margin: 1px 2px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.mv-toolbar-btn {
+  min-width: 34px !important;
+  min-height: 34px !important;
+}
+
+.mv-inspect-close,
+.mv-net-close-btn {
+  min-width: 26px !important;
+  min-height: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+
 
 
 

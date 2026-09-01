@@ -9,14 +9,15 @@
   <link rel="stylesheet" href="viewer.css">
 </head>
 <body class="mv-popout-body">
-  <div class="mv-workspace" id="mv-workspace">
+  <!-- Main Application Landmark (WCAG 1.3.1) -->
+  <main class="mv-workspace" id="mv-workspace">
     <!-- Scalable Stage Container -->
-    <div class="mv-stage-container" id="mv-stage">
+    <section class="mv-stage-container" id="mv-stage" aria-label="Mobile Simulation Workspace">
       <div class="mv-device-wrapper">
         <!-- Device Outer Frame -->
-        <div class="mv-device-frame" id="mv-frame">
+        <div class="mv-device-frame" id="mv-frame" role="region" aria-label="Simulated Mobile Device Frame">
           <!-- Physical Hardware Buttons -->
-          <div class="mv-side-buttons">
+          <div class="mv-side-buttons" aria-hidden="true">
             <div class="mv-btn-action"></div>
             <div class="mv-btn-vol-up"></div>
             <div class="mv-btn-vol-down"></div>
@@ -26,61 +27,62 @@
           <!-- Screen Housing -->
           <div class="mv-screen-housing">
             <!-- Hardware Camera Element (Dynamic Island, Notch, Punch Hole) -->
-            <div id="mv-camera-container"></div>
+            <div id="mv-camera-container" aria-hidden="true"></div>
 
             <!-- Realistic Status Bar -->
-            <div class="mv-status-bar" id="mv-status-bar">
+            <div class="mv-status-bar" id="mv-status-bar" aria-hidden="true">
               <div class="mv-status-left">
                 <span id="mv-clock">9:41</span>
               </div>
               <div class="mv-status-right">
                 <span class="mv-status-icon">
-                  <svg viewBox="0 0 24 24"><path d="M2 22h20V2z"/></svg>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 22h20V2z"/></svg>
                 </span>
                 <span class="mv-status-icon">
-                  <svg viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4z"/></svg>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4z"/></svg>
                 </span>
                 <span class="mv-status-icon">
-                  <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
                 </span>
               </div>
             </div>
 
             <!-- Iframe Viewport Container -->
             <div class="mv-iframe-container" id="mv-iframe-box">
-              <div class="mv-grid-overlay" id="mv-grid-overlay"></div>
-              <div class="mv-touch-cursor" id="mv-touch-cursor"></div>
+              <div class="mv-grid-overlay" id="mv-grid-overlay" aria-hidden="true"></div>
+              <div class="mv-touch-cursor" id="mv-touch-cursor" aria-hidden="true"></div>
               <iframe 
                 class="mv-device-iframe" 
                 id="mv-iframe" 
                 src="about:blank"
                 scrolling="yes"
+                title="Mobile Viewport Simulation Workspace"
                 referrerpolicy="no-referrer"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               ></iframe>
-              <div class="mv-loading-overlay" id="mv-loading">
-                <div class="mv-spinner"></div>
+              <div class="mv-loading-overlay" id="mv-loading" aria-live="polite">
+                <div class="mv-spinner" aria-hidden="true"></div>
                 <span class="mv-loading-text">Loading mobile viewport...</span>
               </div>
             </div>
 
             <!-- Bottom Gesture / Home Indicator -->
-            <div class="mv-home-indicator-area" id="mv-home-bar">
+            <div class="mv-home-indicator-area" id="mv-home-bar" aria-hidden="true">
               <div class="mv-home-indicator-pill"></div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- Live Element Inspector Floating Card -->
-    <div class="mv-inspect-card" id="mv-inspect-card">
+    <aside class="mv-inspect-card" id="mv-inspect-card" aria-label="DOM Element Inspector Details">
       <div class="mv-inspect-header">
         <div class="mv-inspect-tag-group">
           <span class="mv-inspect-tag-badge" id="mv-inspect-tag">&lt;element&gt;</span>
           <span class="mv-inspect-dims" id="mv-inspect-dims">393 × 240 px</span>
         </div>
-        <button class="mv-inspect-close" id="mv-inspect-close" title="Close Inspector">&times;</button>
+        <button class="mv-inspect-close" id="mv-inspect-close" aria-label="Close Element Inspector" title="Close Inspector">&times;</button>
       </div>
       <div class="mv-inspect-body">
         <div class="mv-inspect-grid">
@@ -102,101 +104,101 @@
           </div>
         </div>
         <div class="mv-inspect-snippet-box">
-          <pre class="mv-inspect-code" id="mv-inspect-code">&lt;div class="container"&gt;&lt;/div&gt;</pre>
+          <pre class="mv-inspect-code" id="mv-inspect-code" tabindex="0" aria-label="HTML Snippet">&lt;div class="container"&gt;&lt;/div&gt;</pre>
         </div>
       </div>
       <div class="mv-inspect-footer">
-        <button class="mv-chip" id="mv-inspect-copy-btn" style="width: 100%; justify-content: center; padding: 4px 8px; font-size: 11px;">
+        <button class="mv-chip" id="mv-inspect-copy-btn" aria-label="Copy HTML Snippet to clipboard" style="width: 100%; justify-content: center; padding: 4px 8px; font-size: 11px;">
           Copy HTML Snippet
         </button>
       </div>
-    </div>
+    </aside>
 
     <!-- Floating Controls Dock (Collapsible into Sleek Vertical Toolbar Strip) -->
-    <div class="mv-controls-dock" id="mv-dock">
+    <aside class="mv-controls-dock" id="mv-dock" aria-label="Developer and Security Controls Dock">
       <!-- Sleek Vertical Toolbar Strip (Shown when Minimized) -->
-      <div class="mv-minimized-toolbar" id="mv-minimized-toolbar">
+      <div class="mv-minimized-toolbar" id="mv-minimized-toolbar" role="toolbar" aria-label="Quick Action Minimized Toolbar">
         <!-- Expand Dashboard -->
-        <button class="mv-toolbar-btn mv-toolbar-expand" id="mv-tb-expand" title="Expand Dashboard (M)">
-          <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        <button class="mv-toolbar-btn mv-toolbar-expand" id="mv-tb-expand" aria-label="Expand Dashboard (Press M)" title="Expand Dashboard (M)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
         </button>
-        <div class="mv-toolbar-divider"></div>
+        <div class="mv-toolbar-divider" aria-hidden="true"></div>
         
         <!-- Orientation Switcher -->
-        <button class="mv-toolbar-btn" id="mv-tb-rotate" title="Rotate Orientation (O)">
-          <svg viewBox="0 0 24 24"><path d="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h1.5C23.44 4.84 18.29 0 12 0l-.66.03 3.81 3.81 1.33-1.32zm-10.96 18.96C2.25 19.93-.09 16.76.01 13h-1.5c.51 6.16 5.66 11 11.95 11l.66-.03-3.81-3.81-1.29 1.32z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-rotate" aria-label="Rotate Orientation (Press O)" title="Rotate Orientation (O)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h1.5C23.44 4.84 18.29 0 12 0l-.66.03 3.81 3.81 1.33-1.32zm-10.96 18.96C2.25 19.93-.09 16.76.01 13h-1.5c.51 6.16 5.66 11 11.95 11l.66-.03-3.81-3.81-1.29 1.32z"/></svg>
         </button>
 
         <!-- Display Frame Mode Switcher -->
-        <button class="mv-toolbar-btn" id="mv-tb-mode" title="Toggle Mockup / Chrome Mode">
-          <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-mode" aria-label="Toggle Mockup Frame or Chrome Full Screen" title="Toggle Mockup / Chrome Mode">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
         </button>
 
         <!-- Touch Pointer Toggle -->
-        <button class="mv-toolbar-btn" id="mv-tb-touch" title="Toggle Touch Pointer (T)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-touch" aria-label="Toggle Virtual Touch Cursor (Press T)" title="Toggle Touch Pointer (T)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v4m0 12v4M2 12h4m12 0h4"/></svg>
         </button>
 
         <!-- 8px Alignment Grid Overlay -->
-        <button class="mv-toolbar-btn" id="mv-tb-grid" title="Toggle Alignment Grid (G)">
-          <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-grid" aria-label="Toggle 8px Alignment Grid (Press G)" title="Toggle Alignment Grid (G)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>
         </button>
 
         <!-- DOM Element Inspector -->
-        <button class="mv-toolbar-btn" id="mv-tb-inspect" title="Inspect DOM Elements (I)">
-          <svg viewBox="0 0 24 24"><path d="M13.64 21.97C13.14 22.21 12.54 22 12.31 21.5L10.13 16.76L7.62 19.27C7.31 19.58 6.8 19.36 6.8 18.92V3.5C6.8 3.06 7.31 2.84 7.62 3.15L18.53 14.06C18.84 14.37 18.62 14.88 18.18 14.88H14.83L17 19.62C17.23 20.12 17.02 20.72 16.52 20.95L13.64 21.97Z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-inspect" aria-label="Inspect DOM Elements (Press I)" title="Inspect DOM Elements (I)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.64 21.97C13.14 22.21 12.54 22 12.31 21.5L10.13 16.76L7.62 19.27C7.31 19.58 6.8 19.36 6.8 18.92V3.5C6.8 3.06 7.31 2.84 7.62 3.15L18.53 14.06C18.84 14.37 18.62 14.88 18.18 14.88H14.83L17 19.62C17.23 20.12 17.02 20.72 16.52 20.95L13.64 21.97Z"/></svg>
         </button>
 
         <!-- Dark / Light Theme Toggle -->
-        <button class="mv-toolbar-btn" id="mv-tb-theme" title="Toggle Dark / Light Theme (D)">
-          <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-theme" aria-label="Toggle Dark / Light Theme (Press D)" title="Toggle Dark / Light Theme (D)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
         </button>
 
         <!-- Network Throttling Preset -->
-        <button class="mv-toolbar-btn" id="mv-tb-throttle" title="Cycle Network Speed (Fast 4G / 3G / Offline)">
-          <svg viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-throttle" aria-label="Cycle Network Speed Throttling" title="Cycle Network Speed (Fast 4G / 3G / Offline)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4z"/></svg>
         </button>
 
         <!-- QR Code Share -->
-        <button class="mv-toolbar-btn" id="mv-tb-qrcode" title="Show Mobile QR Code (Q)">
-          <svg viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-qrcode" aria-label="Show Mobile Device QR Code (Press Q)" title="Show Mobile QR Code (Q)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
         </button>
 
         <!-- Screenshot / Snapshot Export -->
-        <button class="mv-toolbar-btn" id="mv-tb-screenshot" title="Take Screenshot & Save JPEG (S)">
-          <svg viewBox="0 0 24 24"><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-screenshot" aria-label="Take Screenshot and Save JPEG (Press S)" title="Take Screenshot & Save JPEG (S)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
         </button>
 
         <!-- Copy Screenshot Image to Clipboard -->
-        <button class="mv-toolbar-btn" id="mv-tb-copy-img" title="Copy Screenshot Image to Clipboard (Ctrl+V) (C)">
-          <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.96-2.36L6.5 17h11l-3.54-4.71z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-copy-img" aria-label="Copy Screenshot Image directly to Clipboard (Press C)" title="Copy Screenshot Image to Clipboard (Ctrl+V) (C)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.96-2.36L6.5 17h11l-3.54-4.71z"/></svg>
         </button>
 
         <!-- Scroll to Top -->
-        <button class="mv-toolbar-btn" id="mv-tb-scrolltop" title="Scroll to Top">
-          <svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-scrolltop" aria-label="Scroll Viewport to Top" title="Scroll to Top">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
         </button>
 
         <!-- Reload Viewport -->
-        <button class="mv-toolbar-btn" id="mv-tb-reload" title="Reload Viewport (R)">
-          <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-reload" aria-label="Reload Viewport (Press R)" title="Reload Viewport (R)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
         </button>
 
         <!-- Copy URL to Clipboard -->
-        <button class="mv-toolbar-btn" id="mv-tb-copy" title="Copy Target URL">
-          <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-copy" aria-label="Copy Current Target URL to Clipboard" title="Copy Target URL">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
         </button>
 
         <!-- Open in New Tab -->
-        <button class="mv-toolbar-btn" id="mv-tb-open" title="Open in New Tab">
-          <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+        <button class="mv-toolbar-btn" id="mv-tb-open" aria-label="Open Target URL in New Chrome Tab" title="Open in New Tab">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
         </button>
 
-        <div class="mv-toolbar-spacer"></div>
+        <div class="mv-toolbar-spacer" aria-hidden="true"></div>
 
         <!-- Bottom Expand Button -->
-        <button class="mv-toolbar-btn mv-toolbar-expand-btm" id="mv-tb-expand-btm" title="Expand Dashboard (M)">
-          <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+        <button class="mv-toolbar-btn mv-toolbar-expand-btm" id="mv-tb-expand-btm" aria-label="Expand Dashboard (Press M)" title="Expand Dashboard (M)">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
         </button>
       </div>
 
@@ -205,111 +207,112 @@
         <!-- Dock Header -->
         <div class="mv-dock-header">
           <div class="mv-dock-title-group">
-            <div class="mv-dock-badge-icon">
-              <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+            <div class="mv-dock-badge-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
             </div>
             <div>
-              <div class="mv-dock-title">MobileView Pro</div>
+              <h1 class="mv-dock-title">MobileView Pro</h1>
               <div class="mv-dock-subtitle">Developer & Security Suite</div>
             </div>
           </div>
           <div class="mv-dock-actions">
-            <button class="mv-minimize-btn" id="mv-minimize-btn" title="Minimize to Floating Bubble (M)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <button class="mv-minimize-btn" id="mv-minimize-btn" aria-label="Minimize Dock to Floating Strip (Press M)" title="Minimize to Floating Bubble (M)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true" focusable="false"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <!-- Navigation Tabs (Sleek 3x2 Developer Grid) -->
-        <div class="mv-dock-tabs">
-          <button class="mv-tab-btn mv-tab-active" data-tab="tab-viewport">
-            <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+        <!-- Navigation Tabs (WCAG 1.3.1 ARIA Tablist Pattern) -->
+        <nav class="mv-dock-tabs" role="tablist" aria-label="MobileView Control Panels">
+          <button class="mv-tab-btn mv-tab-active" id="tab-btn-viewport" role="tab" aria-selected="true" aria-controls="tab-viewport" tabindex="0" data-tab="tab-viewport">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
             <span>Viewport</span>
           </button>
-          <button class="mv-tab-btn" data-tab="tab-console">
-            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10zm-14-7h2v2H6zm0 3h8v2H6zm5-3l-2-2 1.4-1.4 3.4 3.4-3.4 3.4L9 13z"/></svg>
+          <button class="mv-tab-btn" id="tab-btn-console" role="tab" aria-selected="false" aria-controls="tab-console" tabindex="-1" data-tab="tab-console">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10zm-14-7h2v2H6zm0 3h8v2H6zm5-3l-2-2 1.4-1.4 3.4 3.4-3.4 3.4L9 13z"/></svg>
             <span>Console</span>
           </button>
-          <button class="mv-tab-btn" data-tab="tab-perf">
-            <svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+          <button class="mv-tab-btn" id="tab-btn-perf" role="tab" aria-selected="false" aria-controls="tab-perf" tabindex="-1" data-tab="tab-perf">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
             <span>Performance</span>
           </button>
-          <button class="mv-tab-btn" data-tab="tab-app">
-            <svg viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7c0-2.21-3.58-4-8-4zm0 2c3.87 0 6 1.5 6 2s-2.13 2-6 2-6-1.5-6-2 2.13-2 6-2zm6 12c0 .5-2.13 2-6 2s-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V17zm0-4c0 .5-2.13 2-6 2s-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V13z"/></svg>
+          <button class="mv-tab-btn" id="tab-btn-app" role="tab" aria-selected="false" aria-controls="tab-app" tabindex="-1" data-tab="tab-app">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7c0-2.21-3.58-4-8-4zm0 2c3.87 0 6 1.5 6 2s-2.13 2-6 2-6-1.5-6-2 2.13-2 6-2zm6 12c0 .5-2.13 2-6 2s-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V17zm0-4c0 .5-2.13 2-6 2s-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V13z"/></svg>
             <span>Storage</span>
           </button>
-          <button class="mv-tab-btn" data-tab="tab-qa">
-            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          <button class="mv-tab-btn" id="tab-btn-qa" role="tab" aria-selected="false" aria-controls="tab-qa" tabindex="-1" data-tab="tab-qa">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
             <span>QA Tools</span>
           </button>
-          <button class="mv-tab-btn" data-tab="tab-pentest">
-            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+          <button class="mv-tab-btn" id="tab-btn-pentest" role="tab" aria-selected="false" aria-controls="tab-pentest" tabindex="-1" data-tab="tab-pentest">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
             <span>Pentest</span>
           </button>
-        </div>
+        </nav>
 
         <div class="mv-tab-content">
           <!-- TAB 1: VIEWPORT & PRESETS -->
-          <div class="mv-tab-panel mv-panel-active" id="tab-viewport">
+          <section class="mv-tab-panel mv-panel-active" id="tab-viewport" role="tabpanel" aria-labelledby="tab-btn-viewport">
             <!-- Editable URL Address Bar -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Target URL</label>
+              <label class="mv-control-label" for="mv-url-input">Target URL</label>
               <div class="mv-url-form">
                 <div class="mv-url-input-container">
-                  <span class="mv-url-icon">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                  <span class="mv-url-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
                   </span>
                   <input 
                     type="text" 
                     class="mv-url-input" 
                     id="mv-url-input" 
                     placeholder="Enter URL (e.g. google.com, localhost:3000)..."
+                    aria-label="Target website URL to test in viewport"
                     spellcheck="false"
                     autocomplete="off"
                   />
-                  <button class="mv-url-clear-btn" id="mv-url-clear-btn" title="Clear URL">
-                    <svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                  <button class="mv-url-clear-btn" id="mv-url-clear-btn" aria-label="Clear URL text" title="Clear URL">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   </button>
                 </div>
-                <button class="mv-url-go-btn" id="mv-url-go-btn" title="Load URL (Enter)">
-                  <svg viewBox="0 0 24 24"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7h-2z"/></svg>
+                <button class="mv-url-go-btn" id="mv-url-go-btn" aria-label="Navigate to URL" title="Load URL (Enter)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7h-2z"/></svg>
                 </button>
               </div>
             </div>
 
             <!-- Device Selector -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Device Preset</label>
+              <label class="mv-control-label" for="mv-device-select">Device Preset</label>
               <div class="mv-select-wrapper">
-                <select class="mv-device-select" id="mv-device-select"></select>
-                <span class="mv-select-arrow">
-                  <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                <select class="mv-device-select" id="mv-device-select" aria-label="Select mobile or tablet device preset"></select>
+                <span class="mv-select-arrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false"><path d="M7 10l5 5 5-5z"/></svg>
                 </span>
               </div>
-              <div class="mv-dimension-badge" id="mv-dimension-badge">393 × 852 px</div>
+              <div class="mv-dimension-badge" id="mv-dimension-badge" aria-live="polite">393 × 852 px</div>
             </div>
 
             <!-- Custom Size Resizer -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Custom Resolution (W × H)</label>
-              <div class="mv-custom-resizer">
-                <input type="number" class="mv-dimension-input" id="mv-custom-w" placeholder="Width" min="280" max="1600" value="393">
-                <span class="mv-dimension-sep">×</span>
-                <input type="number" class="mv-dimension-input" id="mv-custom-h" placeholder="Height" min="400" max="2400" value="852">
-                <button class="mv-btn" id="mv-custom-apply-btn" style="padding: 6px 12px;">Apply</button>
+              <label class="mv-control-label" id="mv-custom-res-label">Custom Resolution (W × H)</label>
+              <div class="mv-custom-resizer" role="group" aria-labelledby="mv-custom-res-label">
+                <input type="number" class="mv-dimension-input" id="mv-custom-w" aria-label="Custom Viewport Width in pixels" placeholder="Width" min="280" max="1600" value="393">
+                <span class="mv-dimension-sep" aria-hidden="true">×</span>
+                <input type="number" class="mv-dimension-input" id="mv-custom-h" aria-label="Custom Viewport Height in pixels" placeholder="Height" min="400" max="2400" value="852">
+                <button class="mv-btn" id="mv-custom-apply-btn" aria-label="Apply custom dimensions" style="padding: 6px 12px;">Apply</button>
               </div>
             </div>
 
             <!-- Display Frame Mode (Clean Full Screen Chrome Mode vs Device Mockup) -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Display Frame Mode</label>
-              <div class="mv-btn-grid" style="grid-template-columns: 1fr 1fr;">
-                <button class="mv-btn mv-btn-active mv-frame-mode-btn" id="mv-frame-mode-mockup" data-mode="mockup" title="Physical Phone / Tablet Chassis Mockup Frame" style="padding: 7px 4px; font-size: 10.5px;">
-                  <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
+              <label class="mv-control-label" id="mv-display-mode-label">Display Frame Mode</label>
+              <div class="mv-btn-grid" role="group" aria-labelledby="mv-display-mode-label" style="grid-template-columns: 1fr 1fr;">
+                <button class="mv-btn mv-btn-active mv-frame-mode-btn" id="mv-frame-mode-mockup" data-mode="mockup" aria-label="Enable Physical Phone Chassis Mockup" title="Physical Phone / Tablet Chassis Mockup Frame" style="padding: 7px 4px; font-size: 10.5px;">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>
                   <span>Device Mockup</span>
                 </button>
-                <button class="mv-btn mv-frame-mode-btn" id="mv-frame-mode-clean" data-mode="clean" title="Full Clean Screen (Chrome DevTools Mode - Edge-to-Edge 100% Viewport)" style="padding: 7px 4px; font-size: 10.5px;">
-                  <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10z"/></svg>
+                <button class="mv-btn mv-frame-mode-btn" id="mv-frame-mode-clean" data-mode="clean" aria-label="Enable Edge-to-Edge Full Screen Chrome Mode" title="Full Clean Screen (Chrome DevTools Mode - Edge-to-Edge 100% Viewport)" style="padding: 7px 4px; font-size: 10.5px;">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10z"/></svg>
                   <span>Full Screen (Chrome)</span>
                 </button>
               </div>
@@ -317,22 +320,22 @@
 
             <!-- Orientation & Zoom Controls -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Orientation & Scale</label>
-              <div class="mv-btn-grid">
-                <button class="mv-btn" id="mv-orientation-btn" title="Toggle Portrait / Landscape (O)">
-                  <svg viewBox="0 0 24 24"><path d="M7.11 8.53L5.7 7.11C4.8 8.27 4.24 9.61 4.07 11h2.02c.14-.87.5-1.72 1.02-2.47zM6.09 13H4.07c.17 1.39.72 2.73 1.62 3.89l1.41-1.42c-.52-.75-.88-1.6-1.01-2.47zm1.01 5.32c1.16.9 2.51 1.44 3.9 1.61V17.9c-.87-.15-1.71-.49-2.46-1.03L7.1 18.32zM13 4.07V1L8.45 5.55 13 10V6.09c3.37 0 6.09 2.72 6.09 6.09s-2.72 6.09-6.09 6.09v2.02c4.49 0 8.11-3.62 8.11-8.11S17.49 4.07 13 4.07z"/></svg>
+              <label class="mv-control-label" id="mv-orientation-label">Orientation & Scale</label>
+              <div class="mv-btn-grid" role="group" aria-labelledby="mv-orientation-label">
+                <button class="mv-btn" id="mv-orientation-btn" aria-label="Toggle Portrait or Landscape Orientation (Press O)" title="Toggle Portrait / Landscape (O)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.11 8.53L5.7 7.11C4.8 8.27 4.24 9.61 4.07 11h2.02c.14-.87.5-1.72 1.02-2.47zM6.09 13H4.07c.17 1.39.72 2.73 1.62 3.89l1.41-1.42c-.52-.75-.88-1.6-1.01-2.47zm1.01 5.32c1.16.9 2.51 1.44 3.9 1.61V17.9c-.87-.15-1.71-.49-2.46-1.03L7.1 18.32zM13 4.07V1L8.45 5.55 13 10V6.09c3.37 0 6.09 2.72 6.09 6.09s-2.72 6.09-6.09 6.09v2.02c4.49 0 8.11-3.62 8.11-8.11S17.49 4.07 13 4.07z"/></svg>
                   <span id="mv-orientation-text">Portrait</span>
                 </button>
                 <div class="mv-select-wrapper">
-                  <select class="mv-device-select" id="mv-zoom-select" style="padding-top: 8px; padding-bottom: 8px;">
+                  <select class="mv-device-select" id="mv-zoom-select" aria-label="Select viewport scaling zoom percentage" style="padding-top: 8px; padding-bottom: 8px;">
                     <option value="auto">Auto-Fit</option>
                     <option value="100">100%</option>
                     <option value="85">85%</option>
                     <option value="75">75%</option>
                     <option value="60">60%</option>
                   </select>
-                  <span class="mv-select-arrow">
-                    <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                  <span class="mv-select-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false"><path d="M7 10l5 5 5-5z"/></svg>
                   </span>
                 </div>
               </div>
@@ -363,14 +366,14 @@
 
             <!-- Hardware & Simulation Controls -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Hardware & Touch Simulation</label>
-              <div class="mv-btn-grid">
-                <button class="mv-btn" id="mv-haptic-btn" title="Simulate iPhone Taptic Engine Vibration">
-                  <svg viewBox="0 0 24 24"><path d="M0 15h2V9H0v6zm3 2h2V7H3v10zm19-8v6h2V9h-2zm-3 8h2V7h-2v10zM16.5 3h-9C6.67 3 6 3.67 6 4.5v15c0 .83.67 1.5 1.5 1.5h9c.83 0 1.5-.67 1.5-1.5v-15c0-.83-.67-1.5-1.5-1.5zM16 19H8V5h8v14z"/></svg>
+              <label class="mv-control-label" id="mv-sim-label">Hardware & Touch Simulation</label>
+              <div class="mv-btn-grid" role="group" aria-labelledby="mv-sim-label">
+                <button class="mv-btn" id="mv-haptic-btn" aria-label="Trigger Simulated Haptic Vibration" title="Simulate iPhone Taptic Engine Vibration">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M0 15h2V9H0v6zm3 2h2V7H3v10zm19-8v6h2V9h-2zm-3 8h2V7h-2v10zM16.5 3h-9C6.67 3 6 3.67 6 4.5v15c0 .83.67 1.5 1.5 1.5h9c.83 0 1.5-.67 1.5-1.5v-15c0-.83-.67-1.5-1.5-1.5zM16 19H8V5h8v14z"/></svg>
                   <span>Haptic Vibration</span>
                 </button>
-                <button class="mv-btn" id="mv-touch-toggle-btn" title="Toggle Virtual Touch Cursor">
-                  <svg viewBox="0 0 24 24"><path d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.02-.24-.02-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.43 1.06.43h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z"/></svg>
+                <button class="mv-btn" id="mv-touch-toggle-btn" aria-label="Toggle Virtual Touch Cursor (Press T)" title="Toggle Virtual Touch Cursor">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 11.24V7.5C9 6.12 10.12 5 11.5 5S14 6.12 14 7.5v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.43-.72c-.08-.01-.15-.02-.24-.02-.31 0-.59.13-.79.33l-.79.8 4.94 4.94c.27.27.65.43 1.06.43h6.79c.75 0 1.33-.55 1.44-1.28l.75-5.27c.01-.07.02-.14.02-.2 0-.62-.38-1.16-.91-1.38z"/></svg>
                   <span id="mv-touch-toggle-text">Touch Cursor</span>
                 </button>
               </div>
@@ -378,22 +381,22 @@
 
             <!-- Color Scheme / Dark Mode Simulation -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Color Scheme & Media Features</label>
-              <div class="mv-btn-grid" style="grid-template-columns: repeat(3, 1fr);">
-                <button class="mv-btn mv-btn-active mv-theme-btn" id="mv-theme-auto" data-theme="auto" title="Follow System Theme" style="font-size: 10px; padding: 7px 4px;">⚙️ System</button>
-                <button class="mv-btn mv-theme-btn" id="mv-theme-light" data-theme="light" title="Force Light Theme" style="font-size: 10px; padding: 7px 4px;">☀️ Light</button>
-                <button class="mv-btn mv-theme-btn" id="mv-theme-dark" data-theme="dark" title="Force Dark Theme" style="font-size: 10px; padding: 7px 4px;">🌙 Dark</button>
+              <label class="mv-control-label" id="mv-color-scheme-label">Color Scheme & Media Features</label>
+              <div class="mv-btn-grid" role="group" aria-labelledby="mv-color-scheme-label" style="grid-template-columns: repeat(3, 1fr);">
+                <button class="mv-btn mv-btn-active mv-theme-btn" id="mv-theme-auto" data-theme="auto" aria-label="Use System Default Color Scheme" title="Follow System Theme" style="font-size: 10px; padding: 7px 4px;">⚙️ System</button>
+                <button class="mv-btn mv-theme-btn" id="mv-theme-light" data-theme="light" aria-label="Force Light Color Scheme" title="Force Light Theme" style="font-size: 10px; padding: 7px 4px;">☀️ Light</button>
+                <button class="mv-btn mv-theme-btn" id="mv-theme-dark" data-theme="dark" aria-label="Force Dark Color Scheme" title="Force Dark Theme" style="font-size: 10px; padding: 7px 4px;">🌙 Dark</button>
               </div>
             </div>
 
             <!-- Network Profile Quick Switcher -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Network Throttling</label>
-              <div class="mv-btn-grid" style="grid-template-columns: repeat(4, 1fr);">
-                <button class="mv-btn mv-btn-active mv-quick-net-btn" data-profile="online" style="font-size: 9.5px; padding: 6px 2px;">Online</button>
-                <button class="mv-btn mv-quick-net-btn" data-profile="fast3g" style="font-size: 9.5px; padding: 6px 2px;">Fast 4G</button>
-                <button class="mv-btn mv-quick-net-btn" data-profile="slow3g" style="font-size: 9.5px; padding: 6px 2px;">Slow 3G</button>
-                <button class="mv-btn mv-quick-net-btn" data-profile="offline" style="font-size: 9.5px; padding: 6px 2px;">Offline</button>
+              <label class="mv-control-label" id="mv-quick-throttle-label">Network Throttling</label>
+              <div class="mv-btn-grid" role="group" aria-labelledby="mv-quick-throttle-label" style="grid-template-columns: repeat(4, 1fr);">
+                <button class="mv-btn mv-btn-active mv-quick-net-btn" data-profile="online" aria-label="Set Network to Online" style="font-size: 9.5px; padding: 6px 2px;">Online</button>
+                <button class="mv-btn mv-quick-net-btn" data-profile="fast3g" aria-label="Set Network to Fast 4G" style="font-size: 9.5px; padding: 6px 2px;">Fast 4G</button>
+                <button class="mv-btn mv-quick-net-btn" data-profile="slow3g" aria-label="Set Network to Slow 3G" style="font-size: 9.5px; padding: 6px 2px;">Slow 3G</button>
+                <button class="mv-btn mv-quick-net-btn" data-profile="offline" aria-label="Set Network to Offline" style="font-size: 9.5px; padding: 6px 2px;">Offline</button>
               </div>
             </div>
 
@@ -401,31 +404,31 @@
             <div class="mv-control-group">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
                 <label class="mv-control-label">Real Mobile Device Testing</label>
-                <button class="mv-chip" id="mv-gen-qr-btn" style="padding: 2px 6px; font-size: 9px;">Generate QR</button>
+                <button class="mv-chip" id="mv-gen-qr-btn" aria-label="Generate QR Code to open on physical phone" style="padding: 4px 8px; font-size: 10px;">Generate QR</button>
               </div>
               <div id="mv-qr-container" style="display: none; background: #ffffff; padding: 10px; border-radius: 8px; text-align: center; margin-top: 4px;">
-                <div id="mv-qr-code-img" style="display: flex; justify-content: center; align-items: center;"></div>
-                <div style="font-size: 10px; color: #1e293b; margin-top: 6px; font-weight: 500;">Scan with your physical smartphone camera</div>
+                <div id="mv-qr-code-img" style="display: flex; justify-content: center; align-items: center;" aria-label="QR Code image"></div>
+                <div style="font-size: 11px; color: #1e293b; margin-top: 6px; font-weight: 600;">Scan with your physical smartphone camera</div>
               </div>
             </div>
-          </div>
+          </section>
 
           <!-- TAB 2: INTERACTIVE CONSOLE -->
-          <div class="mv-tab-panel" id="tab-console">
+          <section class="mv-tab-panel" id="tab-console" role="tabpanel" aria-labelledby="tab-btn-console">
             <div class="mv-control-group">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
                 <label class="mv-control-label">Mobile JS Console</label>
-                <div class="mv-net-filters">
-                  <button class="mv-chip mv-chip-active" id="mv-con-filter-all" style="padding: 2px 6px; font-size: 9px;">All</button>
-                  <button class="mv-chip" id="mv-con-filter-error" style="padding: 2px 6px; font-size: 9px;">Errors</button>
-                  <button class="mv-chip" id="mv-con-filter-warn" style="padding: 2px 6px; font-size: 9px;">Warnings</button>
-                  <button class="mv-chip" id="mv-con-filter-log" style="padding: 2px 6px; font-size: 9px;">Logs</button>
-                  <button class="mv-chip" id="mv-con-filter-copy-all" style="padding: 2px 6px; font-size: 9px;" title="Copy all console output">Copy All</button>
-                  <button class="mv-chip" id="mv-con-expand-btn" style="padding: 2px 6px; font-size: 9px;" title="Toggle Expand Console">⛶ Expand</button>
-                  <button class="mv-chip" id="mv-con-filter-clear" style="padding: 2px 6px; font-size: 9px;">Clear</button>
+                <div class="mv-net-filters" role="group" aria-label="Console Log Filters">
+                  <button class="mv-chip mv-chip-active" id="mv-con-filter-all" aria-label="Show all logs" style="padding: 4px 8px; font-size: 10px;">All</button>
+                  <button class="mv-chip" id="mv-con-filter-error" aria-label="Filter errors" style="padding: 4px 8px; font-size: 10px;">Errors</button>
+                  <button class="mv-chip" id="mv-con-filter-warn" aria-label="Filter warnings" style="padding: 4px 8px; font-size: 10px;">Warnings</button>
+                  <button class="mv-chip" id="mv-con-filter-log" aria-label="Filter standard logs" style="padding: 4px 8px; font-size: 10px;">Logs</button>
+                  <button class="mv-chip" id="mv-con-filter-copy-all" aria-label="Copy all console output to clipboard" style="padding: 4px 8px; font-size: 10px;" title="Copy all console output">Copy All</button>
+                  <button class="mv-chip" id="mv-con-expand-btn" aria-label="Toggle Expand Console Drawer" style="padding: 4px 8px; font-size: 10px;" title="Toggle Expand Console">⛶ Expand</button>
+                  <button class="mv-chip" id="mv-con-filter-clear" aria-label="Clear console output" style="padding: 4px 8px; font-size: 10px;">Clear</button>
                 </div>
               </div>
-              <div class="mv-console-stream" id="mv-console-stream">
+              <div class="mv-console-stream" id="mv-console-stream" tabindex="0" role="region" aria-label="Console log output stream">
                 <div class="mv-con-entry mv-con-info" data-level="info">
                   <span class="mv-log-time">00:00</span>
                   <span>Console session initialized. Ready for mobile debugging.</span>
@@ -435,17 +438,17 @@
 
             <!-- Interactive JS REPL -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Evaluate JavaScript in Mobile Page</label>
+              <label class="mv-control-label" for="mv-repl-input">Evaluate JavaScript in Mobile Page</label>
               <form class="mv-con-repl-form" id="mv-repl-form">
-                <span class="mv-con-repl-in">&gt;</span>
-                <input type="text" class="mv-con-repl-input" id="mv-repl-input" placeholder="e.g. document.title, window.innerWidth, alert('hi')" spellcheck="false" autocomplete="off" />
-                <button type="submit" class="mv-btn mv-btn-primary" style="padding: 6px 12px; font-size: 11px;">Run</button>
+                <span class="mv-con-repl-in" aria-hidden="true">&gt;</span>
+                <input type="text" class="mv-con-repl-input" id="mv-repl-input" aria-label="JavaScript expression to evaluate in mobile iframe" placeholder="e.g. document.title, window.innerWidth, alert('hi')" spellcheck="false" autocomplete="off" />
+                <button type="submit" class="mv-btn mv-btn-primary" aria-label="Run JavaScript code" style="padding: 6px 12px; font-size: 11px;">Run</button>
               </form>
             </div>
-          </div>
+          </section>
 
           <!-- TAB 3: PERFORMANCE & CORE WEB VITALS -->
-          <div class="mv-tab-panel" id="tab-perf">
+          <section class="mv-tab-panel" id="tab-perf" role="tabpanel" aria-labelledby="tab-btn-perf">
             <div class="mv-control-group">
               <label class="mv-control-label">Core Web Vitals & Loading</label>
               <div class="mv-vitals-grid">
@@ -497,27 +500,27 @@
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
           <!-- TAB 4: APPLICATION & STORAGE -->
-          <div class="mv-tab-panel" id="tab-app">
+          <section class="mv-tab-panel" id="tab-app" role="tabpanel" aria-labelledby="tab-btn-app">
             <!-- LocalStorage -->
             <div class="mv-control-group">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
                 <label class="mv-control-label">LocalStorage</label>
                 <div style="display: flex; gap: 4px;">
-                  <button class="mv-chip" id="mv-copy-localstorage-btn" title="Copy all LocalStorage as JSON" style="padding: 2px 6px; font-size: 9px;">Copy All</button>
-                  <button class="mv-chip" id="mv-refresh-storage-btn" style="padding: 2px 6px; font-size: 9px;">Refresh</button>
+                  <button class="mv-chip" id="mv-copy-localstorage-btn" aria-label="Copy all LocalStorage keys and values as JSON" title="Copy all LocalStorage as JSON" style="padding: 4px 8px; font-size: 10px;">Copy All</button>
+                  <button class="mv-chip" id="mv-refresh-storage-btn" aria-label="Refresh storage table" style="padding: 4px 8px; font-size: 10px;">Refresh</button>
                 </div>
               </div>
-              <div class="mv-storage-table" id="mv-localstorage-table">
-                <div class="mv-storage-row" style="color: #64748b; font-style: italic;">No LocalStorage items found</div>
+              <div class="mv-storage-table" id="mv-localstorage-table" tabindex="0" role="region" aria-label="LocalStorage Items Table">
+                <div class="mv-storage-row" style="color: #94a3b8; font-style: italic;">No LocalStorage items found</div>
               </div>
               <!-- Add LocalStorage Key -->
-              <div class="mv-storage-add-form">
-                <input type="text" class="mv-input" id="mv-add-local-key" placeholder="Key" style="flex: 1;" />
-                <input type="text" class="mv-input" id="mv-add-local-val" placeholder="Value" style="flex: 1.3;" />
-                <button class="mv-btn mv-btn-primary" id="mv-add-local-btn">Set</button>
+              <div class="mv-storage-add-form" role="group" aria-label="Add LocalStorage Item">
+                <input type="text" class="mv-input" id="mv-add-local-key" aria-label="New LocalStorage Key Name" placeholder="Key" style="flex: 1;" />
+                <input type="text" class="mv-input" id="mv-add-local-val" aria-label="New LocalStorage Value" placeholder="Value" style="flex: 1.3;" />
+                <button class="mv-btn mv-btn-primary" id="mv-add-local-btn" aria-label="Save LocalStorage Item">Set</button>
               </div>
             </div>
 
@@ -525,10 +528,10 @@
             <div class="mv-control-group">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
                 <label class="mv-control-label">SessionStorage</label>
-                <button class="mv-chip" id="mv-copy-sessionstorage-btn" title="Copy all SessionStorage as JSON" style="padding: 2px 6px; font-size: 9px;">Copy All</button>
+                <button class="mv-chip" id="mv-copy-sessionstorage-btn" aria-label="Copy all SessionStorage keys and values as JSON" title="Copy all SessionStorage as JSON" style="padding: 4px 8px; font-size: 10px;">Copy All</button>
               </div>
-              <div class="mv-storage-table" id="mv-sessionstorage-table">
-                <div class="mv-storage-row" style="color: #64748b; font-style: italic;">No SessionStorage items found</div>
+              <div class="mv-storage-table" id="mv-sessionstorage-table" tabindex="0" role="region" aria-label="SessionStorage Items Table">
+                <div class="mv-storage-row" style="color: #94a3b8; font-style: italic;">No SessionStorage items found</div>
               </div>
             </div>
 
@@ -536,34 +539,34 @@
             <div class="mv-control-group">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
                 <label class="mv-control-label">Document Cookies</label>
-                <button class="mv-chip" id="mv-copy-cookies-btn" title="Copy all Cookies as JSON" style="padding: 2px 6px; font-size: 9px;">Copy All</button>
+                <button class="mv-chip" id="mv-copy-cookies-btn" aria-label="Copy all Cookies as JSON" title="Copy all Cookies as JSON" style="padding: 4px 8px; font-size: 10px;">Copy All</button>
               </div>
-              <div class="mv-storage-table" id="mv-cookies-table">
-                <div class="mv-storage-row" style="color: #64748b; font-style: italic;">No Cookies found</div>
+              <div class="mv-storage-table" id="mv-cookies-table" tabindex="0" role="region" aria-label="Cookies Table">
+                <div class="mv-storage-row" style="color: #94a3b8; font-style: italic;">No Cookies found</div>
               </div>
             </div>
 
-            <button class="mv-btn" id="mv-app-clear-all-btn" style="width: 100%; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.15); color: #fca5a5; margin-top: 4px;">
-              <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            <button class="mv-btn" id="mv-app-clear-all-btn" aria-label="Clear all LocalStorage, SessionStorage, and Cookies" style="width: 100%; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.15); color: #fca5a5; margin-top: 4px;">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
               <span>Clear LocalStorage & Cookies</span>
             </button>
-          </div>
+          </section>
 
           <!-- TAB 5: QA & DEVELOPER TOOLS -->
-          <div class="mv-tab-panel" id="tab-qa">
+          <section class="mv-tab-panel" id="tab-qa" role="tabpanel" aria-labelledby="tab-btn-qa">
             <div class="mv-control-group">
-              <label class="mv-control-label">Layout & Visual Testing</label>
-              <div class="mv-btn-grid" style="grid-template-columns: 1fr 1fr 1fr;">
-                <button class="mv-btn" id="mv-grid-btn" title="Toggle 20px Grid Ruler Overlay (G)">
-                  <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>
+              <label class="mv-control-label" id="mv-qa-layout-label">Layout & Visual Testing</label>
+              <div class="mv-btn-grid" role="group" aria-labelledby="mv-qa-layout-label" style="grid-template-columns: 1fr 1fr 1fr;">
+                <button class="mv-btn" id="mv-grid-btn" aria-label="Toggle 20px Grid Ruler Overlay (Press G)" title="Toggle 20px Grid Ruler Overlay (G)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>
                   <span>Grid</span>
                 </button>
-                <button class="mv-btn" id="mv-inspect-btn" title="Inspect Live DOM Elements (I)">
-                  <svg viewBox="0 0 24 24"><path d="M13.64 21.97C13.14 22.21 12.54 22 12.31 21.5L10.13 16.76L7.62 19.27C7.31 19.58 6.8 19.36 6.8 18.92V3.5C6.8 3.06 7.31 2.84 7.62 3.15L18.53 14.06C18.84 14.37 18.62 14.88 18.18 14.88H14.83L17 19.62C17.23 20.12 17.02 20.72 16.52 20.95L13.64 21.97Z"/></svg>
+                <button class="mv-btn" id="mv-inspect-btn" aria-label="Inspect Live DOM Elements (Press I)" title="Inspect Live DOM Elements (I)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.64 21.97C13.14 22.21 12.54 22 12.31 21.5L10.13 16.76L7.62 19.27C7.31 19.58 6.8 19.36 6.8 18.92V3.5C6.8 3.06 7.31 2.84 7.62 3.15L18.53 14.06C18.84 14.37 18.62 14.88 18.18 14.88H14.83L17 19.62C17.23 20.12 17.02 20.72 16.52 20.95L13.64 21.97Z"/></svg>
                   <span>Inspect</span>
                 </button>
-                <button class="mv-btn" id="mv-touch-btn" title="Toggle Mobile Touch Cursor (T)">
-                  <svg viewBox="0 0 24 24"><path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.44-.72c-.1-.02-.21-.02-.31 0-.41.07-.76.32-.93.69l-.78 1.63 5.48 5.48c.45.45 1.07.7 1.71.7h6.7c1.09 0 2-.85 2.08-1.94l.43-5.64c.05-.71-.24-1.39-.77-1.87z"/></svg>
+                <button class="mv-btn" id="mv-touch-btn" aria-label="Toggle Mobile Touch Cursor (Press T)" title="Toggle Mobile Touch Cursor (T)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v3.74c1.21-.81 2-2.18 2-3.74C16 5.01 13.99 3 11.5 3S7 5.01 7 7.5c0 1.56.79 2.93 2 3.74zm9.84 4.63l-4.54-2.26c-.17-.07-.35-.11-.54-.11H13v-6c0-.83-.67-1.5-1.5-1.5S10 6.67 10 7.5v10.74l-3.44-.72c-.1-.02-.21-.02-.31 0-.41.07-.76.32-.93.69l-.78 1.63 5.48 5.48c.45.45 1.07.7 1.71.7h6.7c1.09 0 2-.85 2.08-1.94l.43-5.64c.05-.71-.24-1.39-.77-1.87z"/></svg>
                   <span>Touch</span>
                 </button>
               </div>
@@ -571,8 +574,8 @@
 
             <div class="mv-control-group">
               <label class="mv-control-label">Emulate Color Scheme</label>
-              <button class="mv-btn" id="mv-theme-btn" style="width: 100%;">
-                <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
+              <button class="mv-btn" id="mv-theme-btn" aria-label="Toggle Dark and Light Mode Scheme" style="width: 100%;">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>
                 <span id="mv-theme-text">Toggle Dark / Light Mode</span>
               </button>
             </div>
@@ -593,18 +596,18 @@
             </div>
 
             <div class="mv-control-group">
-              <label class="mv-control-label">Quick Actions</label>
-              <div class="mv-btn-grid" style="grid-template-columns: 1fr 1fr 1fr;">
-                <button class="mv-btn" id="mv-screenshot-btn" title="Export Screenshot as JPEG (S)">
-                  <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+              <label class="mv-control-label" id="mv-qa-quick-label">Quick Actions</label>
+              <div class="mv-btn-grid" role="group" aria-labelledby="mv-qa-quick-label" style="grid-template-columns: 1fr 1fr 1fr;">
+                <button class="mv-btn" id="mv-screenshot-btn" aria-label="Export Screenshot as JPEG (Press S)" title="Export Screenshot as JPEG (S)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
                   <span>Snapshot</span>
                 </button>
-                <button class="mv-btn" id="mv-copy-screenshot-btn" title="Copy Screenshot directly to Clipboard (Ctrl+V) (C)">
-                  <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.96-2.36L6.5 17h11l-3.54-4.71z"/></svg>
+                <button class="mv-btn" id="mv-copy-screenshot-btn" aria-label="Copy Screenshot directly to Clipboard (Press C)" title="Copy Screenshot directly to Clipboard (Ctrl+V) (C)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.96-2.36L6.5 17h11l-3.54-4.71z"/></svg>
                   <span>Copy Image</span>
                 </button>
-                <button class="mv-btn" id="mv-protocol-btn" title="Switch HTTP / HTTPS">
-                  <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                <button class="mv-btn" id="mv-protocol-btn" aria-label="Switch between HTTP and HTTPS" title="Switch HTTP / HTTPS">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
                   <span id="mv-protocol-text">HTTP/S</span>
                 </button>
               </div>
@@ -612,9 +615,9 @@
 
             <!-- Network Profile & Throttling -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Network Profile & Throttling</label>
+              <label class="mv-control-label" for="mv-network-select">Network Profile & Throttling</label>
               <div class="mv-select-wrapper">
-                <select class="mv-device-select" id="mv-network-select">
+                <select class="mv-device-select" id="mv-network-select" aria-label="Select network throttling speed profile">
                   <option value="online">🚀 Online (No Throttling)</option>
                   <option value="fast4g">⚡ Fast 4G / 5G (25 Mbps · 20ms)</option>
                   <option value="slow4g">📱 Slow 4G / LTE (10 Mbps · 50ms)</option>
@@ -622,8 +625,8 @@
                   <option value="slow3g">🐌 Slow 3G (400 Kbps · 400ms)</option>
                   <option value="offline">🚫 Offline (Disconnected)</option>
                 </select>
-                <span class="mv-select-arrow">
-                  <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                <span class="mv-select-arrow" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" focusable="false"><path d="M7 10l5 5 5-5z"/></svg>
                 </span>
               </div>
             </div>
@@ -635,7 +638,7 @@
                 <div class="mv-security-item">
                   <span class="mv-sec-name">Network Status:</span>
                   <span class="mv-badge-pill mv-badge-green" id="mv-net-status">
-                    <span class="mv-network-status-dot" id="mv-net-dot"></span>
+                    <span class="mv-network-status-dot" id="mv-net-dot" aria-hidden="true"></span>
                     <span id="mv-net-status-text">Online (Active)</span>
                   </span>
                 </div>
@@ -654,14 +657,14 @@
             <div class="mv-control-group">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px;">
                 <label class="mv-control-label">Fetch & XHR Requests</label>
-                <div class="mv-net-filters">
-                  <button class="mv-chip mv-chip-active" id="mv-filter-all" style="padding: 2px 6px; font-size: 9px;">All</button>
-                  <button class="mv-chip" id="mv-filter-fetch" style="padding: 2px 6px; font-size: 9px;">Fetch</button>
-                  <button class="mv-chip" id="mv-filter-xhr" style="padding: 2px 6px; font-size: 9px;">XHR</button>
-                  <button class="mv-chip" id="mv-filter-clear" style="padding: 2px 6px; font-size: 9px;" title="Clear Network Requests">Clear</button>
+                <div class="mv-net-filters" role="group" aria-label="Network Request Filters">
+                  <button class="mv-chip mv-chip-active" id="mv-filter-all" aria-label="Show all network requests" style="padding: 4px 8px; font-size: 10px;">All</button>
+                  <button class="mv-chip" id="mv-filter-fetch" aria-label="Filter Fetch requests only" style="padding: 4px 8px; font-size: 10px;">Fetch</button>
+                  <button class="mv-chip" id="mv-filter-xhr" aria-label="Filter XHR requests only" style="padding: 4px 8px; font-size: 10px;">XHR</button>
+                  <button class="mv-chip" id="mv-filter-clear" aria-label="Clear recorded network requests" style="padding: 4px 8px; font-size: 10px;" title="Clear Network Requests">Clear</button>
                 </div>
               </div>
-              <div class="mv-net-stream" id="mv-net-stream">
+              <div class="mv-net-stream" id="mv-net-stream" tabindex="0" role="region" aria-label="Network Requests Stream">
                 <div class="mv-log-entry" data-type="DOC">
                   <span class="mv-log-time">00:00</span>
                   <span class="mv-log-tag-pass">[GET]</span>
@@ -670,25 +673,25 @@
               </div>
 
               <!-- Network Request Details Drawer (Headers / Payload / Response) -->
-              <div class="mv-net-details-drawer" id="mv-net-drawer">
+              <div class="mv-net-details-drawer" id="mv-net-drawer" role="region" aria-label="Network Request Inspector Drawer">
                 <div class="mv-net-details-header">
                   <div class="mv-net-details-title" id="mv-drawer-title">Request Details</div>
-                  <button class="mv-net-close-btn" id="mv-drawer-close" title="Close Details">✕</button>
+                  <button class="mv-net-close-btn" id="mv-drawer-close" aria-label="Close Request Details Drawer" title="Close Details">✕</button>
                 </div>
 
-                <div class="mv-net-subtabs">
-                  <button class="mv-net-subtab mv-subtab-active" data-pane="pane-headers">Headers</button>
-                  <button class="mv-net-subtab" data-pane="pane-payload">Payload</button>
-                  <button class="mv-net-subtab" data-pane="pane-response">Response</button>
+                <div class="mv-net-subtabs" role="tablist" aria-label="Request Details Subpanels">
+                  <button class="mv-net-subtab mv-subtab-active" data-pane="pane-headers" role="tab" aria-selected="true">Headers</button>
+                  <button class="mv-net-subtab" data-pane="pane-payload" role="tab" aria-selected="false">Payload</button>
+                  <button class="mv-net-subtab" data-pane="pane-response" role="tab" aria-selected="false">Response</button>
                 </div>
 
                 <!-- Pane 1: Headers -->
-                <div class="mv-net-tab-pane mv-pane-active" id="pane-headers">
+                <div class="mv-net-tab-pane mv-pane-active" id="pane-headers" role="tabpanel">
                   <div class="mv-net-pane-toolbar">
                     <span class="mv-net-pane-title">General & Headers</span>
-                    <button class="mv-net-copy-btn" id="mv-copy-headers-btn">Copy</button>
+                    <button class="mv-net-copy-btn" id="mv-copy-headers-btn" aria-label="Copy request headers to clipboard">Copy</button>
                   </div>
-                  <div class="mv-net-kv-table" id="mv-headers-content">
+                  <div class="mv-net-kv-table" id="mv-headers-content" tabindex="0">
                     <div class="mv-net-kv-row"><span class="mv-net-key">Request URL:</span><span class="mv-net-val" id="mv-det-url">-</span></div>
                     <div class="mv-net-kv-row"><span class="mv-net-key">Request Method:</span><span class="mv-net-val" id="mv-det-method">-</span></div>
                     <div class="mv-net-kv-row"><span class="mv-net-key">Status Code:</span><span class="mv-net-val" id="mv-det-status">-</span></div>
@@ -697,28 +700,28 @@
                 </div>
 
                 <!-- Pane 2: Payload -->
-                <div class="mv-net-tab-pane" id="pane-payload">
+                <div class="mv-net-tab-pane" id="pane-payload" role="tabpanel">
                   <div class="mv-net-pane-toolbar">
                     <span class="mv-net-pane-title">Request Payload / Body</span>
-                    <button class="mv-net-copy-btn" id="mv-copy-payload-btn">Copy</button>
+                    <button class="mv-net-copy-btn" id="mv-copy-payload-btn" aria-label="Copy request payload to clipboard">Copy</button>
                   </div>
-                  <div class="mv-net-code-box" id="mv-payload-content">No payload data for this request</div>
+                  <div class="mv-net-code-box" id="mv-payload-content" tabindex="0">No payload data for this request</div>
                 </div>
 
                 <!-- Pane 3: Response -->
-                <div class="mv-net-tab-pane" id="pane-response">
+                <div class="mv-net-tab-pane" id="pane-response" role="tabpanel">
                   <div class="mv-net-pane-toolbar">
                     <span class="mv-net-pane-title">Response Body</span>
-                    <button class="mv-net-copy-btn" id="mv-copy-response-btn">Copy</button>
+                    <button class="mv-net-copy-btn" id="mv-copy-response-btn" aria-label="Copy response body to clipboard">Copy</button>
                   </div>
-                  <div class="mv-net-code-box" id="mv-response-content">Loading response...</div>
+                  <div class="mv-net-code-box" id="mv-response-content" tabindex="0">Loading response...</div>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
           <!-- TAB 3: PENTEST & SECURITY -->
-          <div class="mv-tab-panel" id="tab-pentest">
+          <section class="mv-tab-panel" id="tab-pentest" role="tabpanel" aria-labelledby="tab-btn-pentest">
             <!-- Active Framing Bypass Status -->
             <div class="mv-control-group">
               <label class="mv-control-label">Active Security Headers</label>
@@ -742,13 +745,13 @@
               </div>
             </div>
 
-            <!-- Interactive HTTP / API Request Client (POST, GET, DELETE, PUT, PATCH, HEAD, OPTIONS) -->
+            <!-- Interactive HTTP / API Request Client -->
             <div class="mv-control-group">
               <label class="mv-control-label">HTTP & API Request Dispatcher</label>
               
               <!-- Method + URL Input Bar -->
               <div class="mv-http-url-bar">
-                <select class="mv-http-method-select" id="mv-http-method">
+                <select class="mv-http-method-select" id="mv-http-method" aria-label="Select HTTP Request Method">
                   <option value="GET" style="color: #4ade80;">GET</option>
                   <option value="POST" style="color: #f59e0b;">POST</option>
                   <option value="PUT" style="color: #38bdf8;">PUT</option>
@@ -757,64 +760,64 @@
                   <option value="HEAD" style="color: #2dd4bf;">HEAD</option>
                   <option value="OPTIONS" style="color: #94a3b8;">OPTIONS</option>
                 </select>
-                <input type="text" class="mv-http-url-input" id="mv-http-url" placeholder="/api/endpoint or https://..." spellcheck="false" autocomplete="off" />
-                <button class="mv-btn mv-btn-primary" id="mv-http-send-btn" style="padding: 6px 12px; font-weight: bold;">Send</button>
+                <input type="text" class="mv-http-url-input" id="mv-http-url" aria-label="API endpoint URL path" placeholder="/api/endpoint or https://..." spellcheck="false" autocomplete="off" />
+                <button class="mv-btn mv-btn-primary" id="mv-http-send-btn" aria-label="Send HTTP API Request" style="padding: 6px 12px; font-weight: bold;">Send</button>
               </div>
 
               <!-- Request Subtabs: Body | Headers | Response -->
-              <div class="mv-net-subtabs" style="margin-top: 6px;">
-                <button class="mv-http-subtab mv-subtab-active" data-pane="http-pane-body">Body</button>
-                <button class="mv-http-subtab" data-pane="http-pane-headers">Headers</button>
-                <button class="mv-http-subtab" data-pane="http-pane-response">Response</button>
+              <div class="mv-net-subtabs" role="tablist" aria-label="HTTP Client Subtabs" style="margin-top: 6px;">
+                <button class="mv-http-subtab mv-subtab-active" data-pane="http-pane-body" role="tab" aria-selected="true">Body</button>
+                <button class="mv-http-subtab" data-pane="http-pane-headers" role="tab" aria-selected="false">Headers</button>
+                <button class="mv-http-subtab" data-pane="http-pane-response" role="tab" aria-selected="false">Response</button>
               </div>
 
               <!-- Pane 1: Request Body -->
-              <div class="mv-http-tab-pane mv-pane-active" id="http-pane-body">
+              <div class="mv-http-tab-pane mv-pane-active" id="http-pane-body" role="tabpanel">
                 <div class="mv-net-pane-toolbar">
                   <span class="mv-net-pane-title">JSON / Raw Body</span>
                   <div style="display: flex; gap: 4px;">
-                    <button class="mv-chip" id="mv-http-format-json" title="Prettify JSON" style="padding: 2px 6px; font-size: 9px;">✨ Format</button>
-                    <button class="mv-chip" id="mv-http-expand-body" title="Toggle Expand Body" style="padding: 2px 6px; font-size: 9px;">⛶ Expand</button>
-                    <button class="mv-chip" id="mv-http-sample-json" style="padding: 2px 6px; font-size: 9px;">Preset JSON</button>
+                    <button class="mv-chip" id="mv-http-format-json" aria-label="Format JSON payload" title="Prettify JSON" style="padding: 4px 8px; font-size: 10px;">✨ Format</button>
+                    <button class="mv-chip" id="mv-http-expand-body" aria-label="Toggle Expand Request Body" title="Toggle Expand Body" style="padding: 4px 8px; font-size: 10px;">⛶ Expand</button>
+                    <button class="mv-chip" id="mv-http-sample-json" aria-label="Insert preset sample JSON payload" style="padding: 4px 8px; font-size: 10px;">Preset JSON</button>
                   </div>
                 </div>
-                <textarea class="mv-http-body-textarea" id="mv-http-body" placeholder='{\n  "username": "admin@gmail.com",\n  "status": "active"\n}' spellcheck="false"></textarea>
+                <textarea class="mv-http-body-textarea" id="mv-http-body" aria-label="HTTP Request JSON or Raw Body Payload" placeholder='{\n  "username": "admin@gmail.com",\n  "status": "active"\n}' spellcheck="false"></textarea>
               </div>
 
               <!-- Pane 2: Custom Headers -->
-              <div class="mv-http-tab-pane" id="http-pane-headers">
+              <div class="mv-http-tab-pane" id="http-pane-headers" role="tabpanel">
                 <div class="mv-net-pane-toolbar">
                   <span class="mv-net-pane-title">Request Headers (Key: Value)</span>
                   <div style="display: flex; gap: 4px;">
-                    <button class="mv-chip" id="mv-http-expand-headers" title="Toggle Expand Headers" style="padding: 2px 6px; font-size: 9px;">⛶ Expand</button>
-                    <button class="mv-chip" id="mv-http-preset-auth" style="padding: 2px 6px; font-size: 9px;">+ Auth Header</button>
+                    <button class="mv-chip" id="mv-http-expand-headers" aria-label="Toggle Expand Request Headers" title="Toggle Expand Headers" style="padding: 4px 8px; font-size: 10px;">⛶ Expand</button>
+                    <button class="mv-chip" id="mv-http-preset-auth" aria-label="Insert Authorization Bearer Header template" style="padding: 4px 8px; font-size: 10px;">+ Auth Header</button>
                   </div>
                 </div>
-                <textarea class="mv-http-body-textarea" id="mv-http-headers" placeholder="Content-Type: application/json&#10;Authorization: Bearer my_token" spellcheck="false"></textarea>
+                <textarea class="mv-http-body-textarea" id="mv-http-headers" aria-label="Custom HTTP Request Headers" placeholder="Content-Type: application/json&#10;Authorization: Bearer my_token" spellcheck="false"></textarea>
               </div>
 
               <!-- Pane 3: Response View -->
-              <div class="mv-http-tab-pane" id="http-pane-response">
+              <div class="mv-http-tab-pane" id="http-pane-response" role="tabpanel">
                 <div class="mv-net-pane-toolbar">
                   <div style="display: flex; align-items: center; gap: 6px;">
                     <span class="mv-badge-pill mv-badge-green" id="mv-http-resp-status">Status: Ready</span>
                     <span class="mv-badge-pill mv-badge-cyan" id="mv-http-resp-time">0 ms</span>
                   </div>
                   <div style="display: flex; gap: 4px;">
-                    <button class="mv-chip" id="mv-http-expand-resp" title="Toggle Expand Response" style="padding: 2px 6px; font-size: 9px;">⛶ Expand</button>
-                    <button class="mv-net-copy-btn" id="mv-http-copy-resp-btn">Copy</button>
+                    <button class="mv-chip" id="mv-http-expand-resp" aria-label="Toggle Expand HTTP Response" title="Toggle Expand Response" style="padding: 4px 8px; font-size: 10px;">⛶ Expand</button>
+                    <button class="mv-net-copy-btn" id="mv-http-copy-resp-btn" aria-label="Copy HTTP response body to clipboard">Copy</button>
                   </div>
                 </div>
-                <div class="mv-net-code-box" id="mv-http-resp-body" style="max-height: 120px;">Dispatch a request to inspect response</div>
+                <div class="mv-net-code-box" id="mv-http-resp-body" tabindex="0" aria-label="HTTP API Response Content" style="max-height: 120px;">Dispatch a request to inspect response</div>
               </div>
             </div>
 
             <!-- Quick Injection Payloads for Testing -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Inject Pentest Payload</label>
+              <label class="mv-control-label" for="mv-payload-select">Inject Pentest Payload</label>
               <div class="mv-payload-form">
                 <div class="mv-select-wrapper" style="flex: 1;">
-                  <select class="mv-device-select" id="mv-payload-select">
+                  <select class="mv-device-select" id="mv-payload-select" aria-label="Select Security Test Payload to Inject">
                     <option value="?q=<script>alert(1)</script>">XSS: &lt;script&gt;alert(1)&lt;/script&gt;</option>
                     <option value="?test=<img src=x onerror=alert(1)>">XSS: &lt;img onerror=alert(1)&gt;</option>
                     <option value="?id=' OR '1'='1">SQLi: ' OR '1'='1</option>
@@ -822,24 +825,24 @@
                     <option value="?file=../../../../etc/passwd">LFI: ../../../../etc/passwd</option>
                     <option value="?redirect=//evil.com">Open Redirect: //evil.com</option>
                   </select>
-                  <span class="mv-select-arrow">
-                    <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                  <span class="mv-select-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false"><path d="M7 10l5 5 5-5z"/></svg>
                   </span>
                 </div>
-                <button class="mv-btn" id="mv-inject-btn" style="padding: 6px 10px;">Inject</button>
+                <button class="mv-btn" id="mv-inject-btn" aria-label="Inject selected payload into active viewport URL" style="padding: 6px 10px;">Inject</button>
               </div>
             </div>
 
             <!-- Payload Encoder Helper (Base64 / URL) -->
             <div class="mv-control-group">
-              <label class="mv-control-label">Payload Encoder Helper</label>
-              <div class="mv-encoder-box">
-                <input type="text" class="mv-dimension-input" id="mv-encoder-input" placeholder="Type text to encode (e.g. <script>)..." style="text-align: left;">
+              <label class="mv-control-label" id="mv-encoder-label">Payload Encoder Helper</label>
+              <div class="mv-encoder-box" role="group" aria-labelledby="mv-encoder-label">
+                <input type="text" class="mv-dimension-input" id="mv-encoder-input" aria-label="Input text string to URL-encode or Base64-encode" placeholder="Type text to encode (e.g. <script>)..." style="text-align: left;">
                 <div class="mv-btn-grid" style="grid-template-columns: 1fr 1fr;">
-                  <button class="mv-btn" id="mv-encode-url-btn" style="padding: 5px;">URL-Encode</button>
-                  <button class="mv-btn" id="mv-encode-b64-btn" style="padding: 5px;">Base64</button>
+                  <button class="mv-btn" id="mv-encode-url-btn" aria-label="Encode input as URL safe string" style="padding: 5px;">URL-Encode</button>
+                  <button class="mv-btn" id="mv-encode-b64-btn" aria-label="Encode input as Base64 string" style="padding: 5px;">Base64</button>
                 </div>
-                <div class="mv-encoder-output" id="mv-encoder-out">Encoded output appears here</div>
+                <div class="mv-encoder-output" id="mv-encoder-out" tabindex="0" aria-label="Encoded output text string">Encoded output appears here</div>
               </div>
             </div>
 
@@ -848,11 +851,11 @@
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
                 <label class="mv-control-label">Live Security Event Log</label>
                 <div style="display: flex; gap: 4px;">
-                  <button class="mv-chip" id="mv-sec-expand-btn" title="Toggle Expand Event Log" style="padding: 2px 6px; font-size: 9px;">⛶ Expand</button>
-                  <button class="mv-chip" id="mv-sec-clear-btn" title="Clear Event Log" style="padding: 2px 6px; font-size: 9px;">Clear</button>
+                  <button class="mv-chip" id="mv-sec-expand-btn" aria-label="Toggle Expand Security Log" title="Toggle Expand Event Log" style="padding: 4px 8px; font-size: 10px;">⛶ Expand</button>
+                  <button class="mv-chip" id="mv-sec-clear-btn" aria-label="Clear Security Event Log" title="Clear Event Log" style="padding: 4px 8px; font-size: 10px;">Clear</button>
                 </div>
               </div>
-              <div class="mv-sec-console" id="mv-sec-console">
+              <div class="mv-sec-console" id="mv-sec-console" tabindex="0" role="region" aria-label="Security events and rule enforcement stream">
                 <div class="mv-log-entry">
                   <span class="mv-log-time">00:00</span>
                   <span class="mv-log-tag-pass">[DNR]</span>
@@ -869,29 +872,29 @@
             <!-- Storage & Cookie Session Clear -->
             <div class="mv-control-group">
               <label class="mv-control-label">Storage & Session Reset</label>
-              <button class="mv-btn" id="mv-clear-session-btn" style="width: 100%; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.15); color: #fca5a5;">
-                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+              <button class="mv-btn" id="mv-clear-session-btn" aria-label="Clear entire browser cache and reset session cookies" style="width: 100%; border-color: rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.15); color: #fca5a5;">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                 <span>Clear Cache & Reset Session</span>
               </button>
             </div>
-          </div>
+          </section>
         </div>
 
         <!-- Quick Action Toolbar -->
-        <div class="mv-action-toolbar">
-          <button class="mv-icon-btn" id="mv-reload-btn" title="Reload iframe (R)">
-            <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+        <div class="mv-action-toolbar" role="toolbar" aria-label="Bottom Navigation Actions">
+          <button class="mv-icon-btn" id="mv-reload-btn" aria-label="Reload Viewport (Press R)" title="Reload iframe (R)">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
           </button>
-          <button class="mv-icon-btn" id="mv-scroll-top-btn" title="Scroll to top">
-            <svg viewBox="0 0 24 24"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg>
+          <button class="mv-icon-btn" id="mv-scroll-top-btn" aria-label="Scroll Viewport to Top" title="Scroll to top">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"/></svg>
           </button>
-          <button class="mv-icon-btn" id="mv-open-new-tab-btn" title="Open loaded URL in new tab">
-            <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+          <button class="mv-icon-btn" id="mv-open-new-tab-btn" aria-label="Open active URL in new browser tab" title="Open loaded URL in new tab">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
           </button>
         </div>
 
         <!-- Keyboard Hint -->
-        <div class="mv-keyboard-hint">
+        <div class="mv-keyboard-hint" aria-hidden="true">
           <span>Shortcut:</span>
           <span class="mv-kbd">M</span>
           <span>bubble</span>
@@ -903,8 +906,8 @@
           <span>reload</span>
         </div>
       </div>
-    </div>
-  </div>
+    </aside>
+  </main>
 
   <script src="viewer.js"></script>
 </body>
